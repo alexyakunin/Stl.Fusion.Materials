@@ -106,10 +106,10 @@
 </foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="12" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h1>Возможные решения*</h1>
 <div class="col2">
-<p>1. Сделать чистыми все функции</p>
+<p>План А. Сделать чистыми все функции</p>
 <p><img src="./img/Hell.gif" width="100%" /></p>
 <div class="break"></div>
-<p>2. Отслеживание зависимостей и каскадная инвалидация</p>
+<p>План Б. Отслеживание зависимостей и каскадная инвалидация</p>
 <p><img src="./img/Chance.jpg" width="100%" /></p>
 </div>
 <footer>
@@ -117,7 +117,7 @@
 </footer>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="13" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
-<h1>Caching + Dependency Tracking, как higher order function</h1>
+<h1>План Б: зависимости + инвалидация</h1>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function">Func&lt;TIn, TOut&gt; <span class="hljs-title">ToAwesome</span>(<span class="hljs-params">Func&lt;TIn, TOut&gt; computer</span>)</span>
   =&gt; input =&gt; {
     <span class="hljs-keyword">var</span> key = CreateKey(computer, input);

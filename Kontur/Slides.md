@@ -154,11 +154,11 @@ var cachingGetUser = ToCaching(getUser);
 # Возможные решения*
 
 <div class="col2">
-<p>1. Сделать чистыми все функции</p>
+<p>План А. Сделать чистыми все функции</p>
 <p><img src="./img/Hell.gif" width="100%"></p>
 
 <div class="break"></div>
-<p>2. Отслеживание зависимостей и каскадная инвалидация</p>
+<p>План Б. Отслеживание зависимостей и каскадная инвалидация</p>
 <p><img src="./img/Chance.jpg" width="100%"></p>
 </div>
 
@@ -167,7 +167,7 @@ var cachingGetUser = ToCaching(getUser);
 </footer>
 
 ---
-# Caching + Dependency Tracking, как higher order function
+# План Б: зависимости + инвалидация
 
 ```cs
 Func<TIn, TOut> ToAwesome(Func<TIn, TOut> computer)
