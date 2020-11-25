@@ -309,7 +309,8 @@ john = getUserName(johnId); // Might be different
 ---
 # А нужны ли нам делегаты?
 
-Вообще-то нет. Гораздо удобнее давать эту фичу классам целиком, "оборачивая" часть их виртуальных методов (например, со специальным атрибутом) в такую обертку.
+Вообще-то нет. Гораздо удобнее давать эту фичу классам целиком, перекрывая часть их виртуальных методов (например, помеченных специальным атрибутом)
+в сгенерированном классе-потомке.
 
 ---
 # Что нужно, чтоб это заработало на практике?
@@ -591,6 +592,7 @@ public class ReplicaComputed<T> : IComputed<T>
 ---
 # `ComposerService` - пример сервиса-агрегатора
 
+Он же live: https://fusion-samples.servicetitan.com/composition
 Исходный код: [ComposerService](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/Server/Services/ComposerService.cs), [LocalComposerService](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/Client/Services/LocalComposerService.cs).
 
 ```cs
