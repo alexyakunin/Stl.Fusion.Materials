@@ -254,7 +254,7 @@ john = getUserName(johnId); <span class="hljs-comment">// Might be different</sp
 <ul>
 <li data-marpit-fragment="1">Ассинхронность - как вы знаете, она сквозная, потому<br />
 наш синхронный вариант не жизнеспособен в принципе (ŏ̥̥̥̥ωŏ̥̥̥̥)</li>
-<li data-marpit-fragment="2">GC-friends кеш</li>
+<li data-marpit-fragment="2">GC-friendly кеш</li>
 <li data-marpit-fragment="3">GC-friendly ссылки на dependants (но сильные - на dependencies)</li>
 </ul>
 </section>
@@ -278,7 +278,22 @@ john = getUserName(johnId); <span class="hljs-comment">// Might be different</sp
 <p><a href="https://martinfowler.com/bliki/TwoHardThings.html">https://martinfowler.com/bliki/TwoHardThings.html</a></p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/Caching.gif&quot;);"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="27" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="content"></section>
-</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="28" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;--marpit-advanced-background-split:40%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="right"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/AllTheThings.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="60%" height="720"><section id="28" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;--marpit-advanced-background-split:40%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="right">
+<h1>Как это связано с real-time?</h1>
+<p>Для real-time нужно:</p>
+<ul>
+<li>Знать, когда результат функции меняется<br />
+<span style="color: #f44">Инвалидация!</span></li>
+<li>Вычислять новый результат быстро<br />
+<span style="color: #f44">Инкрементальный билд!</span></li>
+<li>Уметь отправлять его по сети<br />
+<span style="color: #f44">&quot;.NET&quot; - это же как раз про сеть!</span></li>
+<li>В идеале, компактным diff-ом<br />
+<span style="color: #f44">Его так же можно вычислить<br />
+за <code>O(diffSize)</code> для immutable types, <a href="https://medium.com/swlh/fusion-current-state-and-upcoming-features-88bc4201594b?source=friends_link&sk=375290c4538167fe99419a744f3d42d5">детали - здесь.</a></span></li>
+</ul>
+</section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="29" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h1>Blazor и React</h1>
 <pre><code class="language-html"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;@CssClass&quot;</span> @<span class="hljs-attr">attributes</span>=<span class="hljs-string">&quot;@Attributes&quot;</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;card-body&quot;</span>&gt;</span>
@@ -293,7 +308,7 @@ john = getUserName(johnId); <span class="hljs-comment">// Might be different</sp
 <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="29" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="30" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h1>Blazor и React - Virtual DOM</h1>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">override</span> <span class="hljs-keyword">void</span> <span class="hljs-title">BuildRenderTree</span>(<span class="hljs-params">RenderTreeBuilder __builder</span>)</span>
 {
@@ -315,7 +330,7 @@ john = getUserName(johnId); <span class="hljs-comment">// Might be different</sp
 }
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="30" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="31" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h1>Blazor и React - альтернативный синтаксис</h1>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">override</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Render</span>(<span class="hljs-params"></span>)</span>
 {
@@ -334,7 +349,7 @@ john = getUserName(johnId); <span class="hljs-comment">// Might be different</sp
 }
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="31" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="32" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h1>Blazor и React - так что же общего?</h1>
 <ul>
 <li>Virtual DOM = такой же кеш для результатов <code>Component&lt;T&gt;(...)</code> &amp; <code>Element(...)</code></li>
@@ -343,26 +358,11 @@ john = getUserName(johnId); <span class="hljs-comment">// Might be different</sp
 </ul>
 <h2>Это инкрементальный рендеринг UI с генерацией diff-a к реальному DOM во время рендеринга.</h2>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="center" data-theme="default" class="center" style="--class:center;--theme:default;--marpit-advanced-background-split:50%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="right"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/RaptorJesus.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="50%" height="720"><section id="32" data-class="center" data-theme="default" class="center" style="--class:center;--theme:default;--marpit-advanced-background-split:50%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="right">
-<h1>Дедуля, а ОНО вообще существует?</h1>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="center" data-theme="default" class="center" style="--class:center;--theme:default;--marpit-advanced-background-split:50%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="right"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/RaptorJesus.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="50%" height="720"><section id="33" data-class="center" data-theme="default" class="center" style="--class:center;--theme:default;--marpit-advanced-background-split:50%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="right">
+<h1>А существует ли <code>ToAwesome()</code> в реальном мире?</h1>
 </section>
-</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="center" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="center" data-theme="default" class="center" style="--class:center;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/FusionWebsite.jpg&quot;);background-size:contain;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="33" data-class="center" data-theme="default" class="center" style="--class:center;--theme:default;" data-marpit-advanced-background="content"></section>
-</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="center" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;--marpit-advanced-background-split:40%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="right"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/AllTheThings.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="60%" height="720"><section id="34" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;--marpit-advanced-background-split:40%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="right">
-<h1>Постойте, при чем тут real-time?</h1>
-<p>Для real-time нужно:</p>
-<ul>
-<li>Знать, когда результат функции меняется<br />
-<span style="color: #f44">Инвалидация!</span></li>
-<li>Вычислять новый результат быстро<br />
-<span style="color: #f44">Инкрементальный билд!</span></li>
-<li>Уметь отправлять его по сети<br />
-<span style="color: #f44">&quot;.NET&quot; - это же как раз про сеть, нет?</span></li>
-<li>В идеале, компактным diff-ом<br />
-<span style="color: #f44">Забавно, его так же можно вычислить<br />
-за O(diffSize), <a href="https://medium.com/swlh/fusion-current-state-and-upcoming-features-88bc4201594b?source=friends_link&sk=375290c4538167fe99419a744f3d42d5">детали - здесь</a>, но пока это не реализовано в Fusion.</span></li>
-</ul>
-</section>
-</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="35" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="center" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="center" data-theme="default" class="center" style="--class:center;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/FusionWebsite.jpg&quot;);background-size:contain;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="34" data-class="center" data-theme="default" class="center" style="--class:center;--theme:default;" data-marpit-advanced-background="content"></section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="center" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="35" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h1>Пример сервиса Fusion</h1>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">CounterService</span>
 {
@@ -393,20 +393,30 @@ john = getUserName(johnId); <span class="hljs-comment">// Might be different</sp
   T Value { <span class="hljs-keyword">get</span>; }
   Exception Error { <span class="hljs-keyword">get</span>; }
   
-  Action Invalidated; <span class="hljs-comment">// Event, triggered just once on invalidation</span>
+  <span class="hljs-keyword">event</span> Action Invalidated; <span class="hljs-comment">// Event, triggered just once on invalidation</span>
   <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Invalidate</span>(<span class="hljs-params"></span>)</span>;
   Task&lt;IComputed&lt;T&gt;&gt; UpdateAsync();
 }
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="37" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" data-background-color="black" class="invert" style="--class:invert;--theme:default;--background-color:black;background-color:black;background-image:none;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/Computed-Gantt.jpg&quot;);background-size:contain;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="37" data-class="invert" data-theme="default" data-background-color="black" class="invert" style="--class:invert;--theme:default;--background-color:black;background-color:black;background-image:none;" data-marpit-advanced-background="content"></section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="center" data-theme="default" class="center" style="--class:center;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/Samples-Blazor.gif&quot;);"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="38" data-class="center" data-theme="default" class="center" style="--class:center;--theme:default;" data-marpit-advanced-background="content"><div style="font-size: 100px; color: #eee; text-shadow: 2px 2px #000;">
+  <a href="http://fusion-samples.servicetitan.com/" 
+     style="color: #eee">DEMO</a>
+</div>
+<footer>
+  <a href="http://fusion-samples.servicetitan.com/"
+     style="background: white; padding: 3pt;">https://fusion-samples.servicetitan.com</a>
+</footer>
+</section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="center" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="39" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h1>Реплики и вызовы по сети</h1>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">ReplicaComputed</span>&lt;<span class="hljs-title">T</span>&gt; : <span class="hljs-title">IComputed</span>&lt;<span class="hljs-title">T</span>&gt; 
 {
     ConsistencyState ConsistencyState { <span class="hljs-keyword">get</span>; }
     T Value { <span class="hljs-keyword">get</span>; }
     Exception Error { <span class="hljs-keyword">get</span>; }
-    Action Invalidated;
+    <span class="hljs-keyword">event</span> Action Invalidated;
     
     <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ReplicaComputed</span>&lt;<span class="hljs-title">T</span>&gt;(<span class="hljs-params">IComputed&lt;T&gt; source</span>)</span> 
     {
@@ -420,28 +430,43 @@ john = getUserName(johnId); <span class="hljs-comment">// Might be different</sp
 }
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="center" data-theme="default" class="center" style="--class:center;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/Samples-Blazor.gif&quot;);"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="38" data-class="center" data-theme="default" class="center" style="--class:center;--theme:default;" data-marpit-advanced-background="content"><div style="font-size: 100px; color: #eee; text-shadow: 2px 2px #000;">
-  <a href="http://fusion-samples.servicetitan.com/" 
-     style="color: #eee">DEMO</a>
-</div>
-</section>
-</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="center" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="39" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
-<h1>Насколько эффективно кеширование Fusion?</h1>
-<p>Метод, который мы будем вызывать в тесте:</p>
-<pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">public</span> <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">async</span> Task&lt;User?&gt; TryGetAsync(
-  <span class="hljs-built_in">long</span> userId, CancellationToken cancellationToken = <span class="hljs-literal">default</span>)
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" data-background-color="black" class="invert" style="--class:invert;--theme:default;--background-color:black;background-color:black;background-image:none;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/WebApi-Regular.jpg&quot;);background-size:contain;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="40" data-class="invert" data-theme="default" data-background-color="black" class="invert" style="--class:invert;--theme:default;--background-color:black;background-color:black;background-image:none;" data-marpit-advanced-background="content"></section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" data-background-color="black" class="invert" style="--class:invert;--theme:default;--background-color:black;background-color:black;background-image:none;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/WebApi-Fusion.jpg&quot;);background-size:contain;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="41" data-class="invert" data-theme="default" data-background-color="black" class="invert" style="--class:invert;--theme:default;--background-color:black;background-color:black;background-image:none;" data-marpit-advanced-background="content"></section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="42" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+<h1><code>ComposerService</code> - пример сервиса-агрегатора</h1>
+<p>Исходный код: <a href="https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/Server/Services/ComposerService.cs">ComposerService</a>, <a href="https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/Client/Services/LocalComposerService.cs">LocalComposerService</a>.</p>
+<pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">async</span> Task&lt;ComposedValue&gt; <span class="hljs-title">GetComposedValueAsync</span>(<span class="hljs-params">
+    <span class="hljs-built_in">string</span> parameter, Session session</span>)</span>
 {
-    <span class="hljs-keyword">await</span> Everything().ConfigureAwait(<span class="hljs-literal">false</span>);
-    <span class="hljs-comment">// DbContextFactory зарегистрирована с AddPooledDbContextFactory</span>
-    <span class="hljs-keyword">await</span> <span class="hljs-keyword">using</span> <span class="hljs-keyword">var</span> dbContext = DbContextFactory.CreateDbContext();
-    <span class="hljs-keyword">var</span> user = <span class="hljs-keyword">await</span> dbContext.Users
-        .FindAsync(<span class="hljs-keyword">new</span>[] {(<span class="hljs-built_in">object</span>) userId}, cancellationToken)
-        .ConfigureAwait(<span class="hljs-literal">false</span>);
-    <span class="hljs-keyword">return</span> user;
+  <span class="hljs-keyword">var</span> chatTail = <span class="hljs-keyword">await</span> ChatService.GetChatTailAsync(<span class="hljs-number">1</span>);
+  <span class="hljs-keyword">var</span> uptime = <span class="hljs-keyword">await</span> TimeService.GetUptimeAsync(TimeSpan.FromSeconds(<span class="hljs-number">10</span>));
+  <span class="hljs-keyword">var</span> sum = (<span class="hljs-built_in">double</span>?) <span class="hljs-literal">null</span>;
+  <span class="hljs-keyword">if</span> (<span class="hljs-built_in">double</span>.TryParse(parameter, <span class="hljs-keyword">out</span> <span class="hljs-keyword">var</span> <span class="hljs-keyword">value</span>))
+      sum = <span class="hljs-keyword">await</span> SumService.SumAsync(<span class="hljs-keyword">new</span> [] { <span class="hljs-keyword">value</span> }, <span class="hljs-literal">true</span>);
+  <span class="hljs-keyword">var</span> lastChatMessage = chatTail.Messages.SingleOrDefault()?.Text 
+    ?? <span class="hljs-string">&quot;(no messages)&quot;</span>;
+  <span class="hljs-keyword">var</span> user = <span class="hljs-keyword">await</span> AuthService.GetUserAsync(session);
+  <span class="hljs-keyword">var</span> activeUserCount = <span class="hljs-keyword">await</span> ChatService.GetActiveUserCountAsync();
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ComposedValue(
+    <span class="hljs-string">$&quot;<span class="hljs-subst">{parameter}</span> - server&quot;</span>, uptime, sum, 
+    lastChatMessage, user, activeUserCount);
 }
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="40" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="43" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+<h1>Насколько эффективно кеширование Fusion?</h1>
+<p>Метод, который мы будем вызывать в тесте:</p>
+<pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">public</span> <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">async</span> Task&lt;User?&gt; TryGetAsync(<span class="hljs-built_in">long</span> userId)
+{
+  <span class="hljs-keyword">await</span> Everything(); <span class="hljs-comment">// Кто уже понял, чем этот вызов полезен?</span>
+  <span class="hljs-keyword">await</span> <span class="hljs-keyword">using</span> <span class="hljs-keyword">var</span> dbContext = DbContextFactory.CreateDbContext();
+  <span class="hljs-comment">// DbContextFactory зарегистрирована с AddPooledDbContextFactory</span>
+  <span class="hljs-keyword">var</span> user = <span class="hljs-keyword">await</span> dbContext.Users.FindAsync(<span class="hljs-keyword">new</span>[] {(<span class="hljs-built_in">object</span>) userId});
+  <span class="hljs-keyword">return</span> user;
+}
+</span></span></foreignObject></svg></code></pre>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="44" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h1>Насколько эффективно кеширование Fusion?</h1>
 <p>Читалка - их в тесте 3 на ядро:</p>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">async</span> Task&lt;<span class="hljs-built_in">long</span>&gt; <span class="hljs-title">Reader</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> name, <span class="hljs-built_in">int</span> iterationCount</span>)</span>
@@ -451,7 +476,7 @@ john = getUserName(johnId); <span class="hljs-comment">// Might be different</sp
     <span class="hljs-keyword">var</span> count = <span class="hljs-number">0L</span>;
     <span class="hljs-keyword">for</span> (; iterationCount &gt; <span class="hljs-number">0</span>; iterationCount--) {
         <span class="hljs-keyword">var</span> userId = (<span class="hljs-built_in">long</span>) rnd.Next(UserCount);
-        <span class="hljs-keyword">var</span> user = <span class="hljs-keyword">await</span> users.TryGetAsync(userId).ConfigureAwait(<span class="hljs-literal">false</span>);
+        <span class="hljs-keyword">var</span> user = <span class="hljs-keyword">await</span> users.TryGetAsync(userId);
         <span class="hljs-keyword">if</span> (user!.Id == userId)
             count++;
         extraAction.Invoke(user!); <span class="hljs-comment">// + Сериализация</span>
@@ -461,7 +486,7 @@ john = getUserName(johnId); <span class="hljs-comment">// Might be different</sp
 </span></span></foreignObject></svg></code></pre>
 <p>Еще есть похожий <code>Mutator</code>, его выполняет один поток.</p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="41" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="45" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h1>Насколько эффективно кеширование Fusion?</h1>
 <p>Sqlite EF provider: <strong>16070x</strong></p>
 <div class="col2" style="margin-top: 0px;">
@@ -498,14 +523,11 @@ Without Stl.Fusion:
 </div>
 <p>И это только первый уровень, т.е. нет никакого incremental build!</p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="42" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
-<h1>Здесь будет слайд с видео из Beat Saber</h1>
-<ol>
-<li><a href="https://www.youtube.com/watch?v=05pzUXujMJU&amp;feature=youtu.be&amp;t=186">https://www.youtube.com/watch?v=05pzUXujMJU&amp;feature=youtu.be&amp;t=186</a></li>
-<li><a href="https://www.youtube.com/watch?v=lzP0JIzrYmM&amp;feature=youtu.be&amp;t=24">https://www.youtube.com/watch?v=lzP0JIzrYmM&amp;feature=youtu.be&amp;t=24</a></li>
-</ol>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="46" data-class="video" data-theme="default" class="video" style="--class:video;--theme:default;"><iframe src="https://www.youtube.com/embed/05pzUXujMJU?start=186" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="center invert" data-theme="default" class="center invert" style="--class:center invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/FusionBg.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="43" data-class="center invert" data-theme="default" class="center invert" style="--class:center invert;--theme:default;" data-marpit-advanced-background="content">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="47" data-class="video" data-theme="default" class="video" style="--class:video;--theme:default;"><iframe src="https://www.youtube.com/embed/lzP0JIzrYmM?start=24" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="center invert" data-theme="default" class="center invert" style="--class:center invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/FusionBg.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="48" data-class="center invert" data-theme="default" class="center invert" style="--class:center invert;--theme:default;" data-marpit-advanced-background="content">
 <p><br /><br /><br /><br /></p>
 <h2 style="font-size: 60pt">СПАСИБО!</h1>
 <footer style="width: 95%; text-align: right; font-size: 20pt; color: white">

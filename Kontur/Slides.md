@@ -644,10 +644,12 @@ Without Stl.Fusion:
 И это только первый уровень, т.е. нет никакого incremental build!
 
 ---
-# Здесь будет слайд с видео из Beat Saber
+<!-- _class: video -->
+<iframe src="https://www.youtube.com/embed/05pzUXujMJU?start=186" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-1. https://www.youtube.com/watch?v=05pzUXujMJU&feature=youtu.be&t=186
-2. https://www.youtube.com/watch?v=lzP0JIzrYmM&feature=youtu.be&t=24
+---
+<!-- _class: video -->
+<iframe src="https://www.youtube.com/embed/lzP0JIzrYmM?start=24" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ---
 <!-- _class: center invert-->
