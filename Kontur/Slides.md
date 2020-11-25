@@ -615,6 +615,7 @@ With Stl.Fusion:
   Standard test + serialization:
     Speed:      12481.940 K Ops/sec
 </pre>
+<div class="break"></div>
 <pre>
 Without Stl.Fusion:
   Standard test:
@@ -631,7 +632,9 @@ With Stl.Fusion:
   Standard test:
     Speed:      30338.256 K Ops/sec
   Standard test + serialization:
-    Speed:      11789.282 K Ops/sec</pre>
+    Speed:      11789.282 K Ops/sec
+</pre>
+<div class="break"></div>
 <pre>
 Without Stl.Fusion:
   Standard test:
@@ -642,6 +645,22 @@ Without Stl.Fusion:
 </div>
 
 И это только первый уровень, т.е. нет никакого incremental build!
+
+---
+# Fusion's Caching Sample
+
+Web API endpoint: **20,000 → 130,000 RPS**
+
+```text
+Fusion's Replica Client:
+  Reads: 20.29M operations/s
+
+RestEase Client -> ASP.NET Core -> Compute Service:
+  Reads: 127.96K operations/s
+
+RestEase Client -> ASP.NET Core -> EF Core Service:
+  Reads: 20.46K operations/s
+```
 
 ---
 <!-- _class: video -->
