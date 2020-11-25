@@ -51,10 +51,10 @@ div.col2 .break {
 С вами все в прорядке. Это с real-time UI все сложно.
 
 ## О чем вы узнаете:
+- Почему real-time UI - это важно?
 - Какие проблемы нужно решить, чтоб сделать real-time UI?
 - При чем здесь инвалидация кэша?
 - Что именно делает React (и Blazor) настолько удобным?
-- Почему real-time UI - это важно?
 
 ---
 # Поток данных при отображении в UI
@@ -201,15 +201,16 @@ Func<TIn, TOut> ToAwesome(Func<TIn, TOut> computer)
 # Computed.Use()
 
 ```cs
-TOut Use<TIn, TOut>(
+static TOut Use<TIn, TOut>(
     this Computed<TIn, TOut>? computed, 
     bool isInvalidating = false) 
 {
-  if (isInvalidating)
-    computed.Invalidate();
-  else
-    Computed.Current?.AddDependency(this);
-  return Value;
+  if (isInvalidating) {
+    computed?.Invalidate();
+    return default;
+  }
+  Computed.Current.AddDependency(this);
+  return computed.Value;
 }
 ```
 
@@ -315,7 +316,7 @@ john = getUserName(johnId); // Might be different
 
 * Ассинхронность - как вы знаете, она сквозная, потому
   наш синхронный вариант не жизнеспособен в принципе (ŏ̥̥̥̥ωŏ̥̥̥̥)
-* GC-friends кеш
+* GC-friendly кеш
 * GC-friendly ссылки на dependants (но сильные - на dependencies)
 
 ![bg brightness:0.2](./img/Buzz2.jpg)
@@ -351,6 +352,22 @@ https://martinfowler.com/bliki/TwoHardThings.html
 
 ---
 ![bg](./img/Caching.gif)
+
+---
+# Как это связано с real-time?
+
+Для real-time нужно:
+- Знать, когда результат функции меняется
+  <span style="color: #f44">Инвалидация!</span>
+- Вычислять новый результат быстро
+  <span style="color: #f44">Инкрементальный билд!</span>
+- Уметь отправлять его по сети
+  <span style="color: #f44">".NET" - это же как раз про сеть!</span>
+- В идеале, компактным diff-ом
+  <span style="color: #f44">Его так же можно вычислить
+  за `O(diffSize)` для immutable types, <a href="https://medium.com/swlh/fusion-current-state-and-upcoming-features-88bc4201594b?source=friends_link&sk=375290c4538167fe99419a744f3d42d5">детали - здесь.</a></span>
+
+![bg right:40%](./img/AllTheThings.jpg)
 
 ---
 # Blazor и React
@@ -424,7 +441,7 @@ protected override void Render()
 
 ---
 <!-- _class: center -->
-# Дедуля, а ОНО вообще существует?
+# А существует ли `ToAwesome()` в реальном мире?
 
 ![bg right](./img/RaptorJesus.jpg)
 
@@ -432,22 +449,6 @@ protected override void Render()
 <!-- _class: center -->
 
 ![bg fit](./img/FusionWebsite.jpg)
-
----
-# Постойте, при чем тут real-time?
-
-Для real-time нужно:
-- Знать, когда результат функции меняется
-  <span style="color: #f44">Инвалидация!</span>
-- Вычислять новый результат быстро
-  <span style="color: #f44">Инкрементальный билд!</span>
-- Уметь отправлять его по сети
-  <span style="color: #f44">".NET" - это же как раз про сеть, нет?</span>
-- В идеале, компактным diff-ом
-  <span style="color: #f44">Забавно, его так же можно вычислить
-  за O(diffSize), <a href="https://medium.com/swlh/fusion-current-state-and-upcoming-features-88bc4201594b?source=friends_link&sk=375290c4538167fe99419a744f3d42d5">детали - здесь</a>, но пока это не реализовано в Fusion.</span>
-
-![bg right:40%](./img/AllTheThings.jpg)
 
 ---
 # Пример сервиса Fusion
@@ -484,14 +485,32 @@ interface IComputed<T> {
   T Value { get; }
   Exception Error { get; }
   
-  Action Invalidated; // Event, triggered just once on invalidation
+  event Action Invalidated; // Event, triggered just once on invalidation
   void Invalidate();
   Task<IComputed<T>> UpdateAsync();
 }
 ```
-
 ![bg](black)
 ![bg fit right:30%](./img/ConsistencyState.jpg)
+
+---
+![bg](black)
+![bg fit](./img/Computed-Gantt.jpg)
+
+---
+<!-- _class: center -->
+
+<div style="font-size: 100px; color: #eee; text-shadow: 2px 2px #000;">
+  <a href="http://fusion-samples.servicetitan.com/" 
+     style="color: #eee">DEMO</a>
+</div>
+
+<footer>
+  <a href="http://fusion-samples.servicetitan.com/"
+     style="background: white; padding: 3pt;">https://fusion-samples.servicetitan.com</a>
+</footer>
+
+![bg](./img/Samples-Blazor.gif)
 
 ---
 # Реплики и вызовы по сети
@@ -502,7 +521,7 @@ public class ReplicaComputed<T> : IComputed<T>
     ConsistencyState ConsistencyState { get; }
     T Value { get; }
     Exception Error { get; }
-    Action Invalidated;
+    event Action Invalidated;
     
     public ReplicaComputed<T>(IComputed<T> source) 
     {
@@ -517,30 +536,49 @@ public class ReplicaComputed<T> : IComputed<T>
 ```
 
 ---
-<!-- _class: center -->
+![bg](black)
+![bg fit](./img/WebApi-Regular.jpg)
 
-<div style="font-size: 100px; color: #eee; text-shadow: 2px 2px #000;">
-  <a href="http://fusion-samples.servicetitan.com/" 
-     style="color: #eee">DEMO</a>
-</div>
+---
+![bg](black)
+![bg fit](./img/WebApi-Fusion.jpg)
 
-![bg](./img/Samples-Blazor.gif)
+---
+# `ComposerService` - пример сервиса-агрегатора
+
+Исходный код: [ComposerService](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/Server/Services/ComposerService.cs), [LocalComposerService](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/Client/Services/LocalComposerService.cs).
+
+```cs
+public virtual async Task<ComposedValue> GetComposedValueAsync(
+    string parameter, Session session)
+{
+  var chatTail = await ChatService.GetChatTailAsync(1);
+  var uptime = await TimeService.GetUptimeAsync(TimeSpan.FromSeconds(10));
+  var sum = (double?) null;
+  if (double.TryParse(parameter, out var value))
+      sum = await SumService.SumAsync(new [] { value }, true);
+  var lastChatMessage = chatTail.Messages.SingleOrDefault()?.Text 
+    ?? "(no messages)";
+  var user = await AuthService.GetUserAsync(session);
+  var activeUserCount = await ChatService.GetActiveUserCountAsync();
+  return new ComposedValue(
+    $"{parameter} - server", uptime, sum, 
+    lastChatMessage, user, activeUserCount);
+}
+```
 
 ---
 # Насколько эффективно кеширование Fusion?
 
 Метод, который мы будем вызывать в тесте:
 ```cs
-public virtual async Task<User?> TryGetAsync(
-  long userId, CancellationToken cancellationToken = default)
+public virtual async Task<User?> TryGetAsync(long userId)
 {
-    await Everything().ConfigureAwait(false);
-    // DbContextFactory зарегистрирована с AddPooledDbContextFactory
-    await using var dbContext = DbContextFactory.CreateDbContext();
-    var user = await dbContext.Users
-        .FindAsync(new[] {(object) userId}, cancellationToken)
-        .ConfigureAwait(false);
-    return user;
+  await Everything(); // Кто уже понял, чем этот вызов полезен?
+  await using var dbContext = DbContextFactory.CreateDbContext();
+  // DbContextFactory зарегистрирована с AddPooledDbContextFactory
+  var user = await dbContext.Users.FindAsync(new[] {(object) userId});
+  return user;
 }
 ```
 ---
@@ -555,7 +593,7 @@ async Task<long> Reader(string name, int iterationCount)
     var count = 0L;
     for (; iterationCount > 0; iterationCount--) {
         var userId = (long) rnd.Next(UserCount);
-        var user = await users.TryGetAsync(userId).ConfigureAwait(false);
+        var user = await users.TryGetAsync(userId);
         if (user!.Id == userId)
             count++;
         extraAction.Invoke(user!); // + Сериализация
