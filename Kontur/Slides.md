@@ -345,12 +345,6 @@ john = getUserName(johnId); // Might be different
 ![bg fit](./img/TwoDogs.jpg)
 
 ---
-"There are only two hard things in Computer Science: cache invalidation and naming things."
-&ndash; Phil Karlton
-
-https://martinfowler.com/bliki/TwoHardThings.html
-
----
 ![bg](./img/Caching.gif)
 
 ---
@@ -368,6 +362,12 @@ https://martinfowler.com/bliki/TwoHardThings.html
   за `O(diffSize)` для immutable types, <a href="https://medium.com/swlh/fusion-current-state-and-upcoming-features-88bc4201594b?source=friends_link&sk=375290c4538167fe99419a744f3d42d5">детали - здесь.</a></span>
 
 ![bg right:40%](./img/AllTheThings.jpg)
+
+---
+"There are only two hard things in Computer Science: cache invalidation and naming things."
+&ndash; Phil Karlton
+
+https://martinfowler.com/bliki/TwoHardThings.html
 
 ---
 # Blazor и React
