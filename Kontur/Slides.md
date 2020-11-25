@@ -51,7 +51,6 @@ div.col2 .break {
 С вами все в прорядке. Это с real-time UI все сложно.
 
 ## О чем вы узнаете:
-- Почему real-time UI - это важно?
 - Какие проблемы нужно решить, чтоб сделать real-time UI?
 - При чем здесь инвалидация кэша?
 - Что именно делает React (и Blazor) настолько удобным?
@@ -139,6 +138,7 @@ Func<TIn, TOut> ToCaching(Func<TIn, TOut> computer)
 var getUser = (Func<long, User>) (userId => UserRepository.Get(userId));
 var cachingGetUser = ToCaching(getUser);
 ```
+
 ---
 # Un problema*
 
@@ -356,7 +356,7 @@ john = getUserName(johnId); // Might be different
 - Вычислять новый результат быстро
   <span style="color: #f44">Инкрементальный билд!</span>
 - Уметь отправлять его по сети
-  <span style="color: #f44">".NET" - это же как раз про сеть!</span>
+  <span style="color: #f44">".NET" - это же как раз про сеть, нет?</span>
 - В идеале, компактным diff-ом
   <span style="color: #f44">Его так же можно вычислить
   за `O(diffSize)` для immutable types, <a href="https://medium.com/swlh/fusion-current-state-and-upcoming-features-88bc4201594b?source=friends_link&sk=375290c4538167fe99419a744f3d42d5">детали - здесь.</a></span>
@@ -370,7 +370,36 @@ john = getUserName(johnId); // Might be different
 https://martinfowler.com/bliki/TwoHardThings.html
 
 ---
-# Blazor и React
+# Blazor - это:
+
+- .NET, работающий в браузере
+- Работает все! 
+  - `Expression.Compile(...)`, Reflection и т.п.
+  - Пока нет потоков, но `Task<T>` работает (так же, как в JS)
+- UI = React-like components, даже лучше!
+
+---
+# Blazor - это:
+
+Минусы:
+- Пока нет JIT / AOT - все исполняется в режиме интерпретации
+- Даже небольшие проекты загружают кучу сборок.
+  Есть tree shaking, но даже с ним остается 2-4 МБ сборок .NET.
+
+---
+# Blazor - это:
+
+Плюсы:
+- Это .NET, т.е. масса готового + не нужен JavaScript, TypeScript, ...
+- Есть Blazor Server: UI работает на стороне сервера, на клиент идут diff-ы, которые применяются там к DOM.
+- AOT и threads обещают в ближ. год. В JS threads не видать, а ядер - все больше, потому догнать и перегнать JS вполне возможно даже без JIT.
+- Есть [Blazor Mobile](https://docs.microsoft.com/en-us/mobile-blazor-bindings/) - это React Native на .NET и без WASM. Пока experimental.
+
+---
+![bg fit](./img/Blazor.jpg)
+
+---
+# Blazor - пример Razor-разметки компонента
 
 ```html
 <div class="@CssClass" @attributes="@Attributes">
@@ -387,7 +416,7 @@ https://martinfowler.com/bliki/TwoHardThings.html
 ```
 
 ---
-# Blazor и React - Virtual DOM
+# Blazor - результат компиляции предыдущего фрагмента
 
 ```cs
 protected override void BuildRenderTree(RenderTreeBuilder __builder)
@@ -411,7 +440,7 @@ protected override void BuildRenderTree(RenderTreeBuilder __builder)
 ```
 
 ---
-# Blazor и React - альтернативный синтаксис
+# Blazor - альтернативный синтаксис
 
 ```cs
 protected override void Render()
@@ -437,7 +466,23 @@ protected override void Render()
 - Сache miss для `Component<T>(...)` так же приводит к его созданию
 - Вызовы `SetAttributes` на `Component` приводят к вызову `Render` в конце, если атрибуты изменились или компонент еще не рендерился
 
-## Это инкрементальный рендеринг UI с генерацией diff-a к реальному DOM во время рендеринга.
+## Это инкрементальный билд UI с генерацией diff-a к реальному DOM во время рендеринга.
+
+---
+![bg](white)
+![bg fit](./img/FP1.jpg)
+
+---
+<div class="col2">
+<img src="./img/FP3.jpg">
+<div class="break">
+<img src="./img/FP2.jpg">
+</div>
+
+---
+<!-- _class: invert-->
+![w:300px](./img/Substance.jpg)
+![bg fit](./img/FP4.jpg)
 
 ---
 <!-- _class: center -->
@@ -649,17 +694,17 @@ Without Stl.Fusion:
 ---
 # Fusion's Caching Sample
 
-Web API endpoint: **20,000 → 130,000 RPS**
+Такой же Web API endpoint: 20,000 → 130,000 RPS, или **6.5x**
 
 ```text
-Fusion's Replica Client:
-  Reads: 20.29M operations/s
-
-RestEase Client -> ASP.NET Core -> Compute Service:
-  Reads: 127.96K operations/s
-
 RestEase Client -> ASP.NET Core -> EF Core Service:
   Reads: 20.46K operations/s
+
+RestEase Client -> ASP.NET Core -> Fusion Proxy -> EF Core Service:
+  Reads: 127.96K operations/s
+
+Fusion's Replica Client:
+  Reads: 20.29M operations/s
 ```
 
 ---
@@ -669,6 +714,14 @@ RestEase Client -> ASP.NET Core -> EF Core Service:
 ---
 <!-- _class: video -->
 <iframe src="https://www.youtube.com/embed/lzP0JIzrYmM?start=24" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+---
+<!-- _class: center invert-->
+
+## Почему real-time - это важно?
+
+---
+![bg fit](./img/IT_ETF.png)
 
 ---
 <!-- _class: center invert-->
