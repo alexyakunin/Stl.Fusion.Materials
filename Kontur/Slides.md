@@ -209,7 +209,7 @@ static TOut Use<TIn, TOut>(
     computed?.Invalidate();
     return default;
   }
-  Computed.Current.AddDependency(this);
+  Computed.Current.AddDependency(computed);
   return computed.Value;
 }
 ```
