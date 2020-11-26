@@ -5,6 +5,10 @@ class:
   - invert
 ---
 <style>
+section span.hljs-string { color: #50b050; }
+section span.hljs-title { color: #7ff2e1; }
+section span.hljs-number { color: #00acc5; }
+
 section.center {
   text-align: center;
 }
@@ -323,7 +327,7 @@ WriteLine(getCounterText("A")); // Count: 1
 # Что нужно, чтоб это заработало на практике?
 
 - Асинхронность, настоящая потокобезопасность
-- GC-friendly кеш
+- GC-friendly кэш
 - GC-friendly ссылки на dependants
 - Еще дофига всего, но кто же в презентациях говорит о настоящих проблемах?
 
@@ -336,6 +340,25 @@ WriteLine(getCounterText("A")); // Count: 1
 ### Что с React и Blazor?
 
 ![bg left:53%](./img/DeepEnough.jpg)
+
+---
+<!-- _class: invert -->
+## Ленивец - eventually consistent:
+
+Он 100% завершит все его вялотекущие задачи КОГДА-НИБУДЬ
+ЕСЛИ избавится от зайца и лисы (перестанет брать новые задачи)
+
+![bg brightness:0.4](./img/Zootopia.jpg)
+
+---
+<!-- _class: invert -->
+<h2>
+&ndash; А чо, кэш есть?</br>
+&ndash; Ну есть - но совсем чуть-чуть...</br>
+&ndash; Мужайся, у тебя eventual consistency!
+</h2>
+
+![bg brightness:0.4](./img/Dinosaurs.jpg)
 
 ---
 <!-- _class: center -->
@@ -378,6 +401,9 @@ WriteLine(getCounterText("A")); // Count: 1
 https://martinfowler.com/bliki/TwoHardThings.html - там их целая коллекция.
 
 ---
+![bg fit](./img/BlazorAndReact.jpg)
+
+---
 # Blazor - это:
 
 - .NET, работающий в браузере
@@ -387,6 +413,9 @@ https://martinfowler.com/bliki/TwoHardThings.html - там их целая ко�
 - UI = React-like components, даже лучше!
 
 ![bg right:40%](./img/Steve.jpg)
+
+---
+![bg fit](./img/Blazor.jpg)
 
 ---
 # Blazor - минусы:
@@ -402,9 +431,6 @@ https://martinfowler.com/bliki/TwoHardThings.html - там их целая ко�
 - Есть Blazor Server: UI работает на стороне сервера, на клиент идут diff-ы, которые применяются там к DOM.
 - AOT и threads обещают в ближ. год. В JS threads не видать, а ядер - все больше, потому догнать и перегнать JS вполне возможно даже без JIT.
 - Есть [Blazor Mobile](https://docs.microsoft.com/en-us/mobile-blazor-bindings/) - это React Native на .NET и без WASM. Пока experimental.
-
----
-![bg fit](./img/Blazor.jpg)
 
 ---
 # Blazor - пример Razor-разметки компонента
@@ -473,9 +499,9 @@ protected void Render()
 
 ```
 ---
-# Blazor и React - так что же общего?
+# Blazor и React - так что же у нас общее?
 
-- Virtual DOM = такой же кеш для результатов `Component<T>(...)` & `Element(...)`
+- Virtual DOM = такой же кэш для результатов `Component<T>(...)` & `Element(...)`
 - Сache miss для `Component<T>(...)` так же приводит к его созданию
 - `TryRender()` вызывает `Render()` для всего, что изменилось с 
   последнего `Render`.
@@ -763,6 +789,30 @@ Fusion's Replica Client:
 - Все еще ищете аналог MobX / Knockout.js для Blazor? С Fusion он не нужен.  
 - Ваш клиентский код, строящий клиентские модели, теперь может так же работать везде - именно это и позволяет приложениям на Fusion работать как в Blazor Server, так и в Blazor WASM режимах.
 
+---
+## Какие ваши trade-offs?
+
+- **Деньги:** гусары денег не берут (MIT license)
+- **CPU:** мы освободим ваши CPU, избавив их от вычисления одной и той же фигни по тысяче раз!
+- **RAM:** это наше все, но [помните про GC pauses](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part08.md#large-working-sets-and-gc-pauses) и другие минусы локального кэширования. Впрочем, плюсов больше + есть swapping - Fusion-версия кеширования извне.
+- **Время на изучение:** все не так просто, как в этой презентации, конечно, но если сравнить с TPL и особенностями async-await на .NET, например - Fusion несколько проще.
+- **Другие риски:** продукту целых 8 месяцев с момента написания первых строчек кода, какие тут могут быть риски?
+
+<footer>Слайд сделан под давлением!</footer>
+
+---
+## Какие ваши trade-offs?
+
+Fusion - вероятно, наименьшее из зол, с которым придется иметь дело, если вам нужен real-time UI. *
+</br>
+</br>
+
+<footer>(*) Мнение автора доклада.</footer>
+
+## &nbsp;
+## &nbsp;
+
+![bg brightness:0.7](./img/StitchAndOthers.jpg)
 
 ---
 <!-- _class: center invert-->
@@ -781,8 +831,9 @@ Fusion's Replica Client:
 <footer style="width: 95%; text-align: right; font-size: 20pt; color: white">
 Александр Якунин</br>
 Автор Fusion, CTO в <a href="https://www.servicetitan.com/">ServiceTitan, Inc.</a></br>
+Специально для <a href="https://eventskbkontur.timepad.ru/events/">Kontur Tech Talks</a></br>
 <a href="https://github.com/servicetitan/Stl.Fusion">https://github.com/servicetitan/Stl.Fusion</a></br>
-Специально для <a href="https://eventskbkontur.timepad.ru/events/">Kontur Tech Talks</a>
+P.S. Нам нужны ваши звезды и вилки: <img src="https://img.shields.io/github/stars/servicetitan/Stl.Fusion?style=social" style="height: 1.1em; vertical-align: middle"/> <img src="https://img.shields.io/github/forks/servicetitan/Stl.Fusion?style=social" style="height: 1.1em; vertical-align: middle"/></br>
 </footer>
 
 ![bg](./img/FusionBg.jpg)
