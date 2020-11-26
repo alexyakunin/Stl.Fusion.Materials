@@ -108,7 +108,7 @@ User Get(string userId) { ... }
 2. Часть вызовов требуют RPC, а это еще и долго.
    <span style="color: #f44">Временно хранят на клиенте их все...<span>
 
-![bg brightness:0.5](./img/Yoda1.jpg)
+![bg brightness:0.2](./img/Yoda1.jpg)
 
 ---
 # А что это вообще за зверь - кеширование?
@@ -252,33 +252,36 @@ static void Computed.Invalidate(Action action)
 # Caching + Dependency Tracking - пример
 
 ```cs
+var counters = new Dictionary<string, int>();
+ 
 // Dependency
-var _getUser = (Func<long, User>) (userId => UserRepository.Get(userId));
-var getUser = ToAwesome(_getUser);
+var getCounter = ToAwesome((Func<string, int>) (key
+  => counters.GetValueOrDefault(key)));
 
 // Dependent function
-var _getUserName = (Func<long, string>) (userId => getUser(userId).Name);
-var getUserName = ToAwesome(getUserName);
+var getCounterText = ToAwesome((Func<long, string>) (key
+  => $"Count: {GetCounter(key)}"));
 
-var john = getUserName(johnId);
-getUserName(johnId).Should().Be(john); // Unless invalidated concurrently
+WriteLine(getCounterText("A")); // Count: 0
 
-Computed.Invalidate(() => getUser(johnId))
-john = getUserName(johnId); // Might be different
+counters["A"] = 1;
+Computed.Invalidate(() => getCounter("A"))
+WriteLine(getCounterText("A")); // Count: 1
 ```
 
 ---
-# Что мы приобрели?
+# Кого же мы вывели?
 
+Суперспособности `ToAwesome`:
 * Кеширование результатов
 * Отслеживание зависимостей
-* Гарантию отсутствия™ бессмысленного параллельного вычисления
+* Гарантию отсутствия™ бессмысленных конкурентных вычислений
 
 И все это - не меняя:
 * Ни сигнатуру
-* Ни реализацию ориг. функций
+* Ни реализацию функций на входе!
 
-![bg right](./img/Stitch1.gif)
+![bg right:40%](./img/Stitch1.gif)
 
 ---
 # Декоратор инкрементальной сборки ВСЕГО!
@@ -293,6 +296,8 @@ john = getUserName(johnId); // Might be different
 
 2. Часть вызовов требуют RPC, а это еще и долго.
    <span style="color: #f44">Временно хранят на клиенте их все...</span> - **еще вернемся мы к тебе 😈**
+
+![bg brightness:0.2](./img/Yoda1.jpg)
 
 ---
 ![bg](./img/IncrementalBuild.gif)
@@ -312,15 +317,17 @@ john = getUserName(johnId); // Might be different
 Вообще-то нет. Гораздо удобнее давать эту фичу классам целиком, перекрывая часть их виртуальных методов (например, помеченных специальным атрибутом)
 в сгенерированном классе-потомке.
 
+![bg right:50%](./img/YouDontNeedIt.jpg)
+
 ---
 # Что нужно, чтоб это заработало на практике?
 
-* Ассинхронность - как вы знаете, она сквозная, потому
-  наш синхронный вариант не жизнеспособен в принципе (ŏ̥̥̥̥ωŏ̥̥̥̥)
-* GC-friendly кеш
-* GC-friendly ссылки на dependants (но сильные - на dependencies)
+- Асинхронность, настоящая потокобезопасность
+- GC-friendly кеш
+- GC-friendly ссылки на dependants
+- Еще дофига всего, но кто же в презентациях говорит о настоящих проблемах?
 
-![bg brightness:0.2](./img/Buzz2.jpg)
+![bg right:50%](./img/Buzz2.jpg)
 
 ---
 <!-- _class: center -->
@@ -368,7 +375,7 @@ john = getUserName(johnId); // Might be different
 "There are only two hard things in Computer Science: cache invalidation and naming things."
 &ndash; Phil Karlton
 
-https://martinfowler.com/bliki/TwoHardThings.html
+https://martinfowler.com/bliki/TwoHardThings.html - там их целая коллекция.
 
 ---
 # Blazor - это:
@@ -379,18 +386,18 @@ https://martinfowler.com/bliki/TwoHardThings.html
   - Пока нет потоков, но `Task<T>` работает (так же, как в JS)
 - UI = React-like components, даже лучше!
 
----
-# Blazor - это:
+![bg right:40%](./img/Steve.jpg)
 
-Минусы:
+---
+# Blazor - минусы:
+
 - Пока нет JIT / AOT - все исполняется в режиме интерпретации
 - Даже небольшие проекты загружают кучу сборок.
   Есть tree shaking, но даже с ним остается 2-4 МБ сборок .NET.
 
 ---
-# Blazor - это:
+# Blazor - плюсы:
 
-Плюсы:
 - Это .NET, т.е. масса готового + не нужен JavaScript, TypeScript, ...
 - Есть Blazor Server: UI работает на стороне сервера, на клиент идут diff-ы, которые применяются там к DOM.
 - AOT и threads обещают в ближ. год. В JS threads не видать, а ядер - все больше, потому догнать и перегнать JS вполне возможно даже без JIT.
@@ -444,28 +451,34 @@ protected override void BuildRenderTree(RenderTreeBuilder __builder)
 # Blazor - альтернативный синтаксис
 
 ```cs
-protected override void Render()
+protected override HashSet<Component> RenderChildren()
 {
   var div = Element(this, 0, "div") // parent, key, type
     .SetAttributes("class", CssClass)
     .SetAttributes(Attributes)); 
   var icon = Component<Icon>(div, 7) // parent, key
     .SetAttributes("CssClass", IconCssClass));
-  
   // ...
-  var used = new HashSet<Component>() { div, icon, ... };
-  foreach (var c in GetChildren().ToList()) {
-    if (!used.Contains(c))
-      c.Dispose(); // Удаляется и из Children
-  }
+  return new new HashSet<Component>() { div, icon, ... };
 }
+
+protected void Render()
+{
+  var newChildren = RenderChildren();
+  foreach (var c in Children.ToHashSet().ExceptWith(newChildren))
+      c.Dispose();
+  foreach (var c in newChildren)
+      c.TryRender();
+}
+
 ```
 ---
 # Blazor и React - так что же общего?
 
 - Virtual DOM = такой же кеш для результатов `Component<T>(...)` & `Element(...)`
 - Сache miss для `Component<T>(...)` так же приводит к его созданию
-- Вызовы `SetAttributes` на `Component` приводят к вызову `Render` в конце, если атрибуты изменились или компонент еще не рендерился
+- `TryRender()` вызывает `Render()` для всего, что изменилось с 
+  последнего `Render`.
 
 ## Это инкрементальный билд UI с генерацией diff-a к реальному DOM во время рендеринга.
 
@@ -716,6 +729,40 @@ Fusion's Replica Client:
 ---
 <!-- _class: video -->
 <iframe src="https://www.youtube.com/embed/lzP0JIzrYmM?start=24" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+---
+## Что дает Fusion?
+
+Чувство полета:
+- Кеширование с каскадной инвалидацией
+- Гарантию отсутствия™ бессмысленных конкурентных вычислений
+- Внезапно: все `[ComputeMethod]`-ы можно выполнять параллельно!
+
+Чувство офигения:
+- Клиенты сервисов Fusion, кеширующие все локально - 
+  с цепочками инвалидации, которые тянутся до них с сервера!
+
+![bg right:40%](./img/FlyingCat.jpg)
+
+---
+## Что дает Fusion
+
+И все это - с минимальными изменениями в коде.
+
+> Просто добавь `Computed.Invalidate(...)`!
+> &ndash; Александр Якунин, автор Fusion
+
+![bg right:45%](./img/LazyCat.jpg)
+
+---
+## Что дает Fusion
+
+Более того, Blazor позволяет запускать сервисы Fusion и на клиенте, где они обычно "подключаются" к репликам сервисов вместо настоящих серверных сервисов.
+
+А значит:
+- Все еще ищете аналог MobX / Knockout.js для Blazor? С Fusion он не нужен.  
+- Ваш клиентский код, строящий клиентские модели, теперь может так же работать везде - именно это и позволяет приложениям на Fusion работать как в Blazor Server, так и в Blazor WASM режимах.
+
 
 ---
 <!-- _class: center invert-->
