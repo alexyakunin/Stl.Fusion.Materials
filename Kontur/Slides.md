@@ -50,6 +50,9 @@ div.col2 .break {
 <iframe src="https://www.youtube.com/embed/xJyE2QDEASA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ---
+![bg](./img/MinusOneLike.jpg)
+
+---
 ![bg right](./img/DogOnFire.jpg)
 
 С вами все в прорядке. Это с real-time UI все сложно.
@@ -108,23 +111,23 @@ User Get(string userId) { ... }
 # Но постойте...
 
 1. Вычислять все заново на каждый рендер - дорого
-   <span style="color: #f44">Кеширование не для этого выдумано ли?</span>
+   <span style="color: #f44">Кэширование не для этого выдумано ли?</span>
 2. Часть вызовов требуют RPC, а это еще и долго.
    <span style="color: #f44">Временно хранят на клиенте их все...<span>
 
 ![bg brightness:0.2](./img/Yoda1.jpg)
 
 ---
-# А что это вообще за зверь - кеширование?
+# А что это вообще за зверь - кэширование?
 
 ![bg right](./img/ShockedDog.jpg)
 
 Это просто временное хранение + повторное использование результата, вычисленного ранее.
 
-<span style="color: #f44">Но ведь тогда получается, что <b>мы кешируем вообще все!</b></span>
+<span style="color: #f44">Но ведь тогда получается, что <b>мы кэшируем вообще все!</b></span>
 
 ---
-# Кеширование, как higher order function
+# Кэширование, как higher order function
 
 ```cs
 Func<TIn, TOut> ToCaching(Func<TIn, TOut> computer)
@@ -277,7 +280,7 @@ WriteLine(getCounterText("A")); // Count: 1
 # Кого же мы вывели?
 
 Суперспособности `ToAwesome`:
-* Кеширование результатов
+* Кэширование результатов
 * Отслеживание зависимостей
 * Гарантию отсутствия™ бессмысленных конкурентных вычислений
 
@@ -293,7 +296,7 @@ WriteLine(getCounterText("A")); // Count: 1
 Вспомним, с чего мы начали:
 
 1. Вычислять все заново на каждый рендер - дорого
-   <span style="color: #f44">Кеширование не для этого выдумано ли?</span>
+   <span style="color: #f44">Кэширование не для этого выдумано ли?</span>
 
    * Но как же быть, если у нас не pure functions?
      <span style="color: #f44">Не ваша проблема это уже!</span>
@@ -654,7 +657,7 @@ public virtual async Task<ComposedValue> GetComposedValueAsync(
 ```
 
 ---
-# Насколько эффективно кеширование Fusion?
+# Насколько эффективно кэширование Fusion?
 
 Метод, который мы будем вызывать в тесте:
 ```cs
@@ -668,7 +671,7 @@ public virtual async Task<User?> TryGetAsync(long userId)
 }
 ```
 ---
-# Насколько эффективно кеширование Fusion?
+# Насколько эффективно кэширование Fusion?
 
 Читалка - их в тесте 3 на ядро:
 ```cs
@@ -690,7 +693,7 @@ async Task<long> Reader(string name, int iterationCount)
 Еще есть похожий `Mutator`, его выполняет один поток.
 
 ---
-# Насколько эффективно кеширование Fusion?
+# Насколько эффективно кэширование Fusion?
 
 Sqlite EF provider: **16070x**
 <div class="col2" style="margin-top: 0px;">
@@ -760,18 +763,18 @@ Fusion's Replica Client:
 ## Что дает Fusion?
 
 Чувство полета:
-- Кеширование с каскадной инвалидацией
+- Кэширование с каскадной инвалидацией
 - Гарантию отсутствия™ бессмысленных конкурентных вычислений
 - Внезапно: все `[ComputeMethod]`-ы можно выполнять параллельно!
 
 Чувство офигения:
-- Клиенты сервисов Fusion, кеширующие все локально - 
+- Клиенты сервисов Fusion, кэширующие все локально - 
   с цепочками инвалидации, которые тянутся до них с сервера!
 
 ![bg right:40%](./img/FlyingCat.jpg)
 
 ---
-## Что дает Fusion
+## Что дает Fusion?
 
 И все это - с минимальными изменениями в коде.
 
@@ -781,7 +784,7 @@ Fusion's Replica Client:
 ![bg right:45%](./img/LazyCat.jpg)
 
 ---
-## Что дает Fusion
+## Что дает Fusion?
 
 Более того, Blazor позволяет запускать сервисы Fusion и на клиенте, где они обычно "подключаются" к репликам сервисов вместо настоящих серверных сервисов.
 
@@ -794,7 +797,7 @@ Fusion's Replica Client:
 
 - **Деньги:** гусары денег не берут (MIT license)
 - **CPU:** мы освободим ваши CPU, избавив их от вычисления одной и той же фигни по тысяче раз!
-- **RAM:** это наше все, но [помните про GC pauses](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part08.md#large-working-sets-and-gc-pauses) и другие минусы локального кэширования. Впрочем, плюсов больше + есть swapping - Fusion-версия кеширования извне.
+- **RAM:** это наше все, но [помните про GC pauses](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part08.md#large-working-sets-and-gc-pauses) и другие минусы локального кэширования. Впрочем, плюсов больше + есть swapping - Fusion-версия кэширования извне.
 - **Время на изучение:** все не так просто, как в этой презентации, конечно, но если сравнить с TPL и особенностями async-await на .NET, например - Fusion несколько проще.
 - **Другие риски:** продукту целых 8 месяцев с момента написания первых строчек кода, какие тут могут быть риски?
 
