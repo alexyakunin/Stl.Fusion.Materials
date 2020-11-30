@@ -46,7 +46,7 @@ div.col2 .break {
 ## Is real-time UI </br>really hard to code</br> or do I suck?
 
 ---
-![bg](./img/MinusOneLike.jpg)
+![bg](./img/TwitterMinusOneLike.jpg)
 
 ---
 ![bg right](./img/DogOnFire.jpg)
