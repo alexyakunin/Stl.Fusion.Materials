@@ -46,10 +46,6 @@ div.col2 .break {
 ## Is real-time UI </br>really hard to code</br> or do I suck?
 
 ---
-<!-- _class: video -->
-<iframe src="https://www.youtube.com/embed/xJyE2QDEASA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
----
 ![bg](./img/MinusOneLike.jpg)
 
 ---
@@ -67,11 +63,7 @@ div.col2 .break {
 
 ![bg brightness:0.2](./img/Flow1.jpg)
 
-БД и внешние сервисы
- &nbsp; &rarr; Сервисы приложения 
- &nbsp; &nbsp; &rarr; API 
- &nbsp; &nbsp; &nbsp; &rarr; Клиент 
- &nbsp; &nbsp; &nbsp; &nbsp; &rarr; UI
+UI &larr; Client &larr; API &larr; Services &larr; DB & other storages
 
 ---
 
@@ -118,11 +110,11 @@ User Get(string userId) { ... }
 ![bg brightness:0.2](./img/Yoda1.jpg)
 
 ---
-# А что это вообще за зверь - кэширование?
+# Кэширование - это...
 
 ![bg right](./img/ShockedDog.jpg)
 
-Это просто временное хранение + повторное использование результата, вычисленного ранее.
+просто временное хранение + повторное использование результата, вычисленного ранее.
 
 <span style="color: #f44">Но ведь тогда получается, что <b>мы кэшируем вообще все!</b></span>
 
@@ -147,7 +139,7 @@ var cachingGetUser = ToCaching(getUser);
 ```
 
 ---
-# Un problema*
+# Проблема*
 
 ![bg right](./img/ShockedCat1.jpg)
 
@@ -477,7 +469,7 @@ protected override void BuildRenderTree(RenderTreeBuilder __builder)
 ```
 
 ---
-# Blazor - альтернативный синтаксис
+# Blazor - функциональный вариант
 
 ```cs
 protected override HashSet<Component> RenderChildren()
@@ -512,7 +504,7 @@ protected void Render()
 ## Это инкрементальный билд UI с генерацией diff-a к реальному DOM во время рендеринга.
 
 ---
-![bg](white)
+![bg](black)
 ![bg fit](./img/FP1.jpg)
 
 ---
@@ -624,12 +616,25 @@ public class ReplicaComputed<T> : IComputed<T>
 ```
 
 ---
-![bg](black)
-![bg fit](./img/WebApi-Regular.jpg)
+# Обычный Web API-вызов:
+
+&rarr; Сервер, кагдила?
+&larr; Отстань. 
+
+1 запрос, 1 ответ.
+
+![bg right](./img/RegularDog.jpg)
 
 ---
-![bg](black)
-![bg fit](./img/WebApi-Fusion.jpg)
+# Fusion API-вызов:
+
+&rarr; Сервер, кагдила? <span style="color: #f44">#опубликуй</span>
+&larr; Отстань. <span style="color: #f44">#pub-123456</span>
+<span style="color: #f44">&larr; #pub-123456 инвалидирована<span>
+
+1 запрос, 1 ответ + возможно, уведомление об инвалидации.
+
+![bg left](./img/CoolDog.jpg)
 
 ---
 # `ComposerService` - пример сервиса-агрегатора
@@ -824,6 +829,12 @@ Fusion - вероятно, наименьшее из зол, с которым �
 
 ---
 ![bg fit](./img/IT_ETF.png)
+
+---
+
+Без шуток: [Real-Time is #1 Feature Your Next Web App Needs](https://alexyakunin.medium.com/features-of-the-future-web-apps-part-1-e32cf4e4e4f4?sk=65dacdbf670ef9b5d961c4c666e223e2)
+
+![bg left](./img/Mosaic.png)
 
 ---
 <!-- _class: center invert-->
