@@ -628,11 +628,11 @@ public class ReplicaComputed<T> : IComputed<T>
 ---
 # Fusion API-вызов:
 
-&rarr; Сервер, кагдила? <span style="color: #f44">#опубликуй</span>
-&larr; Отстань. <span style="color: #f44">#pub-123456</span>
-<span style="color: #f44">&larr; #pub-123456 инвалидирована<span>
+&rarr; Сервер, кагдила? <span style="color: #f44">#опубликуй!</span>
+&larr; Отстань. <span style="color: #f44">#такИБыть: pub-666</span>
+<span style="color: #f44">&larr; pub-666 все... Инвалидирован!<span>
 
-1 запрос, 1 ответ + возможно, уведомление об инвалидации.
+1 запрос, 1 ответ + возможно, уведомление об инвалидации по сайд-каналу (сейчас это WebSocket).
 
 ![bg left](./img/CoolDog.jpg)
 
