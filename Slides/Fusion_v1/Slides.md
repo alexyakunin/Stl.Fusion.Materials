@@ -285,7 +285,7 @@ WriteLine(getCounterText("A")); // "Count: 1" - invokes both delegates again
 Supernatural powers of `ToAwesome`:
 * *Call result caching*
 * *Dependency tracking*
-* *Elimination of unnecessary concurrent computations*
+* *The same value is never computed concurrently*
 
 And it does this *without changing neither the signature, nor the implementation* of a function it gets!
 
@@ -334,38 +334,40 @@ We don't. It's actually much more convenient to apply this decorator to virtual 
 ![bg right:50%](./img/YouDontNeedIt.jpg)
 
 ---
-# Что нужно, чтоб это заработало на практике?
+# What else is missing?
 
-- Асинхронность, настоящая потокобезопасность
-- GC-friendly кэш
-- GC-friendly ссылки на dependants
-- Еще дофига всего, но кто же в презентациях говорит о настоящих проблемах?
+- Actual implementation of a "box"
+- Async support
+- GC-friendly "box" cache
+- GC-friendly refs to dependants
+- A lot more. But slides are to show the bright side of things, right?
 
-![bg right:50%](./img/Buzz2.jpg)
+![bg right:45%](./img/Buzz2.jpg)
 
 ---
 <!-- _class: center -->
-### Что там с eventual consistency? Где Redis?
+### What about eventual consistency?
 
-### Что с React и Blazor?
+### What about React and Blazor?
 
 ![bg left:53%](./img/DeepEnough.jpg)
 
 ---
-<!-- _class: invert -->
-## Ленивец - eventually consistent:
+<!-- _class: highlight invert -->
+## Flash Slothmore is eventually consistent:
 
-Он 100% завершит все его вялотекущие задачи КОГДА-НИБУДЬ
-ЕСЛИ избавится от зайца и лисы (перестанет брать новые задачи)
+He will close all of his tasks-in-slow-progress *eventually*.
+*Once* [Judy Hopps](https://zootopia.fandom.com/wiki/Judy_Hopps) stops distracting him with her problems 
+(stops giving him more tasks).
 
 ![bg brightness:0.4](./img/Zootopia.jpg)
 
 ---
-<!-- _class: invert -->
+<!-- _class: highlight invert -->
 <h2>
-&ndash; А чо, кэш есть?</br>
-&ndash; Ну есть - но совсем чуть-чуть...</br>
-&ndash; Мужайся, у тебя eventual consistency!
+&ndash; Bro, do you have a cache?</br>
+&ndash; I do - but it's so tiny...</br>
+&ndash; We are doomed, the state is eventually consistent!
 </h2>
 
 ![bg brightness:0.4](./img/Dinosaurs.jpg)
@@ -373,8 +375,8 @@ We don't. It's actually much more convenient to apply this decorator to virtual 
 ---
 <!-- _class: center -->
 <div>
-Есть две <b>eventually consistent</b> системы -</br>
-чем они отличаются?
+Imagine two <b>eventually consistent</b> systems -</br>
+what's their key difference?
 </div>
 
 <div class="col2">
@@ -389,38 +391,50 @@ We don't. It's actually much more convenient to apply this decorator to virtual 
 ![bg](./img/Caching.gif)
 
 ---
-# Как это связано с real-time?
+# I'm in the real-time business. What's the connection?
+<!-- _class: highlight invert -->
 
-Для real-time нужно:
-- Знать, когда результат функции меняется
-  <span style="color: #f44">Инвалидация!</span>
-- Вычислять новый результат быстро
-  <span style="color: #f44">Инкрементальный билд!</span>
-- Уметь отправлять его по сети
-  <span style="color: #f44">".NET" - это же как раз про сеть, нет?</span>
-- В идеале, компактным diff-ом
-  <span style="color: #f44">Его так же можно вычислить
-  за `O(diffSize)` для immutable types, <a href="https://medium.com/swlh/fusion-current-state-and-upcoming-features-88bc4201594b?source=friends_link&sk=375290c4538167fe99419a744f3d42d5">детали - здесь.</a></span>
+Real-time requires you to:
+- Know when a result of a function changes
+  *Invalidate all the things!*
+- Recompute new results quickly
+  *Incrementally build all the things!*
+- Send them over the network
+  *.NET all the things?
+- Ideally, as a compact diff to the prev. state
+  *Diff can be computed in `O(diffSize)` for immutable types, see <a href="https://medium.com/swlh/fusion-current-state-and-upcoming-features-88bc4201594b?source=friends_link&sk=375290c4538167fe99419a744f3d42d5">this post</a> for details.</span>*
 
 ![bg right:40%](./img/AllTheThings.jpg)
 
 ---
-"There are only two hard things in Computer Science: cache invalidation and naming things."
+<!-- _class: highlight invert -->
+*"There are only two hard things in Computer Science: **cache invalidation** and **naming things**."*
 &ndash; Phil Karlton
 
-https://martinfowler.com/bliki/TwoHardThings.html - там их целая коллекция.
+</br>
+
+Naming problem is of the same scale as the Ultimate Question of Life, the Universe, and Everything, so... Good we've made a meaningful progress with a simpler one!
+
+<footer>
+A  collection of other "two things in computer science" memes: <a href="https://martinfowler.com/bliki/TwoHardThings.html">https://martinfowler.com/bliki/TwoHardThings.html</a>
+</footer>
 
 ---
 ![bg fit](./img/BlazorAndReact.jpg)
 
 ---
-# Blazor - это:
+# Blazor is:
 
-- .NET, работающий в браузере
-- Работает все! 
-  - `Expression.Compile(...)`, Reflection и т.п.
-  - Пока нет потоков, но `Task<T>` работает (так же, как в JS)
-- UI = React-like components, даже лучше!
+- .NET running in your browser
+- Nearly 100% compatibility with .NET 5! 
+  - `Expression.Compile(...)`, Reflection, etc. works
+  - No threads yet, but `Task<T>` works
+- Blazor UI Components ≃ React Components, but with .NET bells and whistles!
+
+<footer>
+The image of Blazor God is here to get his blessings.</br>
+Coincidentally, <a href="https://twitter.com/StevenSanderson">Mr. Sanderson</a> is also the creator of <a href="https://knockoutjs.com/">Knockout.js.</a>
+</footer>
 
 ![bg right:40%](./img/Steve.jpg)
 
@@ -428,22 +442,26 @@ https://martinfowler.com/bliki/TwoHardThings.html - там их целая ко�
 ![bg fit](./img/Blazor.jpg)
 
 ---
-# Blazor - минусы:
+# Blazor &ndash; cons:
 
-- Пока нет JIT / AOT - все исполняется в режиме интерпретации
-- Даже небольшие проекты загружают кучу сборок.
-  Есть tree shaking, но даже с ним остается 2-4 МБ сборок .NET.
-
----
-# Blazor - плюсы:
-
-- Это .NET, т.е. масса готового + не нужен JavaScript, TypeScript, ...
-- Есть Blazor Server: UI работает на стороне сервера, на клиент идут diff-ы, которые применяются там к DOM.
-- AOT и threads обещают в ближ. год. В JS threads не видать, а ядер - все больше, потому догнать и перегнать JS вполне возможно даже без JIT.
-- Есть [Blazor Mobile](https://docs.microsoft.com/en-us/mobile-blazor-bindings/) - это React Native на .NET и без WASM. Пока experimental.
+- No JIT / AOT compilation yet - in fact, everything is interpreted
+- It's .NET, so even a tiny project loads a fair number of assemblies.
+  There is linking with tree shaking, but even it leaves 2…4 MB of .dlls.
 
 ---
-# Blazor - пример Razor-разметки компонента
+# Blazor &ndash; pros:
+<!-- _class: highlight invert -->
+
+- .NET = so many ready-to-use NuGet packages + no need for JS, TS, etc.
+- .dlls are loaded once & stored in application cache. 
+  They aren't updated even on `F5` &ndash; unless you explicitly clear it.
+- [Blazor Server](https://docs.microsoft.com/en-us/aspnet/core/blazor/hosting-models?view=aspnetcore-5.0) helps to mitigate this by further letting your UI code to run on server side (e.g. for slow mobile devices). The JS payload is tiny in this case.
+- AOT and threads are expected in 2021. 
+  **JS won't get threads - ever. CPU core count is increasing. So I bet in 1-2 years WASM (and Blazor) will be #1 choice for truly responsive UI.**
+- There is experimental [Blazor Mobile](https://docs.microsoft.com/en-us/mobile-blazor-bindings/): like [React Native](https://reactnative.dev/), but relying on Blazor compontens and native .NET runtime on each platform.
+
+---
+## Blazor Components - UI markup example
 
 ```html
 <div class="@CssClass" @attributes="@Attributes">
@@ -460,7 +478,7 @@ https://martinfowler.com/bliki/TwoHardThings.html - там их целая ко�
 ```
 
 ---
-# Blazor - результат компиляции предыдущего фрагмента
+## Blazor Components - compiled version of above markup
 
 ```cs
 protected override void BuildRenderTree(RenderTreeBuilder __builder)
@@ -484,7 +502,7 @@ protected override void BuildRenderTree(RenderTreeBuilder __builder)
 ```
 
 ---
-# Blazor - функциональный вариант
+## Blazor Components - the same markup, functional style
 
 ```cs
 protected override HashSet<Component> RenderChildren()
@@ -509,14 +527,22 @@ protected void Render()
 
 ```
 ---
-# Blazor и React - так что же у нас общее?
+# Blazor and React - so what's common there?
 
-- Virtual DOM = такой же кэш для результатов `Component<T>(...)` & `Element(...)`
-- Сache miss для `Component<T>(...)` так же приводит к его созданию
-- `TryRender()` вызывает `Render()` для всего, что изменилось с 
-  последнего `Render`.
+- Virtual DOM = the result cache for `Component<T>(...)` & `Element(...)` calls:
+  - Сache miss = build a component
+  - Cache hit = reuse the exiting one, + maybe rebuild its own Virtual DOM
+- `TryRender()` calls `Render()` for every component that changed after its last `Render()` call.
 
-## Это инкрементальный билд UI с генерацией diff-a к реальному DOM во время рендеринга.
+</br>
+</br>
+<div style="text-align: center">
+<h2 style="margin: 0px">
+  All in all, <strong>React and Blazor = an incremental builder for your UI!</strong>
+</h2>
+<div style="margin: 0px">
+  Just specialized to produce a diff to apply to the real DOM or UI controls.
+</div>
 
 ---
 ![bg](black)
@@ -532,7 +558,7 @@ protected void Render()
 ---
 <!-- _class: invert-->
 ![w:300px](./img/Substance.jpg)
-![bg fit](./img/FP4.jpg)
+![bg fit](./img/FP4-En.jpg)
 
 ---
 <!-- _class: center -->
@@ -546,7 +572,7 @@ protected void Render()
 ![bg fit](./img/FusionWebsite.jpg)
 
 ---
-# Пример сервиса Fusion
+# Fusion Service Example
 
 ```cs
 public class CounterService
@@ -570,9 +596,9 @@ public class CounterService
 ```
 
 ---
-# `IComputed<T>` из Stl.Fusion
+# Fusion's `IComputed<T>`:
 
-Упрощенная версия:
+Below is a simplified version of "a box" storing call result, its dependencies, dependants, etc.:
 ```cs
 interface IComputed<T> {
   // Computing -> Consistent -> Invalidated
@@ -608,7 +634,7 @@ interface IComputed<T> {
 ![bg](./img/Samples-Blazor.gif)
 
 ---
-# Реплики и вызовы по сети
+# Can we *replicate* `IComputed` on a remote host?
 
 ```cs
 public class ReplicaComputed<T> : IComputed<T> 
@@ -621,7 +647,7 @@ public class ReplicaComputed<T> : IComputed<T>
     public ReplicaComputed<T>(IComputed<T> source) 
     {
         source.ThrowIfComputing();
-        Value = source.Value;
+        (Value, Error) = (source.Value, source.Error);
         ConsistencyState = source.ConsistencyState;
         source.Invalidated += () => Invalidate();
     }
@@ -630,44 +656,52 @@ public class ReplicaComputed<T> : IComputed<T>
 }
 ```
 
+Do the same, but deliver the invalidation event via RPC.
+
 ---
-# Обычный Web API-вызов:
+# Your Web API call:
+<!-- _class: highlight invert -->
 
-&rarr; Сервер, кагдила?
-&larr; Отстань. 
+&rarr; How's my app doing?
+&larr; Still alive. 
 
-1 запрос, 1 ответ.
+**1 request = 1 response.**
 
 ![bg right](./img/RegularDog.jpg)
 
 ---
-# Fusion API-вызов:
+# Fusion API call:
+<!-- _class: highlight invert -->
 
-&rarr; Сервер, кагдила? <span style="color: #f44">#опубликуй!</span>
-&larr; Отстань. <span style="color: #f44">#такИБыть: pub-666</span>
-<span style="color: #f44">&larr; pub-666 все... Инвалидирован!<span>
+&rarr; How's my app doing? *+publish*
+&larr; Still alive. *+watch pub-666*
+*&larr; Be brave, pub-666 is... Invalidated.*
 
-1 запрос, 1 ответ + возможно, уведомление об инвалидации по сайд-каналу (сейчас это WebSocket).
+**1 request = 1 or 2 responses, 
+the 2nd one might come much later.** 
+
+The invalidation notifications are delivered via Publisher-Replicator channel. Fusion uses WebSocket connection for such channels now, but more options to be available *eventually*.
 
 ![bg left](./img/CoolDog.jpg)
 
 ---
-# `ComposerService` - пример сервиса-агрегатора
+## `ComposerService` - an example service relying on remote replicas
 
-Он же live: https://fusion-samples.servicetitan.com/composition
-Исходный код: [ComposerService](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/Server/Services/ComposerService.cs), [LocalComposerService](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/Client/Services/LocalComposerService.cs).
+See it live: https://fusion-samples.servicetitan.com/composition
+Source code: [ComposerService](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/Server/Services/ComposerService.cs), [LocalComposerService](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/Client/Services/LocalComposerService.cs).
 
 ```cs
 public virtual async Task<ComposedValue> GetComposedValueAsync(
     string parameter, Session session)
 {
+  // Fusion magic: all these seemingly RPC call complete instantly w/o
+  // a real RPC while the result they produce is known to be consistent.
   var chatTail = await ChatService.GetChatTailAsync(1);
   var uptime = await TimeService.GetUptimeAsync(TimeSpan.FromSeconds(10));
   var sum = (double?) null;
   if (double.TryParse(parameter, out var value))
       sum = await SumService.SumAsync(new [] { value }, true);
-  var lastChatMessage = chatTail.Messages.SingleOrDefault()?.Text 
-    ?? "(no messages)";
+  var lastChatMessage = chatTail.Messages.SingleOrDefault()?.Text ?? "(no messages)";
   var user = await AuthService.GetUserAsync(session);
   var activeUserCount = await ChatService.GetActiveUserCountAsync();
   return new ComposedValue(
@@ -677,9 +711,9 @@ public virtual async Task<ComposedValue> GetComposedValueAsync(
 ```
 
 ---
-# Насколько эффективно кэширование Fusion?
+# How efficient is Fusion caching?
 
-Метод, который мы будем вызывать в тесте:
+The method we're repeatedly calling in our [performance test](https://github.com/servicetitan/Stl.Fusion/blob/master/tests/Stl.Fusion.Tests/PerformanceTest.cs):
 ```cs
 public virtual async Task<User?> TryGetAsync(long userId)
 {
@@ -691,9 +725,9 @@ public virtual async Task<User?> TryGetAsync(long userId)
 }
 ```
 ---
-# Насколько эффективно кэширование Fusion?
+# How efficient is Fusion caching?
 
-Читалка - их в тесте 3 на ядро:
+The `Reader` async task (the test runs 3 readers per core):
 ```cs
 async Task<long> Reader(string name, int iterationCount)
 {
@@ -710,12 +744,13 @@ async Task<long> Reader(string name, int iterationCount)
     return count;
 }
 ```
-Еще есть похожий `Mutator`, его выполняет один поток.
+There is also a similar `Mutator`, but only one instance of it is running.
 
 ---
-# Насколько эффективно кэширование Fusion?
+# How efficient is Fusion caching?
+<!-- _class: highlight invert -->
 
-Sqlite EF provider: **16070x**
+Sqlite EF provider: **16,070x**
 <div class="col2" style="margin-top: 0px;">
 <pre>
 With Stl.Fusion:
@@ -734,7 +769,7 @@ Without Stl.Fusion:
 </pre>
 </div>
 
-In-memory EF provider: **1140x**
+In-memory EF provider: **1,140x**
 <div class="col2" style="margin-top: 0px;">
 <pre>
 With Stl.Fusion:
@@ -753,12 +788,17 @@ Without Stl.Fusion:
 </pre>
 </div>
 
-И это только первый уровень, т.е. нет никакого incremental build!
+And that's just a plain caching, i.e. no any extra benefits from the "incremental build for everything" that Fusion adds!
 
 ---
 # Fusion's Caching Sample
+<!-- _class: highlight invert -->
 
-Такой же Web API endpoint: 20,000 → 130,000 RPS, или **6.5x**
+A very similar code, but exposing the service via Web API. The results: 
+- 20,000 → 130,000 RPS = **6.5x throughput**
+  With server-side changes only, i.e. the same client.
+- 20,000 → 20,000,000 RPS = **1000x throughput!**  
+  If you switch to Fusion client (so-called ["Replica Service"](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part04.md))
 
 ```text
 RestEase Client -> ASP.NET Core -> EF Core Service:
@@ -772,6 +812,11 @@ Fusion's Replica Client:
 ```
 
 ---
+<!-- _class: center invert-->
+
+## How 10x speed boost looks like?
+
+---
 <!-- _class: video -->
 <iframe src="https://www.youtube.com/embed/05pzUXujMJU?start=186" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
@@ -780,57 +825,74 @@ Fusion's Replica Client:
 <iframe src="https://www.youtube.com/embed/lzP0JIzrYmM?start=24" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ---
-## Что дает Fusion?
+## What do you get with Fusion?
+<!-- _class: highlight invert -->
 
-Чувство полета:
-- Кэширование с каскадной инвалидацией
-- Гарантию отсутствия™ бессмысленных конкурентных вычислений
-- Внезапно: все `[ComputeMethod]`-ы можно выполнять параллельно!
-
-Чувство офигения:
-- Клиенты сервисов Fusion, кэширующие все локально - 
-  с цепочками инвалидации, которые тянутся до них с сервера!
+**The feeling of flight:**
+- Caching - with automatic dependency tracking and cascading invalidation
+- The same value is never computed concurrently
+- But: all `[ComputeMethod]`-s can run concurrently!
 
 ![bg right:40%](./img/FlyingCat.jpg)
 
 ---
-## Что дает Fusion?
+## What do you get with Fusion?
+<!-- _class: highlight invert -->
 
-И все это - с минимальными изменениями в коде.
+**The feeling of awesomeness** of your clean code:
+* *You describe the substance.*
+  "That's what I want to get"
+* *Fusion allows you to express this substance in the clean form.*
+  By ensuring you get what you want as efficiently as possible.
 
-> Просто добавь `Computed.Invalidate(...)`!
-> &ndash; Александр Якунин, автор Fusion
+Just imagine, Fusion's Replica Services resolve 99.9% of your RPC calls locally, but still produce the right answers. And to achieve that, they span the web of their invalidation chains across multiple servers. Awesome, right?
+
+![bg right:20% fit](./img/Substance.jpg)
+
+---
+## What do you get with Fusion?
+<!-- _class: highlight invert -->
+
+**The feeling of laziness:** you get all of that with almost zero changes in code!
+
+</br>
+
+> Just add <strike>water</strike> `Computed.Invalidate(...)`.
+> &ndash; AY, Fusion's creator
 
 ![bg right:45%](./img/LazyCat.jpg)
 
 ---
-## Что дает Fusion?
+## What do you get with Fusion?
+<!-- _class: highlight invert -->
 
-Более того, Blazor позволяет запускать сервисы Fusion и на клиенте, где они обычно "подключаются" к репликам сервисов вместо настоящих серверных сервисов.
+**The feeling of ultimate super power** (together with Blazor):
 
-А значит:
-- Все еще ищете аналог MobX / Knockout.js для Blazor? С Fusion он не нужен.  
-- Ваш клиентский код, строящий клиентские модели, теперь может так же работать везде - именно это и позволяет приложениям на Fusion работать как в Blazor Server, так и в Blazor WASM режимах.
+- You can run Fusion services on the client too!
+- Moreover, Fusion includes `LiveComponent` - a base base type for your Blazor components that has everything you need for real-time updates!
+- So you don't need a Knockout or MobX alternative for Blazor. Just use Fusion - everywhere!
 
----
-## Какие ваши trade-offs?
+Moreover, if you use the same interfaces for your Fusion services and their client-side replicas, your UI code will run equally well on the server side too! This is what allows Fusions samples to support both Blazor WebAssembly and Blazor Server mode.
 
-- **Деньги:** гусары денег не берут (MIT license)
-- **CPU:** мы освободим ваши CPU, избавив их от вычисления одной и той же фигни по тысяче раз!
-- **RAM:** это наше все, но [помните про GC pauses](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part08.md#large-working-sets-and-gc-pauses) и другие минусы локального кэширования. Впрочем, плюсов больше + есть swapping - Fusion-версия кэширования извне.
-- **Время на изучение:** все не так просто, как в этой презентации, конечно, но если сравнить с TPL и особенностями async-await на .NET, например - Fusion несколько проще.
-- **Другие риски:** продукту целых 8 месяцев с момента написания первых строчек кода, какие тут могут быть риски?
-
-<footer>Слайд сделан под давлением!</footer>
+![bg blur:5px brightness:0.5](./img/Incredibles.gif)
 
 ---
-## Какие ваши trade-offs?
+## What's the cost?
 
-Fusion - вероятно, наименьшее из зол, с которым придется иметь дело, если вам нужен real-time UI. *
+- **Money:** thanks to [ServiceTitan](servicetitan.com), Fusion is free (MIT license)
+- **CPU:** free your CPUs! The torture of making them to run recurring computations again and again must be stopped!
+- **RAM:** is where the cost is really paid. Besides that, [remember about GC pauses](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part08.md#large-working-sets-and-gc-pauses) and other downsides of local caching. But the upside is so bright + Fusion actually supports external caching via ["swapping" feature](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part05.md#caching-options).
+- **Learning curve:** is relatively shallow in the beginning, but getting steeper once you start to dig deeper. Though Fusion is definitely not as complex as e.g. TPL with its `ExecutionContext`, `ValueTask<T>`, and other tricky parts.
+- **Other risks:** Fusion is 8 months old now. What "other risks" are you talking about?
+
+---
+## What's the cost?
+
+If you need a real-time UI, Fusion is probably the lesser of many evils you'll have to deal with otherwise. *
 </br>
 </br>
 
-<footer>(*) Мнение автора доклада.</footer>
+<footer>(*) Fusion creator's opinion, totally unbiased.</footer>
 
 ## &nbsp;
 ## &nbsp;
@@ -840,14 +902,14 @@ Fusion - вероятно, наименьшее из зол, с которым �
 ---
 <!-- _class: center invert-->
 
-## Почему real-time - это важно?
+## Why having real-time UI is important?
 
 ---
 ![bg fit](./img/IT_ETF.png)
 
 ---
 
-Без шуток: [Real-Time is #1 Feature Your Next Web App Needs](https://alexyakunin.medium.com/features-of-the-future-web-apps-part-1-e32cf4e4e4f4?sk=65dacdbf670ef9b5d961c4c666e223e2)
+On a serious note: [Real-Time is #1 Feature Your Next Web App Needs](https://alexyakunin.medium.com/features-of-the-future-web-apps-part-1-e32cf4e4e4f4?sk=65dacdbf670ef9b5d961c4c666e223e2)
 
 ![bg left](./img/Mosaic.png)
 
@@ -855,14 +917,13 @@ Fusion - вероятно, наименьшее из зол, с которым �
 <!-- _class: center invert-->
 
 <br><br><br><br>
-<h2 style="font-size: 60pt">СПАСИБО!</h1>
+<h2 style="font-size: 60pt">Thank you!</h1>
 
 <footer style="width: 95%; text-align: right; font-size: 20pt; color: white">
-Александр Якунин</br>
-Автор Fusion, CTO в <a href="https://www.servicetitan.com/">ServiceTitan, Inc.</a></br>
-Специально для <a href="https://eventskbkontur.timepad.ru/events/">Kontur Tech Talks</a></br>
+Alex Yakunin</br>
+The creator of Fusion, <a href="https://www.servicetitan.com/">ServiceTitan, Inc.</a> CTO</br>
 <a href="https://github.com/servicetitan/Stl.Fusion">https://github.com/servicetitan/Stl.Fusion</a></br>
-P.S. Нам нужны ваши звезды и вилки: <img src="https://img.shields.io/github/stars/servicetitan/Stl.Fusion?style=social" style="height: 1.1em; vertical-align: middle"/> <img src="https://img.shields.io/github/forks/servicetitan/Stl.Fusion?style=social" style="height: 1.1em; vertical-align: middle"/></br>
+P.S. We need your stars and forks! <img src="https://img.shields.io/github/stars/servicetitan/Stl.Fusion?style=social" style="height: 1.1em; vertical-align: middle"/> <img src="https://img.shields.io/github/forks/servicetitan/Stl.Fusion?style=social" style="height: 1.1em; vertical-align: middle"/></br>
 </footer>
 
 ![bg](./img/FusionBg.jpg)
