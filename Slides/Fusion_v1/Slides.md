@@ -297,7 +297,7 @@ And it does this *without changing neither the signature, nor the implementation
 
 ---
 <!-- _class: highlight invert-->
-# The Decorator of Incremental Build of EVERYTHING!
+# The Incrementally-Build-EVERYTHING Decorator!
 
 Let's remember where we started:
 
