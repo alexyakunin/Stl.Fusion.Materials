@@ -562,7 +562,7 @@ protected void Render()
 
 ---
 <!-- _class: center -->
-# А существует ли `ToAwesome()` в реальном мире?
+# Does `ToAwesome()` really exist?
 
 ![bg right](./img/RaptorJesus.jpg)
 
@@ -707,6 +707,52 @@ public virtual async Task<ComposedValue> GetComposedValueAsync(
   return new ComposedValue(
     $"{parameter} - server", uptime, sum, 
     lastChatMessage, user, activeUserCount);
+}
+```
+
+---
+
+Can you believe this is a real Blazor component that updates in real-time?
+```cs
+@inherits LiveComponentBase<ActiveTranscriptions.Model>
+@using System.Threading
+@using ServiceTitan.Speech.Abstractions
+@inject ITranscriber Transcriber
+
+@{
+    var state = State.LastValue; // We want to show the last correct model on error
+    var error = State.Error;
+}
+
+<DataGrid TItem="Transcript"
+          Data="@state.Transcripts"
+          TotalItems="@state.Transcripts.Length"
+          Sortable="false"
+          ShowPager="false">
+    <DataGridCommandColumn TItem="Transcript"/>
+    <DataGridColumn TItem="Transcript" Field="@nameof(Transcript.Id)" Caption="#"/>
+    <DataGridColumn TItem="Transcript" Field="@nameof(Transcript.StartTime)" Caption="Start Time"/>
+    <DataGridColumn TItem="Transcript" Field="@nameof(Transcript.Duration)" Caption="Duration"/>
+    <DataGridColumn TItem="Transcript" Field="@nameof(Transcript.Text)" Caption="Text" Width="75%" />
+</DataGrid>
+
+@code {
+    public class Model
+    {
+        public Transcript[] Transcripts { get; set; } = Array.Empty<Transcript>();
+    }
+
+    protected override void ConfigureState(LiveState<Model>.Options options)
+        // Update delays are configurable per-state / per-component
+        => options.WithUpdateDelayer(o => o.Delay = TimeSpan.FromSeconds(1));
+
+    protected override async Task<Model> ComputeStateAsync(CancellationToken cancellationToken)
+    {
+        var transcriptIds = await Transcriber.GetActiveTranscriptionIdsAsync(cancellationToken);
+        var transcriptTasks = transcriptIds.Select(id => Transcriber.GetAsync(id, cancellationToken));
+        var transcripts = await Task.WhenAll(transcriptTasks); // Get them all in parallel!
+        return new Model() { Transcripts = transcripts };
+    }
 }
 ```
 
