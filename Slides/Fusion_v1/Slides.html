@@ -23,9 +23,19 @@
 </ul>
 </section>
 </foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/Flow1.jpg&quot;);filter:brightness(0.2);"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="4" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="content">
-<h1>UI Data Stream</h1>
+<h1>Typical Real-time UI Data Flow</h1>
 
-<p>UI ← Client ← API ← Services ← DB &amp; other storages</p>
+<p><strong>Reads:</strong> UI ← Client ← API ← Services ← DB &amp; other storages<br />
+<strong>Updates</strong>:</p>
+<ul>
+<li>Client must subscribe to (and unsubscribe from!) domain events (error prone)</li>
+<li>These events must be transformed to UI model changes (breaks DRY)</li>
+<li>The UI displaying these models must be updated</li>
+<li>Server-side code must implement event sourcing / CQRS</li>
+<li>... a lot more ...</li>
+</ul>
+<h3>But the main downside is:</h3>
+<p>Your client becomes implicitly dependent on the server-side change processing logic. It accumulates more and more knowledge of which models &amp; parts of the UI are impacted by which changes.</p>
 </section>
 </foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/SupplyChain.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="5" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="content"></section>
 </foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="6" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
@@ -74,7 +84,7 @@
 </section>
 </foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="10" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h1>Caching as a Higher Order Function</h1>
-<pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function">Func&lt;TIn, TOut&gt; <span class="hljs-title">ToCaching</span>(<span class="hljs-params">Func&lt;TIn, TOut&gt; computer</span>)</span>
+<pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-title">Func</span>&lt;<span class="hljs-title">TIn</span>, <span class="hljs-title">TOut</span>&gt; <span class="hljs-title">ToCaching</span>&lt;<span class="hljs-title">TIn</span>, <span class="hljs-title">TOut</span>&gt;(<span class="hljs-params">Func&lt;TIn, TOut&gt; computer</span>)</span>
   =&gt; input =&gt; {
     <span class="hljs-keyword">var</span> key = CreateKey(computer, input);
     <span class="hljs-keyword">if</span> (TryGetCached(key, <span class="hljs-keyword">out</span> <span class="hljs-keyword">var</span> output)) <span class="hljs-keyword">return</span> output;
@@ -114,17 +124,17 @@
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="13" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h1>Plan <img class="emoji" draggable="false" alt="🙀" src="https://twemoji.maxcdn.com/2/svg/1f640.svg" data-marp-twemoji=""/>: Caching + Dependency Tracking + Invalidation</h1>
-<pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function">Func&lt;TIn, TOut&gt; <span class="hljs-title">ToAwesome</span>(<span class="hljs-params">Func&lt;TIn, TOut&gt; computer</span>)</span>
+<pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-title">Func</span>&lt;<span class="hljs-title">TIn</span>, <span class="hljs-title">TOut</span>&gt; <span class="hljs-title">ToAwesome</span>&lt;<span class="hljs-title">TIn</span>, <span class="hljs-title">TOut</span>&gt;(<span class="hljs-params">Func&lt;TIn, TOut&gt; computer</span>)</span>
   =&gt; input =&gt; {
     <span class="hljs-keyword">var</span> key = CreateKey(computer, input);
-    <span class="hljs-keyword">if</span> (TryGetCached(key, <span class="hljs-keyword">out</span> <span class="hljs-keyword">var</span> computed) || Computed.IsInvalidating) 
-      <span class="hljs-keyword">return</span> computed.Use(Computed.IsInvalidating);
+    <span class="hljs-keyword">if</span> (TryGetCached(key, <span class="hljs-keyword">out</span> <span class="hljs-keyword">var</span> computed) || Computed.IsInvalidating) <span class="hljs-comment">// [ThreadStatic]</span>
+      <span class="hljs-keyword">return</span> computed.UseOrInvalidate();
     <span class="hljs-keyword">lock</span> (GetLock(key)) { 
       <span class="hljs-keyword">if</span> (TryGetCached(key, <span class="hljs-keyword">out</span> <span class="hljs-keyword">var</span> computed)) 
         <span class="hljs-keyword">return</span> computed.Use();
       
-      <span class="hljs-keyword">var</span> oldCurrent = Computed.Current;
-      Computed.Current = computed = <span class="hljs-keyword">new</span> Computed(computer, input);
+      <span class="hljs-keyword">var</span> oldCurrent = Computed.Current; <span class="hljs-comment">// [ThreadStatic]</span>
+      Computed.Current = computed = <span class="hljs-keyword">new</span> Computed(computer, input, key);
       <span class="hljs-keyword">try</span> {
         computed.Value = computer(input);
       }
@@ -142,32 +152,35 @@
 </span></span></foreignObject></svg></code></pre>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="14" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
-<h1>Registering a dependency: <code>Computed.Use()</code></h1>
-<pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">static</span> TOut <span class="hljs-title">Use</span>&lt;<span class="hljs-title">TIn</span>, <span class="hljs-title">TOut</span>&gt;(<span class="hljs-params">
-    <span class="hljs-keyword">this</span> Computed&lt;TIn, TOut&gt;? computed, 
-    <span class="hljs-built_in">bool</span> isInvalidating = <span class="hljs-literal">false</span></span>)</span> 
+<h1>Invalidation logic: <code>Computed.Invalidate()</code></h1>
+<pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Invalidate</span>(<span class="hljs-params"></span>)</span> 
 {
-  <span class="hljs-keyword">if</span> (isInvalidating) {
-    computed?.Invalidate();
-    <span class="hljs-keyword">return</span> <span class="hljs-literal">default</span>;
+  <span class="hljs-keyword">if</span> (State == State.Invalidated) <span class="hljs-keyword">return</span>;
+  <span class="hljs-keyword">lock</span> (<span class="hljs-keyword">this</span>) { <span class="hljs-comment">// Double-check locking</span>
+    <span class="hljs-keyword">if</span> (State == State.Invalidated) <span class="hljs-keyword">return</span>;
+    State = State.Invalidated;
+    RemoveCached(Key);
+    InvalidateDependants(); <span class="hljs-comment">// Calls </span>
+    OnInvalidated();
   }
-  Computed.Current.AddDependency(computed);
-  <span class="hljs-keyword">return</span> computed.Value;
 }
 </span></span></foreignObject></svg></code></pre>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="15" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
-<h1>Invalidation logic: <code>Computed.Invalidate()</code></h1>
-<pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">void</span> Computed.Invalidate() 
+<h1>Registering a dependency: <code>Computed.Use()</code></h1>
+<pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">static</span> TOut <span class="hljs-title">Use</span>&lt;<span class="hljs-title">TIn</span>, <span class="hljs-title">TOut</span>&gt;(<span class="hljs-params"><span class="hljs-keyword">this</span> Computed&lt;TIn, TOut&gt; computed</span>)</span>
 {
-  <span class="hljs-keyword">if</span> (State == State.Invalidated) <span class="hljs-keyword">return</span>;
-  <span class="hljs-keyword">lock</span> (<span class="hljs-keyword">this</span>) {
-    <span class="hljs-keyword">if</span> (State == State.Invalidated) <span class="hljs-keyword">return</span>;
-    State = State.Invalidated;
-    RemoveCached(Key);
-    InvalidateDependants()
-    OnInvalidated();
+  Computed.Current.AddDependency(computed);
+  <span class="hljs-keyword">return</span> computed.Value;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">static</span> TOut <span class="hljs-title">UseOrInvalidate</span>&lt;<span class="hljs-title">TIn</span>, <span class="hljs-title">TOut</span>&gt;(<span class="hljs-params"><span class="hljs-keyword">this</span> Computed&lt;TIn, TOut&gt;? computed</span>)</span>
+{
+  <span class="hljs-keyword">if</span> (Computed.IsInvalidating) { <span class="hljs-comment">// [ThreadStatic]</span>
+    computed?.Invalidate();
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">default</span>;
   }
+  <span class="hljs-keyword">return</span> computed.Use();
 }
 </span></span></foreignObject></svg></code></pre>
 </section>
@@ -181,7 +194,7 @@
     action();
   }
   <span class="hljs-keyword">finally</span> {
-    Computed.IsInvalidatingent = oldIsInvalidating;
+    Computed.IsInvalidating = oldIsInvalidating;
   }
 }
 </span></span></foreignObject></svg></code></pre>
@@ -607,9 +620,8 @@ Source code: <a href="https://github.com/servicetitan/Stl.Fusion.Samples/blob/ma
 <p>The method we're repeatedly calling in our <a href="https://github.com/servicetitan/Stl.Fusion/blob/master/tests/Stl.Fusion.Tests/PerformanceTest.cs">performance test</a>:</p>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">public</span> <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">async</span> Task&lt;User?&gt; TryGetAsync(<span class="hljs-built_in">long</span> userId)
 {
-  <span class="hljs-keyword">await</span> Everything(); <span class="hljs-comment">// Кто уже понял, чем этот вызов полезен?</span>
-  <span class="hljs-keyword">await</span> <span class="hljs-keyword">using</span> <span class="hljs-keyword">var</span> dbContext = DbContextFactory.CreateDbContext();
-  <span class="hljs-comment">// DbContextFactory зарегистрирована с AddPooledDbContextFactory</span>
+  <span class="hljs-keyword">await</span> Everything(); <span class="hljs-comment">// LMK if you know what&#x27;s the role of this call!</span>
+  <span class="hljs-keyword">await</span> <span class="hljs-keyword">using</span> <span class="hljs-keyword">var</span> dbContext = DbContextFactory.CreateDbContext(); <span class="hljs-comment">// Pooled</span>
   <span class="hljs-keyword">var</span> user = <span class="hljs-keyword">await</span> dbContext.Users.FindAsync(<span class="hljs-keyword">new</span>[] {(<span class="hljs-built_in">object</span>) userId});
   <span class="hljs-keyword">return</span> user;
 }
@@ -620,7 +632,6 @@ Source code: <a href="https://github.com/servicetitan/Stl.Fusion.Samples/blob/ma
 <p>The <code>Reader</code> async task (the test runs 3 readers per core):</p>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">async</span> Task&lt;<span class="hljs-built_in">long</span>&gt; <span class="hljs-title">Reader</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> name, <span class="hljs-built_in">int</span> iterationCount</span>)</span>
 {
-    <span class="hljs-comment">// IUserProvider users захватывается замыканием</span>
     <span class="hljs-keyword">var</span> rnd = <span class="hljs-keyword">new</span> Random();
     <span class="hljs-keyword">var</span> count = <span class="hljs-number">0L</span>;
     <span class="hljs-keyword">for</span> (; iterationCount &gt; <span class="hljs-number">0</span>; iterationCount--) {
@@ -628,7 +639,7 @@ Source code: <a href="https://github.com/servicetitan/Stl.Fusion.Samples/blob/ma
         <span class="hljs-keyword">var</span> user = <span class="hljs-keyword">await</span> users.TryGetAsync(userId);
         <span class="hljs-keyword">if</span> (user!.Id == userId)
             count++;
-        extraAction.Invoke(user!); <span class="hljs-comment">// + Сериализация</span>
+        extraAction.Invoke(user!); <span class="hljs-comment">// Optionally serializes the user</span>
     }
     <span class="hljs-keyword">return</span> count;
 }

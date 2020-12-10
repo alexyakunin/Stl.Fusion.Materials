@@ -64,11 +64,21 @@ div.col2 .break {
 - And many other things...
 
 ---
-# UI Data Stream
+
+# Typical Real-time UI Data Flow
 
 ![bg brightness:0.2](./img/Flow1.jpg)
 
-UI &larr; Client &larr; API &larr; Services &larr; DB & other storages
+**Reads:** UI &larr; Client &larr; API &larr; Services &larr; DB & other storages
+**Updates**:
+- Client must subscribe to (and unsubscribe from!) domain events (error prone)
+- These events must be transformed to UI model changes (breaks DRY)
+- The UI displaying these models must be updated
+- Server-side code must implement event sourcing / CQRS
+- ... a lot more ...
+
+### But the main downside is:
+Your client becomes implicitly dependent on the server-side change processing logic. It accumulates more and more knowledge of which models & parts of the UI are impacted by which changes.
 
 ---
 
@@ -130,7 +140,7 @@ means to store and reuse the results of computations executed in past.
 # Caching as a Higher Order Function
 
 ```cs
-Func<TIn, TOut> ToCaching(Func<TIn, TOut> computer)
+Func<TIn, TOut> ToCaching<TIn, TOut>(Func<TIn, TOut> computer)
   => input => {
     var key = CreateKey(computer, input);
     if (TryGetCached(key, out var output)) return output;
@@ -179,17 +189,17 @@ So you just saw a tiny example of vaporware.
 # Plan 🙀: Caching + Dependency Tracking + Invalidation
 
 ```cs
-Func<TIn, TOut> ToAwesome(Func<TIn, TOut> computer)
+Func<TIn, TOut> ToAwesome<TIn, TOut>(Func<TIn, TOut> computer)
   => input => {
     var key = CreateKey(computer, input);
-    if (TryGetCached(key, out var computed) || Computed.IsInvalidating) 
-      return computed.Use(Computed.IsInvalidating);
+    if (TryGetCached(key, out var computed) || Computed.IsInvalidating) // [ThreadStatic]
+      return computed.UseOrInvalidate();
     lock (GetLock(key)) { 
       if (TryGetCached(key, out var computed)) 
         return computed.Use();
       
-      var oldCurrent = Computed.Current;
-      Computed.Current = computed = new Computed(computer, input);
+      var oldCurrent = Computed.Current; // [ThreadStatic]
+      Computed.Current = computed = new Computed(computer, input, key);
       try {
         computed.Value = computer(input);
       }
@@ -207,36 +217,39 @@ Func<TIn, TOut> ToAwesome(Func<TIn, TOut> computer)
 ```
 
 ---
-# Registering a dependency: `Computed.Use()`
+# Invalidation logic: `Computed.Invalidate()`
 
 ```cs
-static TOut Use<TIn, TOut>(
-    this Computed<TIn, TOut>? computed, 
-    bool isInvalidating = false) 
+public void Invalidate() 
 {
-  if (isInvalidating) {
-    computed?.Invalidate();
-    return default;
+  if (State == State.Invalidated) return;
+  lock (this) { // Double-check locking
+    if (State == State.Invalidated) return;
+    State = State.Invalidated;
+    RemoveCached(Key);
+    InvalidateDependants(); // Calls 
+    OnInvalidated();
   }
-  Computed.Current.AddDependency(computed);
-  return computed.Value;
 }
 ```
 
 ---
-# Invalidation logic: `Computed.Invalidate()`
+# Registering a dependency: `Computed.Use()`
 
 ```cs
-void Computed.Invalidate() 
+static TOut Use<TIn, TOut>(this Computed<TIn, TOut> computed)
 {
-  if (State == State.Invalidated) return;
-  lock (this) {
-    if (State == State.Invalidated) return;
-    State = State.Invalidated;
-    RemoveCached(Key);
-    InvalidateDependants()
-    OnInvalidated();
+  Computed.Current.AddDependency(computed);
+  return computed.Value;
+}
+
+static TOut UseOrInvalidate<TIn, TOut>(this Computed<TIn, TOut>? computed)
+{
+  if (Computed.IsInvalidating) { // [ThreadStatic]
+    computed?.Invalidate();
+    return default;
   }
+  return computed.Use();
 }
 ```
 
@@ -251,7 +264,7 @@ static void Computed.Invalidate(Action action)
     action();
   }
   finally {
-    Computed.IsInvalidatingent = oldIsInvalidating;
+    Computed.IsInvalidating = oldIsInvalidating;
   }
 }
 ```
@@ -763,9 +776,8 @@ The method we're repeatedly calling in our [performance test](https://github.com
 ```cs
 public virtual async Task<User?> TryGetAsync(long userId)
 {
-  await Everything(); // Кто уже понял, чем этот вызов полезен?
-  await using var dbContext = DbContextFactory.CreateDbContext();
-  // DbContextFactory зарегистрирована с AddPooledDbContextFactory
+  await Everything(); // LMK if you know what's the role of this call!
+  await using var dbContext = DbContextFactory.CreateDbContext(); // Pooled
   var user = await dbContext.Users.FindAsync(new[] {(object) userId});
   return user;
 }
@@ -777,7 +789,6 @@ The `Reader` async task (the test runs 3 readers per core):
 ```cs
 async Task<long> Reader(string name, int iterationCount)
 {
-    // IUserProvider users захватывается замыканием
     var rnd = new Random();
     var count = 0L;
     for (; iterationCount > 0; iterationCount--) {
@@ -785,7 +796,7 @@ async Task<long> Reader(string name, int iterationCount)
         var user = await users.TryGetAsync(userId);
         if (user!.Id == userId)
             count++;
-        extraAction.Invoke(user!); // + Сериализация
+        extraAction.Invoke(user!); // Optionally serializes the user
     }
     return count;
 }
