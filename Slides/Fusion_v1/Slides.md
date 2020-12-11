@@ -71,14 +71,14 @@ div.col2 .break {
 
 **Reads:** UI &larr; Client &larr; API &larr; Services &larr; DB & other storages
 **Updates**:
-- Client must subscribe to (and unsubscribe from!) domain events (error prone)
+- UI must subscribe to (and unsubscribe from!) domain events (error prone)
 - These events must be transformed to UI model changes (breaks DRY)
 - The UI displaying these models must be updated
 - Server-side code must implement event sourcing / CQRS
 - ... a lot more ...
 
 ### But the main downside is:
-Your client becomes implicitly dependent on the server-side change processing logic. It accumulates more and more knowledge of which models & parts of the UI are impacted by which changes.
+Your UI becomes implicitly dependent on the server-side change processing logic. It accumulates more and more knowledge of which models & parts of the UI are impacted by which changes.
 
 ---
 

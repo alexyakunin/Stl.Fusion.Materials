@@ -28,14 +28,14 @@
 <p><strong>Reads:</strong> UI ← Client ← API ← Services ← DB &amp; other storages<br />
 <strong>Updates</strong>:</p>
 <ul>
-<li>Client must subscribe to (and unsubscribe from!) domain events (error prone)</li>
+<li>UI must subscribe to (and unsubscribe from!) domain events (error prone)</li>
 <li>These events must be transformed to UI model changes (breaks DRY)</li>
 <li>The UI displaying these models must be updated</li>
 <li>Server-side code must implement event sourcing / CQRS</li>
 <li>... a lot more ...</li>
 </ul>
 <h3>But the main downside is:</h3>
-<p>Your client becomes implicitly dependent on the server-side change processing logic. It accumulates more and more knowledge of which models &amp; parts of the UI are impacted by which changes.</p>
+<p>Your UI becomes implicitly dependent on the server-side change processing logic. It accumulates more and more knowledge of which models &amp; parts of the UI are impacted by which changes.</p>
 </section>
 </foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/SupplyChain.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="5" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="content"></section>
 </foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="6" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
