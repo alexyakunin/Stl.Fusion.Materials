@@ -134,7 +134,7 @@ User Get(string userId) { ... }
 
 means to store and reuse the results of computations executed in past.
 
-**But doesn't this mean <b>we cache everything</b>?**
+**Do we cache everything?**
 
 ---
 # Caching as a Higher Order Function
@@ -143,11 +143,14 @@ means to store and reuse the results of computations executed in past.
 Func<TIn, TOut> ToCaching<TIn, TOut>(Func<TIn, TOut> computer)
   => input => {
     var key = CreateKey(computer, input);
+
     if (TryGetCached(key, out var output)) return output;
     lock (GetLock(key)) { // Double-check locking
       if (TryGetCached(key, out var output)) return output;
+
       output = computer(input);
       StoreCached(key, output);
+
       return output;
     }
   }
@@ -293,9 +296,7 @@ WriteLine(getCounterText("A")); // "Count: 1" - invokes both delegates again
 
 ---
 <!-- _class: highlight invert-->
-# So what we've just created?
-
-Supernatural powers of `ToAwesome`:
+# Our new superpowers:
 * *Call result caching*
 * *Dependency tracking*
 * *The same value is never computed concurrently*
@@ -380,7 +381,7 @@ He will close all of his tasks-in-slow-progress *eventually*.
 <h2>
 &ndash; Bro, do you have a cache?</br>
 &ndash; I do - but it's so tiny...</br>
-&ndash; We are doomed, the state is eventually consistent!
+&ndash; We are doomed! The state is eventually consistent!
 </h2>
 
 ![bg brightness:0.4](./img/Dinosaurs.jpg)
@@ -404,18 +405,18 @@ what's their key difference?
 ![bg](./img/Caching.gif)
 
 ---
-# I'm in the real-time business. What's the connection?
+# I'm in the real-time business. How this is relevant?
 <!-- _class: highlight invert -->
 
-Real-time requires you to:
+Real-time updates require you to:
 - Know when a result of a function changes
-  *Invalidate all the things!*
+  **Invalidate all the things!**
 - Recompute new results quickly
-  *Incrementally build all the things!*
+  **Incrementally build all the things!**
 - Send them over the network
   *.NET all the things?
 - Ideally, as a compact diff to the prev. state
-  *Diff can be computed in `O(diffSize)` for immutable types, see <a href="https://medium.com/swlh/fusion-current-state-and-upcoming-features-88bc4201594b?source=friends_link&sk=375290c4538167fe99419a744f3d42d5">this post</a> for details.</span>*
+  **Diff can be computed in `O(diffSize)` for immutable types (<a href="https://medium.com/swlh/fusion-current-state-and-upcoming-features-88bc4201594b?source=friends_link&sk=375290c4538167fe99419a744f3d42d5">details</a>).</span>**
 
 ![bg right:40%](./img/AllTheThings.jpg)
 
@@ -445,7 +446,7 @@ A  collection of other "two things in computer science" memes: <a href="https://
 - Blazor UI Components ≃ React Components, but with .NET bells and whistles!
 
 <footer>
-The image of Blazor God is here to get his blessings.</br>
+Blazor fans, see the image of the Blazor God!</br>
 Coincidentally, <a href="https://twitter.com/StevenSanderson">Mr. Sanderson</a> is also the creator of <a href="https://knockoutjs.com/">Knockout.js.</a>
 </footer>
 
@@ -701,7 +702,7 @@ The invalidation notifications are delivered via Publisher-Replicator channel. F
 ## `ComposerService` - an example service relying on remote replicas
 
 See it live: https://fusion-samples.servicetitan.com/composition
-Source code: [ComposerService](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/Server/Services/ComposerService.cs), [LocalComposerService](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/Client/Services/LocalComposerService.cs).
+Source code: [ComposerService](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/Server/Services/ComposerService.cs), [LocalComposerService](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/UI/Services/LocalComposerService.cs).
 
 ```cs
 public virtual async Task<ComposedValue> GetComposedValueAsync(
@@ -725,7 +726,7 @@ public virtual async Task<ComposedValue> GetComposedValueAsync(
 
 ---
 
-Can you believe this is a real Blazor component that updates in real-time?
+A real Blazor component that updates in real-time:
 ```cs
 @inherits LiveComponentBase<ActiveTranscriptions.Model>
 @using System.Threading
@@ -940,7 +941,7 @@ Moreover, if you use the same interfaces for your Fusion services and their clie
 - **CPU:** free your CPUs! The torture of making them to run recurring computations again and again must be stopped!
 - **RAM:** is where the cost is really paid. Besides that, [remember about GC pauses](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part08.md#large-working-sets-and-gc-pauses) and other downsides of local caching. But the upside is so bright + Fusion actually supports external caching via ["swapping" feature](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part05.md#caching-options).
 - **Learning curve:** is relatively shallow in the beginning, but getting steeper once you start to dig deeper. Though Fusion is definitely not as complex as e.g. TPL with its `ExecutionContext`, `ValueTask<T>`, and other tricky parts.
-- **Other risks:** Fusion is 8 months old now. What "other risks" are you talking about?
+- **Other risks:** First lines of Fusion code were written 9 months ago. What "other risks" are you talking about?
 
 ---
 ## What's the cost?

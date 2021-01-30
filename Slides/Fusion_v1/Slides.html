@@ -80,18 +80,21 @@
 <h1>To Cache</h1>
 
 <p>means to store and reuse the results of computations executed in past.</p>
-<p><strong>But doesn't this mean <b>we cache everything</b>?</strong></p>
+<p><strong>Do we cache everything?</strong></p>
 </section>
 </foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="10" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h1>Caching as a Higher Order Function</h1>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-title">Func</span>&lt;<span class="hljs-title">TIn</span>, <span class="hljs-title">TOut</span>&gt; <span class="hljs-title">ToCaching</span>&lt;<span class="hljs-title">TIn</span>, <span class="hljs-title">TOut</span>&gt;(<span class="hljs-params">Func&lt;TIn, TOut&gt; computer</span>)</span>
   =&gt; input =&gt; {
     <span class="hljs-keyword">var</span> key = CreateKey(computer, input);
+
     <span class="hljs-keyword">if</span> (TryGetCached(key, <span class="hljs-keyword">out</span> <span class="hljs-keyword">var</span> output)) <span class="hljs-keyword">return</span> output;
     <span class="hljs-keyword">lock</span> (GetLock(key)) { <span class="hljs-comment">// Double-check locking</span>
       <span class="hljs-keyword">if</span> (TryGetCached(key, <span class="hljs-keyword">out</span> <span class="hljs-keyword">var</span> output)) <span class="hljs-keyword">return</span> output;
+
       output = computer(input);
       StoreCached(key, output);
+
       <span class="hljs-keyword">return</span> output;
     }
   }
@@ -220,8 +223,7 @@ WriteLine(getCounterText(<span class="hljs-string">&quot;A&quot;</span>)); <span
 </span></span></foreignObject></svg></code></pre>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-marpit-fragments="3" data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;--marpit-advanced-background-split:40%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="right"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/Stitch1.gif&quot;);"></figure></div></section></foreignObject><foreignObject width="60%" height="720"><section id="18" data-marpit-fragments="3" data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;--marpit-advanced-background-split:40%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="right">
-<h1>So what we've just created?</h1>
-<p>Supernatural powers of <code>ToAwesome</code>:</p>
+<h1>Our new superpowers:</h1>
 <ul>
 <li data-marpit-fragment="1"><em>Call result caching</em></li>
 <li data-marpit-fragment="2"><em>Dependency tracking</em></li>
@@ -286,7 +288,7 @@ WriteLine(getCounterText(<span class="hljs-string">&quot;A&quot;</span>)); <span
 </foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/Dinosaurs.jpg&quot;);filter:brightness(0.4);"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="26" data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;" data-marpit-advanced-background="content"><h2>
 &ndash; Bro, do you have a cache?<br />
 &ndash; I do - but it's so tiny...<br />
-&ndash; We are doomed, the state is eventually consistent!
+&ndash; We are doomed! The state is eventually consistent!
 </h2>
 </section>
 </foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="center" data-theme="default" class="center" style="--class:center;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/TwoDogs.jpg&quot;);background-size:contain;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="27" data-class="center" data-theme="default" class="center" style="--class:center;--theme:default;" data-marpit-advanced-background="content"><div>
@@ -301,18 +303,18 @@ what's their key difference?
 </section>
 </foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="center" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/Caching.gif&quot;);"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="28" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="content"></section>
 </foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;--marpit-advanced-background-split:40%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="right"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/AllTheThings.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="60%" height="720"><section id="29" data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;--marpit-advanced-background-split:40%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="right">
-<h1>I'm in the real-time business. What's the connection?</h1>
+<h1>I'm in the real-time business. How this is relevant?</h1>
 
-<p>Real-time requires you to:</p>
+<p>Real-time updates require you to:</p>
 <ul>
 <li>Know when a result of a function changes<br />
-<em>Invalidate all the things!</em></li>
+<strong>Invalidate all the things!</strong></li>
 <li>Recompute new results quickly<br />
-<em>Incrementally build all the things!</em></li>
+<strong>Incrementally build all the things!</strong></li>
 <li>Send them over the network<br />
 *.NET all the things?</li>
 <li>Ideally, as a compact diff to the prev. state<br />
-<em>Diff can be computed in <code>O(diffSize)</code> for immutable types, see <a href="https://medium.com/swlh/fusion-current-state-and-upcoming-features-88bc4201594b?source=friends_link&sk=375290c4538167fe99419a744f3d42d5">this post</a> for details.</span></em></li>
+<strong>Diff can be computed in <code>O(diffSize)</code> for immutable types (<a href="https://medium.com/swlh/fusion-current-state-and-upcoming-features-88bc4201594b?source=friends_link&sk=375290c4538167fe99419a744f3d42d5">details</a>).</span></strong></li>
 </ul>
 </section>
 </foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="30" data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;">
@@ -338,7 +340,7 @@ A  collection of other "two things in computer science" memes: <a href="https://
 <li>Blazor UI Components ≃ React Components, but with .NET bells and whistles!</li>
 </ul>
 <footer>
-The image of Blazor God is here to get his blessings.<br />
+Blazor fans, see the image of the Blazor God!<br />
 Coincidentally, <a href="https://twitter.com/StevenSanderson">Mr. Sanderson</a> is also the creator of <a href="https://knockoutjs.com/">Knockout.js.</a>
 </footer>
 </section>
@@ -551,7 +553,7 @@ the 2nd one might come much later.</strong></p>
 </foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="52" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h2><code>ComposerService</code> - an example service relying on remote replicas</h2>
 <p>See it live: <a href="https://fusion-samples.servicetitan.com/composition">https://fusion-samples.servicetitan.com/composition</a><br />
-Source code: <a href="https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/Server/Services/ComposerService.cs">ComposerService</a>, <a href="https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/Client/Services/LocalComposerService.cs">LocalComposerService</a>.</p>
+Source code: <a href="https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/Server/Services/ComposerService.cs">ComposerService</a>, <a href="https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/UI/Services/LocalComposerService.cs">LocalComposerService</a>.</p>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">async</span> Task&lt;ComposedValue&gt; <span class="hljs-title">GetComposedValueAsync</span>(<span class="hljs-params">
     <span class="hljs-built_in">string</span> parameter, Session session</span>)</span>
 {
@@ -572,7 +574,7 @@ Source code: <a href="https://github.com/servicetitan/Stl.Fusion.Samples/blob/ma
 </span></span></foreignObject></svg></code></pre>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="53" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
-<p>Can you believe this is a real Blazor component that updates in real-time?</p>
+<p>A real Blazor component that updates in real-time:</p>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap>@inherits LiveComponentBase&lt;ActiveTranscriptions.Model&gt;
 @using System.Threading
 @using ServiceTitan.Speech.Abstractions
@@ -764,7 +766,7 @@ By ensuring you get what you want as efficiently as possible.</li>
 <li><strong>CPU:</strong> free your CPUs! The torture of making them to run recurring computations again and again must be stopped!</li>
 <li><strong>RAM:</strong> is where the cost is really paid. Besides that, <a href="https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part08.md#large-working-sets-and-gc-pauses">remember about GC pauses</a> and other downsides of local caching. But the upside is so bright + Fusion actually supports external caching via <a href="https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part05.md#caching-options">&quot;swapping&quot; feature</a>.</li>
 <li><strong>Learning curve:</strong> is relatively shallow in the beginning, but getting steeper once you start to dig deeper. Though Fusion is definitely not as complex as e.g. TPL with its <code>ExecutionContext</code>, <code>ValueTask&lt;T&gt;</code>, and other tricky parts.</li>
-<li><strong>Other risks:</strong> Fusion is 8 months old now. What &quot;other risks&quot; are you talking about?</li>
+<li><strong>Other risks:</strong> First lines of Fusion code were written 9 months ago. What &quot;other risks&quot; are you talking about?</li>
 </ul>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/StitchAndOthers.jpg&quot;);filter:brightness(0.7);"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="66" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="content">
