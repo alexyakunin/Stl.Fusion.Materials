@@ -220,24 +220,7 @@ Func<TIn, TOut> ToAwesome<TIn, TOut>(Func<TIn, TOut> computer)
 ```
 
 ---
-# Invalidation logic: `Computed.Invalidate()`
-
-```cs
-public void Invalidate() 
-{
-  if (State == State.Invalidated) return;
-  lock (this) { // Double-check locking
-    if (State == State.Invalidated) return;
-    State = State.Invalidated;
-    RemoveCached(Key);
-    InvalidateDependants(); // Calls 
-    OnInvalidated();
-  }
-}
-```
-
----
-# Registering a dependency: `Computed.Use()`
+# `Computed.Use()` = dependency tracking
 
 ```cs
 static TOut Use<TIn, TOut>(this Computed<TIn, TOut> computed)
@@ -257,7 +240,24 @@ static TOut UseOrInvalidate<TIn, TOut>(this Computed<TIn, TOut>? computed)
 ```
 
 ---
-## A convenience helper: static `Computed.Invalidate(...)`
+# What is invalidation / `Computed.Invalidate()`?
+
+```cs
+public void Invalidate() 
+{
+  if (State == State.Invalidated) return;
+  lock (this) { // Double-check locking
+    if (State == State.Invalidated) return;
+    State = State.Invalidated;
+    RemoveCached(Key);
+    InvalidateDependants(); // Calls 
+    OnInvalidated();
+  }
+}
+```
+
+---
+# "Call to invalidate" mode:
 ```cs
 static void Computed.Invalidate(Action action) 
 {
