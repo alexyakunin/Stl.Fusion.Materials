@@ -165,7 +165,8 @@
 <span class="hljs-function"><span class="hljs-keyword">static</span> TOut <span class="hljs-title">UseOrInvalidate</span>&lt;<span class="hljs-title">TIn</span>, <span class="hljs-title">TOut</span>&gt;(<span class="hljs-params"><span class="hljs-keyword">this</span> Computed&lt;TIn, TOut&gt;? computed</span>)</span>
 {
   <span class="hljs-keyword">if</span> (Computed.IsInvalidating) { <span class="hljs-comment">// [ThreadStatic]</span>
-    computed?.Invalidate();
+    <span class="hljs-comment">// Invalidation mode is on, so just invalidate &amp; don&#x27;t compute anything!</span>
+    computed?.Invalidate(); 
     <span class="hljs-keyword">return</span> <span class="hljs-literal">default</span>;
   }
   <span class="hljs-keyword">return</span> computed.Use();
@@ -181,14 +182,14 @@
     <span class="hljs-keyword">if</span> (State == State.Invalidated) <span class="hljs-keyword">return</span>;
     State = State.Invalidated;
     RemoveCached(Key);
-    InvalidateDependants(); <span class="hljs-comment">// Calls </span>
+    InvalidateDependants(); <span class="hljs-comment">// Calls Invalidate() on dependants</span>
     OnInvalidated();
   }
 }
 </span></span></foreignObject></svg></code></pre>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="16" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
-<h1>&quot;Call to invalidate&quot; mode:</h1>
+<h1>Invalidation mode: call to invalidate the call result!</h1>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> Computed.Invalidate(Action action) 
 {
   <span class="hljs-keyword">var</span> oldIsInvalidating = Computed.IsInvalidating;

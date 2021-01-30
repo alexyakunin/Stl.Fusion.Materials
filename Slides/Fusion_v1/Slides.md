@@ -232,7 +232,8 @@ static TOut Use<TIn, TOut>(this Computed<TIn, TOut> computed)
 static TOut UseOrInvalidate<TIn, TOut>(this Computed<TIn, TOut>? computed)
 {
   if (Computed.IsInvalidating) { // [ThreadStatic]
-    computed?.Invalidate();
+    // Invalidation mode is on, so just invalidate & don't compute anything!
+    computed?.Invalidate(); 
     return default;
   }
   return computed.Use();
@@ -250,14 +251,14 @@ public void Invalidate()
     if (State == State.Invalidated) return;
     State = State.Invalidated;
     RemoveCached(Key);
-    InvalidateDependants(); // Calls 
+    InvalidateDependants(); // Calls Invalidate() on dependants
     OnInvalidated();
   }
 }
 ```
 
 ---
-# "Call to invalidate" mode:
+# Invalidation mode: call to invalidate the call result!
 ```cs
 static void Computed.Invalidate(Action action) 
 {
