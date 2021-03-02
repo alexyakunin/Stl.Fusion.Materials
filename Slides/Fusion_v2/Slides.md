@@ -93,7 +93,7 @@ div.col2 .break {
 Kids, look what happens when you code 24/7!
 
 ---
-# Imagine your app is a composition of functions
+# Imagine your app is a composition of functions...
 
 ```cs
 // UI
@@ -117,7 +117,7 @@ string RenderCartTotal(string cartId) {
 ```
 
 ---
-# Imagine your app is a composition of functions
+# Imagine your app is a composition of functions...
 
 ```cs
 // Cart service on your server (*)
