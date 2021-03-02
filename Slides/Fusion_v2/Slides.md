@@ -125,12 +125,12 @@ decimal GetCartTotal(string cartId) {
   var cartTotal = 0M;
   var cart = Carts.Get(string userId); // Carts is ICartService
   var specialOffers = SpecialOffers.GetActive(); // etc.
-  foreach (var cartItem in cart.Items) {
-    var product = Products.Get(cartItem.ProductId);
-    var productPrice = Prices.Get(cartItem.ProductId);
+  foreach (var item in cart.Items) {
+    var product = Products.Get(item.ProductId);
+    var productPrice = Prices.Get(item.ProductId);
     cartTotal += item.Quantity * productPrice;
     cartTotal -= specialOffers
-      .Select(offer => offer.GetDiscount(product, price, cartItem.Quantity))
+      .Select(offer => offer.GetDiscount(product, price, item.Quantity))
       .Max();
   }
   return cartTotal;
