@@ -96,7 +96,10 @@ Kids, look what happens when you code 24/7!
 ![bg height:90%](./diagrams/inc-build/4.dio.svg)
 
 ---
-![bg height:90%](./diagrams/inc-build/final.dio.svg)
+![bg height:90%](./diagrams/inc-build/final1.dio.svg)
+
+---
+![bg height:90%](./diagrams/inc-build/final2.dio.svg)
 
 
 ---
