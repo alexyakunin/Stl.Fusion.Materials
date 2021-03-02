@@ -63,12 +63,12 @@ and <em>functional programming</em></li>
   <span class="hljs-keyword">var</span> cartTotal = <span class="hljs-number">0</span>M;
   <span class="hljs-keyword">var</span> cart = Carts.Get(<span class="hljs-built_in">string</span> userId); <span class="hljs-comment">// Carts is ICartService</span>
   <span class="hljs-keyword">var</span> specialOffers = SpecialOffers.GetActive(); <span class="hljs-comment">// etc.</span>
-  <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">var</span> cartItem <span class="hljs-keyword">in</span> cart.Items) {
-    <span class="hljs-keyword">var</span> product = Products.Get(cartItem.ProductId);
-    <span class="hljs-keyword">var</span> productPrice = Prices.Get(cartItem.ProductId);
+  <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">var</span> item <span class="hljs-keyword">in</span> cart.Items) {
+    <span class="hljs-keyword">var</span> product = Products.Get(item.ProductId);
+    <span class="hljs-keyword">var</span> productPrice = Prices.Get(item.ProductId);
     cartTotal += item.Quantity * productPrice;
     cartTotal -= specialOffers
-      .Select(offer =&gt; offer.GetDiscount(product, price, cartItem.Quantity))
+      .Select(offer =&gt; offer.GetDiscount(product, price, item.Quantity))
       .Max();
   }
   <span class="hljs-keyword">return</span> cartTotal;
