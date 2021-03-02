@@ -89,58 +89,95 @@ div.col2 .break {
 ---
 ![bg right:40%](./img/Let-me-explain.jpg)
 
-# How the hell this is relevant?
+# How the hell this is relevant to real-time?
 Kids, look what happens when you code 24/7!
 
 ---
-![bg height:90%](./diagrams/inc-build/4.dio.svg)
+# Imagine your app is a composition of functions
+
+```cs
+// UI
+string RenderAppUI() { 
+  // ...
+  uiBuilder.Append(RenderUserInfo(userId));
+  uiBuilder.Append(RenderCartTotal(cartId));
+  // ...
+  return uiBuilder.ToString();
+} 
+
+string RenderUserInfo(string userId) {
+  var user = UserServiceClient.GetUser(userId);
+  return $"<div class="user-info">user.Name</div>";
+}
+
+string RenderCartTotal(string cartId) {
+  var cartTotal = CartServiceClient.GetCartTotal(cartId);
+  return $"<div class="cart-total">Total: {cartTotal}$</div>";
+}
+```
+
+---
+# Imagine your app is a composition of functions
+
+```cs
+// Cart service on your server (*)
+decimal GetCartTotal(string cartId) {
+  var cartTotal = 0M;
+  var cart = Carts.Get(string userId); // Carts is ICartService
+  var specialOffers = SpecialOffers.GetActive(); // etc.
+  foreach (var cartItem in cart.Items) {
+    var product = Products.Get(cartItem.ProductId);
+    var productPrice = Prices.Get(cartItem.ProductId);
+    cartTotal += item.Quantity * productPrice;
+    cartTotal -= specialOffers
+      .Select(offer => offer.GetDiscount(product, price, cartItem.Quantity))
+      .Max();
+  }
+  return cartTotal;
+}
+```
+<footer>
+(*) Let's omit all minor issues for now &ndash; such as the fact it's non-async code.
+</footer>
+
+---
+![bg height:90%](./diagrams/inc-build/final2.dio.svg)
 
 ---
 ![bg height:90%](./diagrams/inc-build/final1.dio.svg)
 
 ---
-![bg height:90%](./diagrams/inc-build/final2.dio.svg)
-
+![bg height:90%](./diagrams/inc-build/4.dio.svg)
 
 ---
-# UI as a Composition of Functions
+<!-- _class: highlight center -->
+![bg](./img/Convergence.jpg)
 
-```cs
-// Client
-string RenderAppUI() { 
-  // Uses router, which ends up calling RenderUserName
-} 
+# </br></br></br></br></br></br></br></br><b>THEY CONVERGED!</b>
 
-string RenderUserName(string userId) {
-  var user = UserApiClient.GetUser(userId);
-  return $"<div>{user.Name}</div>";
-}
+---
+<!-- _class: highlight center -->
+![bg](black)
+![bg height:100%](./img/NoSpoon.jpg)
 
-// API controller
-UserModel GetUser(string userId) {
-  var user = UserRepository.Get(string userId);
-  return new UserModel(user.Id, user.Name, ...);
-}
+---
+<!-- _class: highlight -->
+# Why don't we write everything like this?
 
-// UserRepository
-User Get(string userId) { ... }
-```
+We'll hit every possible threshold:
+1. Recompute everything → **saturate CPU**
+2. Chatty client-server RPC → **saturate NIC**
+
+![bg right:43%](./img/GrumpyCat.jpg)
 
 ---
 <!-- _class: highlight invert-->
-# Why don't we use this approach?
+# Incremental Build remember you must!
 
-1. It's quite expensive to recompute everything on every update
-2. And quite time consuming, because a part of these functions require RPC.
-
----
-<!-- _class: highlight invert-->
-# But wait...
-
-1. It's quite expensive to recompute everything on every update
-   **Cache use you must?**
-2. And quite time consuming, because a part of these functions require RPC.
-   **Client-side cache use you must?**
+1. Recompute everything → saturate CPU
+   **May the Cache be with you?**
+2. Chatty client-server RPC → saturate NIC
+   **And the Client-Side Cache too?**
 
 ![bg brightness:0.2](./img/Yoda1.jpg)
 
@@ -152,7 +189,7 @@ User Get(string userId) { ... }
 
 means to store and reuse the results of computations executed in past.
 
-**Do we cache everything?**
+**Do we always cache everything?**
 
 ---
 # Caching as a Higher Order Function
@@ -178,17 +215,13 @@ var cachingGetUser = ToCaching(getUser);
 ```
 
 ---
-# A Small Problem*
+# One More Problem*
 
 ![bg right](./img/ShockedCat1.jpg)
 
 The code you saw works only when <tt>computer</tt> is a *pure function*.
 
 So you just saw a tiny example of vaporware.
-
-<footer>
-(*) Let's omit all minor issues for now &ndash; such as the fact it's non-async code.
-</footer>
 
 ---
 # Solutions*
