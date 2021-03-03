@@ -294,7 +294,7 @@ static TOut Use()
 ```
 
 ---
-# Invalidation
+## Invalidation = Marking `Computed` as Inconsistent / Dirty
 
 ```cs
 public void Invalidate() 
@@ -355,13 +355,14 @@ void Update(Product product)
 
 ---
 <!-- _class: highlight invert-->
-# Superpowers acquired: 
+# Superpowers Acquired:
+
 - *Everything is cached*
   and *(re)computed incrementally*
 - Dependencies are *captured automatically*
 - So we *invalidate just what's produced externally!*
 
-![bg right:50%](./img/SuperSquirrel.gif)
+![bg right:48%](./img/SuperSquirrel.gif)
 
 ---
 <!-- _class: highlight -->
@@ -391,7 +392,7 @@ Making DI container to provide a proxy implementing such decorators for certain 
 ![bg left:50%](./img/YouDontNeedIt.jpg)
 
 ---
-## The Incrementally-Build-Everything Decorator ⚒️
+# ⚒️ Incrementally-Build-Everything Decorator
 
 "So, tell me, my little one-eyed one, on what poor, pitiful, defenseless planet has my monstrosity been unleashed?"
 
@@ -402,7 +403,7 @@ Making DI container to provide a proxy implementing such decorators for certain 
 
 ---
 <!-- _class: highlight invert -->
-# So can we use it?
+# Can I use it now?
 
 Not quite:
 - No async/await, thread-safety
@@ -413,18 +414,25 @@ Not quite:
 > Boring technical problems!
 > &ndash; Elon Musk*
 
-Seriously, let me show all of my slides!
+Let me show 50+ more slides first!
 
 ![bg left:50%](./img/MuskWeed.jpg)
 <footer>(*) Pretty sure he said this at least once
 
 ---
-<!-- _class: center -->
-### What about eventual consistency?
+<!-- _class: center invert highlight-->
+<h1 style="color: white">
+</br>
+</br>
+</br>
+</br>
+What about <em>eventual consistency</em>?</br>
+What about <em>React</em> and <em>Blazor</em>?</br>
+</br>
+We need to go deeper!
+</h1>
 
-### What about React and Blazor?
-
-![bg left:53%](./img/DeepEnough.jpg)
+![bg top:50%](./img/Inception.gif)
 
 ---
 <!-- _class: highlight invert -->
@@ -448,37 +456,51 @@ He will close all of his tasks-in-slow-progress *eventually*.
 
 ---
 <!-- _class: center -->
-<div>
+<h3>
 Imagine two <b>eventually consistent</b> systems -</br>
 what's their key difference?
-</div>
+</h3>
 
 <div class="col2">
-<h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#1</h1>
+<h2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#1</h1>
 <div class="break"></div>
-<h1>#2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h1>
+<h2>#2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h1>
+<br/>
 </div>
 
 ![bg fit](./img/TwoDogs.jpg)
 
 ---
-![bg](./img/Caching.gif)
+<!-- _class:  -->
+![bg height:90%](./diagrams/consistency/0.dio.svg)
 
 ---
-# I'm in the real-time business. How this is relevant?
-<!-- _class: highlight invert -->
+<!-- _class:  -->
+![bg height:90%](./diagrams/consistency/1.dio.svg)
 
-Real-time updates require you to:
+---
+<!-- _class:  -->
+![bg height:90%](./diagrams/consistency/2.dio.svg)
+
+---
+<!-- _class: center invert -->
+![bg right:35%](./img/HaveASeat.jpg)
+## How this is relevant to real-time, again?
+
+---
+<!-- _class: highlight invert -->
+# Real-time updates require you to...
+
 - Know when a result of a function changes
   **Invalidate all the things!**
 - Recompute new results quickly
   **Incrementally build all the things!**
 - Send them over the network
-  *.NET all the things?
+  **Blazorise and AspNetCorize all the things?**
 - Ideally, as a compact diff to the prev. state
   **Diff can be computed in `O(diffSize)` for immutable types (<a href="https://medium.com/swlh/fusion-current-state-and-upcoming-features-88bc4201594b?source=friends_link&sk=375290c4538167fe99419a744f3d42d5">details</a>).</span>**
 
-![bg right:40%](./img/AllTheThings.jpg)
+![bg left:40%](./img/AllTheThings.jpg)
 
 ---
 <!-- _class: highlight invert -->
@@ -486,8 +508,7 @@ Real-time updates require you to:
 &ndash; Phil Karlton
 
 </br>
-
-Naming problem is of the same scale as the Ultimate Question of Life, the Universe, and Everything, so... Good we've made a meaningful progress with a simpler one!
+See, we've made a meaningful progress with a simpler one!
 
 <footer>
 A  collection of other "two things in computer science" memes: <a href="https://martinfowler.com/bliki/TwoHardThings.html">https://martinfowler.com/bliki/TwoHardThings.html</a>
@@ -516,11 +537,16 @@ Coincidentally, <a href="https://twitter.com/StevenSanderson">Mr. Sanderson</a> 
 ![bg fit](./img/Blazor.jpg)
 
 ---
+<!-- _class: highlight invert -->
 # Blazor &ndash; cons:
 
 - No JIT / AOT compilation yet - in fact, everything is interpreted
+  **.NET 6, don't disappoint us!**
 - It's .NET, so even a tiny project loads a fair number of assemblies.
   There is linking with tree shaking, but even it leaves 2…4 MB of .dlls.
+  **Size doesn't matter? The bigger - the better?**
+
+Sorry, no image here.
 
 ---
 # Blazor &ndash; pros:
@@ -532,7 +558,7 @@ Coincidentally, <a href="https://twitter.com/StevenSanderson">Mr. Sanderson</a> 
 - [Blazor Server](https://docs.microsoft.com/en-us/aspnet/core/blazor/hosting-models?view=aspnetcore-5.0) helps to mitigate this by further letting your UI code to run on server side (e.g. for slow mobile devices). The JS payload is tiny in this case.
 - AOT and threads are expected in 2021. 
   **JS won't get threads - ever. CPU core count is increasing. So I bet in 1-2 years WASM (and Blazor) will be #1 choice for truly responsive UI.**
-- There is experimental [Blazor Mobile](https://docs.microsoft.com/en-us/mobile-blazor-bindings/): like [React Native](https://reactnative.dev/), but relying on Blazor compontens and native .NET runtime on each platform.
+- [Blazor Desktop](https://github.com/dotnet/aspnetcore/issues/27217) is upcoming, there is experimental [Blazor Mobile](https://docs.microsoft.com/en-us/mobile-blazor-bindings/) &ndash; Blazor looks more and more as the future of any UI stack on .NET.
 
 ---
 ## Blazor Components - UI markup example
