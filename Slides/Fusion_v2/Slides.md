@@ -122,7 +122,8 @@ string RenderCartTotal(string cartId) {
 
 ```cs
 // Server-side ICartService implementation (*)
-decimal GetCartTotal(string cartId) {
+decimal GetCartTotal(string cartId) 
+{
   var cartTotal = 0M;
   var cart = Carts.Get(string userId); // Carts is ICartService
   var specialOffers = SpecialOffers.GetActive(); // etc.
@@ -317,7 +318,8 @@ public static Disposable Computed.Invalidate()
 
 ```cs
 // IProductService code
-void Update(Product product) {
+void Update(Product product) 
+{
   var oldProduct = ProductRepo.Get(product);
   ProductRepo.Update(product);
 
@@ -374,16 +376,6 @@ The original functions weren't changed!
 </footer>
 
 ---
-## The Incrementally-Build-Everything Decorator ⚒️
-
-"So, tell me, my little one-eyed one, on what poor, pitiful, defenseless planet has my monstrosity been unleashed?"
-
-&ndash; [Dr. Jumba Jookiba](https://disney.fandom.com/wiki/Jumba_Jookiba), #1 scientist in my list
-
-
-![bg left:50%](./img/Stitch1.gif)
-
----
 # Do we really need delegates to decorate them?
 
 We don't. 
@@ -392,20 +384,35 @@ All modern .NET apps rely on Dependency Injection.
 
 Making DI container to provide a proxy implementing such decorators for certain types is a 🍰
 
-![bg right:50%](./img/YouDontNeedIt.jpg)
+![bg left:50%](./img/YouDontNeedIt.jpg)
+
+---
+## The Incrementally-Build-Everything Decorator ⚒️
+
+"So, tell me, my little one-eyed one, on what poor, pitiful, defenseless planet has my monstrosity been unleashed?"
+
+&ndash; [Dr. Jumba Jookiba](https://disney.fandom.com/wiki/Jumba_Jookiba), #1 scientist in my list
+
+
+![bg right:50%](./img/Stitch1.gif)
 
 ---
 <!-- _class: highlight invert -->
-# What else is missing?
+# So can we use it?
 
-- Async, thread-safety
-- GC-friendly cache and `UsedBySet`
-- Actual impl. of `Computed`
+Not quite:
+- No async/await, thread-safety
+- We need GC-friendly cache and `UsedBySet`
+- No actual impl. of `Computed`
 - Etc.
 
-*We'll get back to this later.*
+> Boring technical problems!
+> &ndash; Elon Musk*
 
-![bg left:50%](./img/Buzz2.jpg)
+Seriously, let me show all of my slides!
+
+![bg left:50%](./img/MuskWeed.jpg)
+<footer>(*) Pretty sure he said this at least once
 
 ---
 <!-- _class: center -->

@@ -59,7 +59,8 @@ and <em>functional programming</em></li>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="11" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h1>Imagine your app is a composition of functions...</h1>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-comment">// Server-side ICartService implementation (*)</span>
-<span class="hljs-function"><span class="hljs-built_in">decimal</span> <span class="hljs-title">GetCartTotal</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> cartId</span>)</span> {
+<span class="hljs-function"><span class="hljs-built_in">decimal</span> <span class="hljs-title">GetCartTotal</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> cartId</span>)</span> 
+{
   <span class="hljs-keyword">var</span> cartTotal = <span class="hljs-number">0</span>M;
   <span class="hljs-keyword">var</span> cart = Carts.Get(<span class="hljs-built_in">string</span> userId); <span class="hljs-comment">// Carts is ICartService</span>
   <span class="hljs-keyword">var</span> specialOffers = SpecialOffers.GetActive(); <span class="hljs-comment">// etc.</span>
@@ -213,7 +214,8 @@ and <em>functional programming</em></li>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="28" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h2>Plan <img class="emoji" draggable="false" alt="🦄" src="https://twemoji.maxcdn.com/2/svg/1f984.svg" data-marp-twemoji=""/>: Example</h2>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-comment">// IProductService code</span>
-<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Update</span>(<span class="hljs-params">Product product</span>)</span> {
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Update</span>(<span class="hljs-params">Product product</span>)</span> 
+{
   <span class="hljs-keyword">var</span> oldProduct = ProductRepo.Get(product);
   ProductRepo.Update(product);
 
@@ -256,26 +258,32 @@ The original functions weren't changed!</p>
   </div>
 </footer>
 </section>
-</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;--marpit-advanced-background-split:50%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="left"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/Stitch1.gif&quot;);"></figure></div></section></foreignObject><foreignObject width="50%" height="720" x="50%"><section id="35" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;--marpit-advanced-background-split:50%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="left">
-<h2>The Incrementally-Build-Everything Decorator <img class="emoji" draggable="false" alt="⚒️" src="https://twemoji.maxcdn.com/2/svg/2692.svg" data-marp-twemoji=""/></h2>
-<p>&quot;So, tell me, my little one-eyed one, on what poor, pitiful, defenseless planet has my monstrosity been unleashed?&quot;</p>
-<p>– <a href="https://disney.fandom.com/wiki/Jumba_Jookiba">Dr. Jumba Jookiba</a>, #1 scientist in my list</p>
-</section>
-</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;--marpit-advanced-background-split:50%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="right"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/YouDontNeedIt.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="50%" height="720"><section id="36" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;--marpit-advanced-background-split:50%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="right">
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;--marpit-advanced-background-split:50%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="left"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/YouDontNeedIt.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="50%" height="720" x="50%"><section id="35" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;--marpit-advanced-background-split:50%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="left">
 <h1>Do we really need delegates to decorate them?</h1>
 <p>We don't.</p>
 <p>All modern .NET apps rely on Dependency Injection.</p>
 <p>Making DI container to provide a proxy implementing such decorators for certain types is a <img class="emoji" draggable="false" alt="🍰" src="https://twemoji.maxcdn.com/2/svg/1f370.svg" data-marp-twemoji=""/></p>
 </section>
-</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;--marpit-advanced-background-split:50%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="left"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/Buzz2.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="50%" height="720" x="50%"><section id="37" data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;--marpit-advanced-background-split:50%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="left">
-<h1>What else is missing?</h1>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;--marpit-advanced-background-split:50%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="right"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/Stitch1.gif&quot;);"></figure></div></section></foreignObject><foreignObject width="50%" height="720"><section id="36" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;--marpit-advanced-background-split:50%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="right">
+<h2>The Incrementally-Build-Everything Decorator <img class="emoji" draggable="false" alt="⚒️" src="https://twemoji.maxcdn.com/2/svg/2692.svg" data-marp-twemoji=""/></h2>
+<p>&quot;So, tell me, my little one-eyed one, on what poor, pitiful, defenseless planet has my monstrosity been unleashed?&quot;</p>
+<p>– <a href="https://disney.fandom.com/wiki/Jumba_Jookiba">Dr. Jumba Jookiba</a>, #1 scientist in my list</p>
+</section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;--marpit-advanced-background-split:50%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="left"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/MuskWeed.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="50%" height="720" x="50%"><section id="37" data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;--marpit-advanced-background-split:50%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="left">
+<h1>So can we use it?</h1>
+<p>Not quite:</p>
 <ul>
-<li>Async, thread-safety</li>
-<li>GC-friendly cache and <code>UsedBySet</code></li>
-<li>Actual impl. of <code>Computed</code></li>
+<li>No async/await, thread-safety</li>
+<li>We need GC-friendly cache and <code>UsedBySet</code></li>
+<li>No actual impl. of <code>Computed</code></li>
 <li>Etc.</li>
 </ul>
-<p><em>We'll get back to this later.</em></p>
+<blockquote>
+<p>Boring technical problems!<br />
+– Elon Musk*</p>
+</blockquote>
+<p>Seriously, let me show all of my slides!</p>
+<footer>(*) Pretty sure he said this at least once
 </section>
 </foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="center" data-theme="default" class="center" style="--class:center;--theme:default;--marpit-advanced-background-split:53%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="left"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/DeepEnough.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="47%" height="720" x="53%"><section id="38" data-class="center" data-theme="default" class="center" style="--class:center;--theme:default;--marpit-advanced-background-split:53%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="left">
 <h3>What about eventual consistency?</h3>
