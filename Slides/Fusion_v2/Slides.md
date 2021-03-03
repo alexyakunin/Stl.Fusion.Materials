@@ -163,7 +163,7 @@ decimal GetCartTotal(string cartId) {
 
 ---
 <!-- _class: highlight -->
-# Why don't we write everything like this?
+# Why don't we write everything this way?
 
 We'll hit every possible threshold:
 1. Recompute everything → **saturate CPU**
