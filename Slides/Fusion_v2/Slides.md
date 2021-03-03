@@ -17,6 +17,7 @@ section.center {
   text-align: center;
 }
 
+
 section.video {
   padding: 0px;
   margin: 0px;
@@ -61,7 +62,7 @@ div.col2 .break {
 ![bg right:40%](./img/DogOnFire.jpg)
 
 ## You'll learn:
-- What do you *really need* to build *real-time apps*?
+- What do you *really need* to build a *real-time web app*?
 - How real-time is related to *eventual consistency*, *caching*,
   and *functional programming*
 - What really makes *React and Blazor* so awesome?
@@ -120,7 +121,7 @@ string RenderCartTotal(string cartId) {
 # Imagine your app is a composition of functions...
 
 ```cs
-// Cart service on your server (*)
+// Server-side ICartService implementation (*)
 decimal GetCartTotal(string cartId) {
   var cartTotal = 0M;
   var cart = Carts.Get(string userId); // Carts is ICartService
@@ -137,7 +138,7 @@ decimal GetCartTotal(string cartId) {
 }
 ```
 <footer>
-(*) Let's omit all minor issues for now &ndash; such as the fact it's non-async code.
+(*) Let's ignore such minor issues as the absence of async code &ndash; for now.
 </footer>
 
 ---
@@ -182,7 +183,7 @@ We'll hit every possible threshold:
 ![bg brightness:0.2](./img/Yoda1.jpg)
 
 ---
-<!-- _class: highlight invert-->
+<!-- _class: highlight invert -->
 # To Cache
 
 ![bg right](./img/ShockedDog.jpg)
@@ -192,36 +193,47 @@ means to store and reuse the results of computations executed in past.
 **Do we always cache everything?**
 
 ---
+![bg width:90%](./diagrams/caching-decorator/1.dio.svg)
+<header>
+<h1>Caching as a Higher Order Function</h1>
+</header>
+
+---
+![bg height:90%](./diagrams/caching-decorator/2.dio.svg)
+<header>
+<h1>Caching as a Higher Order Function</h1>
+</header>
+
+---
 # Caching as a Higher Order Function
 
 ```cs
-Func<TIn, TOut> ToCaching<TIn, TOut>(Func<TIn, TOut> computer)
+Func<TIn, TOut> ToCaching<TIn, TOut>(Func<TIn, TOut> fn)
   => input => {
-    var key = CreateKey(computer, input);
+    var key = Cache.CreateKey(fn, input);
+    if (Cache.TryGet(key, out var output)) return output;
+    lock (Cache.Lock(key)) { // Double-check locking
+      if (Cache.TryGet(key, out output)) return output;
 
-    if (TryGetCached(key, out var output)) return output;
-    lock (GetLock(key)) { // Double-check locking
-      if (TryGetCached(key, out var output)) return output;
+      output = fn(input);
 
-      output = computer(input);
-      StoreCached(key, output);
-
+      Cache[key] = output;
       return output;
     }
   }
 
-var getUser = (Func<long, User>) (userId => UserRepository.Get(userId));
-var cachingGetUser = ToCaching(getUser);
+var cachingGetCartTotal = ToCaching(Carts.GetCartTotal);
+var cartTotal = cachingGetCartTotal.Invoke("cart1");
 ```
 
 ---
-# One More Problem*
+# A Tiny Problem
 
-![bg right](./img/ShockedCat1.jpg)
+![bg right:38%](./img/ValentinesDay.jpg)
 
-The code you saw works only when <tt>computer</tt> is a *pure function*.
+To make it work, <tt>fn</tt> must be a **pure function**.
 
-So you just saw a tiny example of vaporware.
+⇒ You saw a Vaporware Version™ of <tt>ToCaching</tt>.
 
 ---
 # Solutions*
@@ -231,7 +243,7 @@ So you just saw a tiny example of vaporware.
 <p><img src="./img/Hell.gif" width="100%"></p>
 
 <div class="break"></div>
-<p><b>Plan 🙀:</b> Implement dependency tracking + cascading invalidation </p>
+<p><b>Plan 🦄:</b> Add dependency tracking + cascading invalidation</p>
 <p><img src="./img/Chance.jpg" width="100%"></p>
 </div>
 
@@ -240,148 +252,117 @@ So you just saw a tiny example of vaporware.
 </footer>
 
 ---
-# Plan 🙀: Caching + Dependency Tracking + Invalidation
+## Plan 🦄: Add Dependency Tracking + Cascading Invalidation
 
 ```cs
-Func<TIn, TOut> ToAwesome<TIn, TOut>(Func<TIn, TOut> computer)
+Func<TIn, TOut> ToAwesome<TIn, TOut>(Func<TIn, TOut> fn)
   => input => {
-    var key = CreateKey(computer, input);
-    if (TryGetCached(key, out var computed) || Computed.IsInvalidating) // [ThreadStatic]
-      return computed.UseOrInvalidate();
-    lock (GetLock(key)) { 
-      if (TryGetCached(key, out var computed)) 
-        return computed.Use();
-      
-      var oldCurrent = Computed.Current; // [ThreadStatic]
-      Computed.Current = computed = new Computed(computer, input, key);
-      try {
-        computed.Value = computer(input);
-      }
-      catch (Exception error) {
-        computed.Error = error;
-      }
-      finally {
-        Computed.Current = oldCurrent;
-      }
-      
-      StoreCached(key, computed);
-      return computed.Use();
+    var key = Cache.CreateKey(fn, input);
+    if (Cache.TryGet(key, out var computed)) return computed.Use();
+    lock (Cache.Lock(key)) { // Double-check locking
+      if (Cache.TryGet(key, out computed)) return  computed.Use();
+
+      computed = new Computed(fn, input, key);
+      using (Computed.ChangeCurrent(computed))
+        computed.Value = fn(input);
+
+      Cache[key] = computed;
+      return computed.Value;
     }
   }
 ```
 
 ---
-# `Computed.Use()` = dependency tracking
+# Dependency Capture
 
 ```cs
-static TOut Use<TIn, TOut>(this Computed<TIn, TOut> computed)
+static TOut Use()
 {
-  Computed.Current.AddDependency(computed);
-  return computed.Value;
-}
-
-static TOut UseOrInvalidate<TIn, TOut>(this Computed<TIn, TOut>? computed)
-{
-  if (Computed.IsInvalidating) { // [ThreadStatic]
-    // Invalidation mode is on, so just invalidate & don't compute anything!
-    computed?.Invalidate(); 
+  if (Computed.IsInvalidating) { // Will explain this later
+    Invalidate(); 
     return default;
   }
-  return computed.Use();
+  // Use = register as a dependency + "unwrap" the Value
+  Computed.Current.AddDependency(this);
+  return Value;
 }
 ```
 
 ---
-# What is invalidation / `Computed.Invalidate()`?
+# Invalidation
 
 ```cs
 public void Invalidate() 
 {
-  if (State == State.Invalidated) return;
-  lock (this) { // Double-check locking
-    if (State == State.Invalidated) return;
-    State = State.Invalidated;
-    RemoveCached(Key);
-    InvalidateDependants(); // Calls Invalidate() on dependants
-    OnInvalidated();
-  }
+  if (ConsistencyState.Invalidated == Interlocked.Exchange(
+      ref _state, ConsistencyState.Invalidated))
+    return;
+  Cache.Remove(Key);
+  foreach (var usedBy in UsedBySet) // Dependants
+    usedBy.Invalidate();
+  OnInvalidated();
 }
-```
 
----
-# Invalidation mode: call to invalidate the call result!
-```cs
-static void Computed.Invalidate(Action action) 
+public static Disposable Computed.Invalidate()
 {
   var oldIsInvalidating = Computed.IsInvalidating;
   Computed.IsInvalidating = true;
-  try {
-    action();
-  }
-  finally {
-    Computed.IsInvalidating = oldIsInvalidating;
+  return Disposable.New(() => 
+    Computed.IsInvalidating = oldIsInvalidating);
+}
+```
+
+---
+## Plan 🦄: Example
+
+```cs
+// IProductService code
+void Update(Product product) {
+  var oldProduct = ProductRepo.Get(product);
+  ProductRepo.Update(product);
+
+  // Invalidation logic
+  using (Computed.Invalidate()) {
+    Get(product.Id);
+    Count();
+    if (oldProduct.IsFeatured || product.IsFeatured)
+      GetFeatured();
   }
 }
 ```
 
 ---
-# Caching + Dependency Tracking Example
+![bg height:90%](./diagrams/invalidation/1.dio.svg)
+<footer><h2>Initial state</h2></footer>
 
-```cs
-var counters = new Dictionary<string, int>();
- 
-// Dependency
-var getCounter = ToAwesome((Func<string, int>) (key
-  => counters.GetValueOrDefault(key)));
+---
+![bg height:90%](./diagrams/invalidation/2.dio.svg)
+<footer><h2>Invalidate Products.Get("carrot")</h2></footer>
 
-// Dependent function
-var getCounterText = ToAwesome((Func<long, string>) (key
-  => $"Count: {GetCounter(key)}"));
+---
+![bg height:90%](./diagrams/invalidation/4.dio.svg)
+<footer><h2>Invalidate Prices.Get("apple")</h2></footer>
 
-WriteLine(getCounterText("A")); // "Count: 0" - invokes both delegates
-WriteLine(getCounterText("A")); // "Count: 0" - cache hit for getCounterText("A")
-
-counters["A"] = 1;
-Computed.Invalidate(() => getCounter("A")) // Invalidates both cached values
-WriteLine(getCounterText("A")); // "Count: 1" - invokes both delegates again
-```
+---
+![bg height:90%](./diagrams/invalidation/5.dio.svg)
+<footer><h2>Call SpecialOffers.GetActive()</h2></footer>
 
 ---
 <!-- _class: highlight invert-->
-# Our new superpowers:
-* *Call result caching*
-* *Dependency tracking*
-* *The same value is never computed concurrently*
+# Superpowers acquired: 
+- *Everything is cached*
+  and *(re)computed incrementally*
+- Dependencies are *captured automatically*
+- So we *invalidate just what's produced externally!*
 
-And it does this *without changing neither the signature, nor the implementation* of a function it gets!
-
-> "So, tell me, my little one-eyed one, on what poor, pitiful, defenseless planet has my monstrosity been unleashed?"
-> &ndash; [Dr. Jumba Jookiba](https://disney.fandom.com/wiki/Jumba_Jookiba), #1 scientist in my list
-
-
-![bg right:40%](./img/Stitch1.gif)
+![bg right:50%](./img/SuperSquirrel.gif)
 
 ---
-<!-- _class: highlight invert-->
-# The Incrementally-Build-EVERYTHING Decorator!
-
-Let's remember where we started:
-
-1. It's quite expensive to recompute everything on every update
-   **Cache use you must?**
-   * But what if some of our functions are impure?
-     *Not a problem this is anymore!*
-2. And quite time consuming, because a part of these functions require RPC.
-   **Client-side cache use you must?**
-   *We'll get back to this part later.*
-
-![bg brightness:0.2](./img/Yoda1.jpg)
-
----
-![bg](./img/IncrementalBuild.gif)
-
----
+<!-- _class: highlight -->
 ![bg](./img/InvisibleEverything.jpg)
+
+We achieved this by **decoration** &ndash;
+The original functions weren't changed! 
 
 <footer style="width: 100%; text-align: center;">
   <div style="font-size: 48px; color: #fff">
@@ -393,22 +374,38 @@ Let's remember where we started:
 </footer>
 
 ---
-# Do we really need this syntax with delegates?
+## The Incrementally-Build-Everything Decorator ⚒️
 
-We don't. It's actually much more convenient to apply this decorator to virtual methods tagged by a special attribute by generating a proxy type in runtime that overrides them.
+"So, tell me, my little one-eyed one, on what poor, pitiful, defenseless planet has my monstrosity been unleashed?"
+
+&ndash; [Dr. Jumba Jookiba](https://disney.fandom.com/wiki/Jumba_Jookiba), #1 scientist in my list
+
+
+![bg left:50%](./img/Stitch1.gif)
+
+---
+# Do we really need delegates to decorate them?
+
+We don't. 
+
+All modern .NET apps rely on Dependency Injection.
+
+Making DI container to provide a proxy implementing such decorators for certain types is a 🍰
 
 ![bg right:50%](./img/YouDontNeedIt.jpg)
 
 ---
+<!-- _class: highlight invert -->
 # What else is missing?
 
-- Actual implementation of a "box"
-- Async support
-- GC-friendly "box" cache
-- GC-friendly refs to dependants
-- A lot more. But slides are to show the bright side of things, right?
+- Async, thread-safety
+- GC-friendly cache and `UsedBySet`
+- Actual impl. of `Computed`
+- Etc.
 
-![bg right:45%](./img/Buzz2.jpg)
+*We'll get back to this later.*
+
+![bg left:50%](./img/Buzz2.jpg)
 
 ---
 <!-- _class: center -->
