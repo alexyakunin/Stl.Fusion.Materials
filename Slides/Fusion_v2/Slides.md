@@ -77,15 +77,19 @@ div.col2 .break {
 
 ---
 ![bg height:90%](./diagrams/inc-build/1.dio.svg)
+<footer><h2>Initial state</h2></footer>
 
 ---
 ![bg height:90%](./diagrams/inc-build/2.dio.svg)
+<footer><h2>Edit "Services.cs"</h2></footer>
 
 ---
 ![bg height:90%](./diagrams/inc-build/3.dio.svg)
+<footer><h2>Artifacts to rebuild</h2></footer>
 
 ---
 ![bg height:90%](./diagrams/inc-build/4.dio.svg)
+<footer><h2>Build "App.exe"</h2></footer>
 
 ---
 ![bg right:40%](./img/Let-me-explain.jpg)
