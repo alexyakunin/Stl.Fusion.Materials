@@ -17,7 +17,6 @@ section.center {
   text-align: center;
 }
 
-
 section.video {
   padding: 0px;
   margin: 0px;
@@ -55,7 +54,6 @@ div.col2 .break {
 ### </br>Twitter can do it,</br>so you can do it too!
 
 ![bg](./img/TwitterMinusOneLike.jpg)
-
 
 ---
 <!-- _class: highlight invert -->
@@ -455,10 +453,21 @@ He will close all of his tasks-in-slow-progress *eventually*.
 ![bg brightness:0.4](./img/Dinosaurs.jpg)
 
 ---
+<!-- _class: invert center -->
+<h3></br>
+What is worse than</br>
+"eventually consistent"?</br>
+Permanently inconsistent.
+</h3>
+
+![bg](./img/TwitterMinusOneLike.jpg)
+
+---
 <!-- _class: center -->
 <h3>
-Imagine two <b>eventually consistent</b> systems -</br>
-what's their key difference?
+</br>
+Two eventually consistent systems were left at your doorstep.</br>
+Which one you should marry?
 </h3>
 
 <div class="col2">
@@ -515,23 +524,27 @@ A  collection of other "two things in computer science" memes: <a href="https://
 </footer>
 
 ---
+<!-- _class: highlight center -->
 ![bg fit](./img/BlazorAndReact.jpg)
+<header><h1>WHAT ABOUT...</h1></header>
 
 ---
 # Blazor is:
 
-- .NET running in your browser
-- Nearly 100% compatibility with .NET 5! 
-  - `Expression.Compile(...)`, Reflection, etc. works
-  - No threads yet, but `Task<T>` works
-- Blazor UI Components ≃ React Components, but with .NET bells and whistles!
+- .NET running in your browser on top of WASM!
+- 100% compatible with .NET 5: 
+  - `Expression.Compile(...)`, Reflection, `Task<T>`, etc. &ndash; it just works!
+  - Nearly all of your managed code will run on Blazor too.
+- (Blazor Components, React Components) ≍ 
+  (🦄,🦌) &ndash; same, but better! 
+  **Oh, this is so Microsoftey!**
 
 <footer>
 Blazor fans, see the image of the Blazor God!</br>
 Coincidentally, <a href="https://twitter.com/StevenSanderson">Mr. Sanderson</a> is also the creator of <a href="https://knockoutjs.com/">Knockout.js.</a>
 </footer>
 
-![bg right:40%](./img/Steve.jpg)
+![bg right:35%](./img/Steve.jpg)
 
 ---
 ![bg fit](./img/Blazor.jpg)
@@ -540,25 +553,13 @@ Coincidentally, <a href="https://twitter.com/StevenSanderson">Mr. Sanderson</a> 
 <!-- _class: highlight invert -->
 # Blazor &ndash; cons:
 
-- No JIT / AOT compilation yet - in fact, everything is interpreted
+- No JIT / AOT yet, MSIL is interpreted. 
   **.NET 6, don't disappoint us!**
-- It's .NET, so even a tiny project loads a fair number of assemblies.
-  There is linking with tree shaking, but even it leaves 2…4 MB of .dlls.
-  **Size doesn't matter? The bigger - the better?**
+- 1🧵 &ndash; but **JS developers live with this 💩 for 25 years, SO WE CAN!**
+- Even small projects download 2…4 MB of .NET .dlls (gzipped!) after linking with tree shaking.
+  **Cmon, it's 21 century &ndash; size doesn't matter! At least online, right?**
 
-Sorry, no image here.
-
----
-# Blazor &ndash; pros:
-<!-- _class: highlight invert -->
-
-- .NET = so many ready-to-use NuGet packages + no need for JS, TS, etc.
-- .dlls are loaded once & stored in application cache. 
-  They aren't updated even on `F5` &ndash; unless you explicitly clear it.
-- [Blazor Server](https://docs.microsoft.com/en-us/aspnet/core/blazor/hosting-models?view=aspnetcore-5.0) helps to mitigate this by further letting your UI code to run on server side (e.g. for slow mobile devices). The JS payload is tiny in this case.
-- AOT and threads are expected in 2021. 
-  **JS won't get threads - ever. CPU core count is increasing. So I bet in 1-2 years WASM (and Blazor) will be #1 choice for truly responsive UI.**
-- [Blazor Desktop](https://github.com/dotnet/aspnetcore/issues/27217) is upcoming, there is experimental [Blazor Mobile](https://docs.microsoft.com/en-us/mobile-blazor-bindings/) &ndash; Blazor looks more and more as the future of any UI stack on .NET.
+![bg right:40%](./img/React-Vs-Blazor.jpg)
 
 ---
 ## Blazor Components - UI markup example
