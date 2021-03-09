@@ -379,13 +379,16 @@ The original functions weren't changed!
 </footer>
 
 ---
+<!-- _class: highlight invert -->
 # Do we really need delegates to decorate them?
 
 We don't. 
 
 All modern .NET apps rely on Dependency Injection.
 
-Making DI container to provide a proxy implementing such decorators for certain types is a 🍰
+Making DI container to provide a proxy implementing such decorators is a 🍰
+
+So it can be <span style="opacity: 0.05">absolutely transparent!</span>
 
 ![bg left:50%](./img/YouDontNeedIt.jpg)
 
@@ -395,7 +398,6 @@ Making DI container to provide a proxy implementing such decorators for certain 
 "So, tell me, my little one-eyed one, on what poor, pitiful, defenseless planet has my monstrosity been unleashed?"
 
 &ndash; [Dr. Jumba Jookiba](https://disney.fandom.com/wiki/Jumba_Jookiba), #1 scientist in my list
-
 
 ![bg right:50%](./img/Stitch1.gif)
 
@@ -443,21 +445,11 @@ He will close all of his tasks-in-slow-progress *eventually*.
 ![bg brightness:0.4](./img/Zootopia.jpg)
 
 ---
-<!-- _class: highlight invert -->
-<h2>
-&ndash; Bro, do you have a cache?</br>
-&ndash; I do - but it's so tiny...</br>
-&ndash; We are doomed! The state is eventually consistent!
-</h2>
-
-![bg brightness:0.4](./img/Dinosaurs.jpg)
-
----
 <!-- _class: invert center -->
 <h3></br>
 What is worse than</br>
-"eventually consistent"?</br>
-Permanently inconsistent.
+eventual consistency?</br>
+Permanent inconsistency.
 </h3>
 
 ![bg](./img/TwitterMinusOneLike.jpg)
@@ -505,7 +497,7 @@ Which one you should marry?
 - Recompute new results quickly
   **Incrementally build all the things!**
 - Send them over the network
-  **Blazorise and AspNetCorize all the things?**
+  **Blazorise and AspNetCorise all the things?**
 - Ideally, as a compact diff to the prev. state
   **Diff can be computed in `O(diffSize)` for immutable types (<a href="https://medium.com/swlh/fusion-current-state-and-upcoming-features-88bc4201594b?source=friends_link&sk=375290c4538167fe99419a744f3d42d5">details</a>).</span>**
 
@@ -517,7 +509,7 @@ Which one you should marry?
 &ndash; Phil Karlton
 
 </br>
-See, we've made a meaningful progress with a simpler one!
+See, we've made a meaningful progress with an easy one!
 
 <footer>
 A  collection of other "two things in computer science" memes: <a href="https://martinfowler.com/bliki/TwoHardThings.html">https://martinfowler.com/bliki/TwoHardThings.html</a>
@@ -525,7 +517,7 @@ A  collection of other "two things in computer science" memes: <a href="https://
 
 ---
 <!-- _class: highlight center -->
-![bg fit](./img/BlazorAndReact.jpg)
+![bg](./img/BlazorAndReact.jpg)
 <header><h1>WHAT ABOUT...</h1></header>
 
 ---
@@ -553,97 +545,113 @@ Coincidentally, <a href="https://twitter.com/StevenSanderson">Mr. Sanderson</a> 
 <!-- _class: highlight invert -->
 # Blazor &ndash; cons:
 
+- 1🧵 for now &ndash; but **JS developers live with this 💩 for 25 years, SO WE CAN!**
 - No JIT / AOT yet, MSIL is interpreted. 
-  **.NET 6, don't disappoint us!**
-- 1🧵 &ndash; but **JS developers live with this 💩 for 25 years, SO WE CAN!**
-- Even small projects download 2…4 MB of .NET .dlls (gzipped!) after linking with tree shaking.
+  **.NET 6, don't disappoint us! 
+  10🧵 x 20x AOT ≃ 200x🚀**
+- Even a small project downloads 2…4 MB of .NET .dlls (gzipped!) - and that's after linking with tree shaking.
   **Cmon, it's 21 century &ndash; size doesn't matter! At least online, right?**
 
 ![bg right:40%](./img/React-Vs-Blazor.jpg)
 
 ---
-## Blazor Components - UI markup example
+## React Component - UI markup example
+
+```js
+class App extends React.Component {
+  render = () => 
+    <div class="main">
+      <Welcome name="World" />
+      <Clock />
+    </div>
+}
+```
+
+See it on CodePen: https://codepen.io/alexyakunin/pen/xxRzgaK?editors=1111
+
+---
+## React Component - (de?)compiled version
+
+```js
+class App extends React.Component {
+  constructor(...args) {
+    super(...args);
+    _defineProperty(this, "render", () =>
+        // render() generates Virtual DOM
+        React.createElement("div", { class: "main" },
+          React.createElement(Welcome, { name: "World" }),
+          React.createElement(Clock, null))
+          );
+  }
+}
+```
+
+---
+## Blazor Component - UI markup example
 
 ```html
-<div class="@CssClass" @attributes="@Attributes">
-    <div class="card-body">
-        <h5 class="card-title">
-            <Icon CssClass="@IconCssClass" /> 
-            @Title
-        </h5>
-        <div class="card-text">
-            @ChildContent
-        </div>
-    </div>
+<div class="main">
+    <Welcome Name="World"/>
+    <Clock />
 </div>
 ```
 
+See it on BlazorREPL: https://blazorrepl.com/repl/wluHuIOv061KS9Vt31
+
 ---
-## Blazor Components - compiled version of above markup
+## Blazor Component - decompiled version
 
 ```cs
-protected override void BuildRenderTree(RenderTreeBuilder __builder)
-{
-  __builder.OpenElement(0, "div");
-  __builder.AddAttribute(1, "class", this.CssClass);
-  __builder.AddMultipleAttributes(2, 
-    RuntimeHelpers.TypeCheck</* ... */>(
-        (IEnumerable<KeyValuePair<string, object>>) this.Attributes));
-  // ...
-  __builder.OpenComponent<Icon>(7);
-  __builder.AddAttribute(8, "CssClass", 
-    RuntimeHelpers.TypeCheck<string>(this.IconCssClass));
-  __builder.CloseComponent();
-  // ...
-  __builder.AddContent(14, this.ChildContent);
-  __builder.CloseElement();
-  __builder.CloseElement();
-  __builder.CloseElement();
-}
-```
-
----
-## Blazor Components - the same markup, functional style
-
-```cs
-protected override HashSet<Component> RenderChildren()
-{
-  var div = Element(this, 0, "div") // parent, key, type
-    .SetAttributes("class", CssClass)
-    .SetAttributes(Attributes)); 
-  var icon = Component<Icon>(div, 7) // parent, key
-    .SetAttributes("CssClass", IconCssClass));
-  // ...
-  return new new HashSet<Component>() { div, icon, ... };
-}
-
-protected void Render()
-{
-  var newChildren = RenderChildren();
-  foreach (var c in Children.ToHashSet().ExceptWith(newChildren))
-      c.Dispose();
-  foreach (var c in newChildren)
-      c.TryRender();
-}
-
+  public class Index : ComponentBase
+  {
+    protected override void BuildRenderTree(RenderTreeBuilder __builder)
+    {
+      // BuildRenderTree(...) generates Virtual DOM too,
+      // just relying on builder
+      __builder.OpenElement(0, "div"); // Notice: OpenElement
+      __builder.AddAttribute(1, "class", "main");
+      __builder.OpenComponent<Welcome>(2); // Notice: OpenComponent
+      __builder.AddAttribute(3, "Name", "World");
+      __builder.CloseComponent();
+      __builder.AddMarkupContent(4, "\r\n    ");
+      __builder.OpenComponent<Clock>(5);
+      __builder.CloseComponent();
+      __builder.CloseElement();
+    }
+  }
 ```
 ---
-# Blazor and React - so what's common there?
+![bg width:90%](./diagrams/virtual-dom/1.dio.svg)
 
-- Virtual DOM = the result cache for `Component<T>(...)` & `Element(...)` calls:
-  - Сache miss = build a component
-  - Cache hit = reuse the exiting one, + maybe rebuild its own Virtual DOM
-- `TryRender()` calls `Render()` for every component that changed after its last `Render()` call.
+---
+![bg width:90%](./diagrams/virtual-dom/2.dio.svg)
 
-</br>
-</br>
+---
+<!-- _class: highlight center -->
+![bg width:90%](./img/JsHolyTrinity.jpg)
+
+<footer>One more argument to use Blazor, btw.</footer>
+
+---
+<!-- _class: highlight center -->
+![bg height:90%](./diagrams/trinity/1.dio.svg)
+
+---
+<!-- _class: highlight center -->
+![bg opacity:0.2](./img/BlazorAndReact.jpg)
 <div style="text-align: center">
 <h2 style="margin: 0px">
-  All in all, <strong>React and Blazor = an incremental builder for your UI!</strong>
+  <h2>React and Blazor are "make"-like incremental builders for your UI</h2>
 </h2>
 <div style="margin: 0px">
-  Just specialized to produce a diff to apply to the real DOM or UI controls.
+  Just specialized ones &ndash; designed to incrementally update DOM</br>
+  (actually, any UI control tree) after any component's render() that</br>
+  actually just defines the new desirable UI state.
 </div>
+
+---
+<!-- _class: highlight center -->
+![bg height:90%](./diagrams/trinity/2.dio.svg)
 
 ---
 ![bg](black)
@@ -662,10 +670,12 @@ protected void Render()
 ![bg fit](./img/FP4-En.jpg)
 
 ---
-<!-- _class: center -->
-# Does `ToAwesome()` really exist?
-
-![bg right](./img/RaptorJesus.jpg)
+<!-- _class: highlight center -->
+![bg height:90%](./diagrams/trinity/3.dio.svg)
+<div style="text-align: center">
+</br>
+&nbsp;&nbsp;<img src="./img/RaptorJesus.gif" style="width: 11.5%">
+</div>
 
 ---
 <!-- _class: center -->
