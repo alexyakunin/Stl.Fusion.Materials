@@ -654,10 +654,6 @@ See it on BlazorREPL: https://blazorrepl.com/repl/wluHuIOv061KS9Vt31
 ![bg height:90%](./diagrams/trinity/2.dio.svg)
 
 ---
-![bg](black)
-![bg fit](./img/FP1.jpg)
-
----
 <div class="col2">
 <img src="./img/FP3.jpg">
 <div class="break">
@@ -683,53 +679,63 @@ See it on BlazorREPL: https://blazorrepl.com/repl/wluHuIOv061KS9Vt31
 ![bg fit](./img/FusionWebsite.jpg)
 
 ---
-# Fusion Service Example
+## Remember Caching Decorator with Dependency Tracking?
 
 ```cs
-public class CounterService
-{
-  private volatile int _count;
+Func<TIn, TOut> ToAwesome<TIn, TOut>(Func<TIn, TOut> fn)
+  => input => {
+    var key = Cache.CreateKey(fn, input);
+    if (Cache.TryGet(key, out var computed)) return computed.Use();
+    lock (Cache.Lock(key)) { // Double-check locking
+      if (Cache.TryGet(key, out computed)) return  computed.Use();
 
-  [ComputeMethod]
-  public virtual async Task<int> GetCountAsync()
-    => _count;
+      computed = new Computed(fn, input, key);
+      using (Computed.ChangeCurrent(computed))
+        computed.Value = fn(input);
 
-  [ComputeMethod]
-  public virtual async Task<string> GetCountTextAsync() 
-    => (await GetCountAsync()).ToString();
-
-  public async Task IncrementCountAsync()
-  {
-    Interlocked.Increment(ref _count);
-    Computed.Invalidate(() => GetCountAsync());
+      Cache[key] = computed;
+      return computed.Value;
+    }
   }
-}
 ```
+---
+
+## Fusion's version of this decorator is:
+![bg right:48%](./img/SuperSquirrel.gif)
+
+- GC-friendly
+- Async, thread-safe
+- Uses AOP-style decoration
+- Relies on immutable<sup>*</sup> `IComputed<T>`
+- Distributed
+- Supports multi-host invalidation / scales horizontally
+- And much more!
+
+<footer>(*) Almost immutable</footer>
 
 ---
 # Fusion's `IComputed<T>`:
+![bg fit right:30%](./diagrams/consistency-state/transitions.dio.svg)
 
-Below is a simplified version of "a box" storing call result, its dependencies, dependants, etc.:
+A bit simplified version of actual `IComputed<T>`:
+
 ```cs
 interface IComputed<T> {
-  // Computing -> Consistent -> Invalidated
   ConsistencyState ConsistencyState { get; } 
   T Value { get; }
   Exception Error { get; }
   
   event Action Invalidated; // Event, triggered just once on invalidation
+  Task WhenInvalidatedAsync(); // Alternative way to await for invalidation
   void Invalidate();
-  Task<IComputed<T>> UpdateAsync();
+  Task<IComputed<T>> UpdateAsync(); // Notice it returns a new instance!
 }
 ```
-![bg](black)
-![bg fit right:30%](./img/ConsistencyState.jpg)
+---
+![bg height:90%](./diagrams/consistency-state/instances.dio.svg)
 
 ---
-![bg](black)
-![bg fit](./img/Computed-Gantt.jpg)
-
----
+![bg](./img/Samples-Blazor.gif)
 <!-- _class: center -->
 
 <div style="font-size: 100px; color: #eee; text-shadow: 2px 2px #000;">
@@ -742,7 +748,230 @@ interface IComputed<T> {
      style="background: white; padding: 3pt;">https://fusion-samples.servicetitan.com</a>
 </footer>
 
-![bg](./img/Samples-Blazor.gif)
+
+---
+# HelloCart: API Models
+
+```cs
+public record Product : IHasId<string>
+{
+    public string Id { get; init; } = "";
+    public decimal Price { get; init; } = 0;
+}
+
+public record Cart : IHasId<string>
+{
+    public string Id { get; init; } = "";
+    public ImmutableDictionary<string, decimal> Items { get; init; } =
+      ImmutableDictionary<string, decimal>.Empty;
+}
+
+public record EditCommand<TValue>(string Id, TValue? Value = null) : ICommand<Unit>
+    where TValue : class, IHasId<string>
+{
+    public EditCommand(TValue value) : this(value.Id, value) { }
+    public EditCommand() : this("", null) { } // JSON deserialization .ctor
+}
+```
+---
+# HelloCart: API
+
+```cs
+public interface IProductService
+{
+    [CommandHandler]
+    Task EditAsync(EditCommand<Product> command, CancellationToken cancellationToken);
+    [ComputeMethod]
+    Task<Product?> FindAsync(string id, CancellationToken cancellationToken);
+}
+
+public interface ICartService
+{
+    [CommandHandler]
+    Task EditAsync(EditCommand<Cart> command, CancellationToken cancellationToken);
+    [ComputeMethod]
+    Task<Cart?> FindAsync(string id, CancellationToken cancellationToken);
+    [ComputeMethod]
+    Task<decimal> GetTotalAsync(string id, CancellationToken cancellationToken);
+}
+```
+---
+![bg height:90%](./img/Samples-HelloCart.gif)
+
+---
+# HelloCart: Cart Watcher
+
+```cs
+public async Task WatchCartTotalAsync(
+    string cartId, CancellationToken cancellationToken)
+{
+    var cartService = ClientServices.GetRequiredService<ICartService>();
+    var computed = await Computed.CaptureAsync(
+        ct => cartService.GetTotalAsync(cartId, ct), 
+        cancellationToken);
+    while (true) {
+        WriteLine($"  {cartId}: total = {computed.Value}");
+        await computed.WhenInvalidatedAsync(cancellationToken);
+        computed = await computed.UpdateAsync(false, cancellationToken);
+    }
+}
+```
+---
+# HelloCart: InMemoryProductService
+
+```cs
+public class InMemoryProductService : IProductService
+{
+    private readonly ConcurrentDictionary<string, Product> _products = new();
+
+    public virtual Task EditAsync(EditCommand<Product> command, CancellationToken cancellationToken)
+    {
+        var (productId, product) = command;
+        if (product == null)
+            _products.Remove(productId, out _);
+        else
+            _products[productId] = product;
+        
+        using (Computed.Invalidate()) {
+            // Every [ComputeMethod] result you call here 
+            // gets invalidated
+            FindAsync(productId, default).Ignore();
+        }
+        return Task.CompletedTask;
+    }
+
+    public virtual Task<Product?> FindAsync(string id, CancellationToken cancellationToken)
+        => Task.FromResult(_products.GetValueOrDefault(id));
+}
+```
+---
+# HelloCart: InMemoryProductService (Actual)
+
+```cs
+public class InMemoryProductService : IProductService
+{
+    private readonly ConcurrentDictionary<string, Product> _products = new();
+
+    public virtual Task EditAsync(EditCommand<Product> command, CancellationToken cancellationToken)
+    {
+        var (productId, product) = command;
+        if (Computed.IsInvalidating()) { // This block changed!
+            FindAsync(productId, default).Ignore();
+            return Task.CompletedTask;
+        }
+
+        if (product == null)
+            _products.Remove(productId, out _);
+        else
+            _products[productId] = product;
+        return Task.CompletedTask;
+    }
+
+    public virtual Task<Product?> FindAsync(string id, CancellationToken cancellationToken)
+        => Task.FromResult(_products.GetValueOrDefault(id));
+}
+```
+---
+# HelloCart: InMemoryCartService
+
+```cs
+public class InMemoryCartService : ICartService
+{
+    private readonly ConcurrentDictionary<string, Cart> _carts = new();
+    private readonly IProductService _products;
+
+    public InMemoryCartService(IProductService products) => _products = products;
+
+    public virtual Task EditAsync(EditCommand<Cart> command, CancellationToken cancellationToken = default)
+    {
+        var (cartId, cart) = command;
+        if (Computed.IsInvalidating()) {
+            FindAsync(cartId, default).Ignore();
+            return Task.CompletedTask;
+        }
+
+        if (cart == null)
+            _carts.Remove(cartId, out _);
+        else
+            _carts[cartId] = cart;
+        return Task.CompletedTask;
+    }
+
+    public virtual Task<Cart?> FindAsync(string id, CancellationToken cancellationToken = default)
+        => Task.FromResult(_carts.GetValueOrDefault(id));
+```
+---
+# HelloCart: InMemoryCartService.GetTotalAsync
+
+```cs
+public virtual async Task<decimal> GetTotalAsync(
+    string id, 
+    CancellationToken cancellationToken = default)
+{
+    var cart = await FindAsync(id, cancellationToken);
+    if (cart == null)
+        return 0;
+    var total = 0M;
+    foreach (var (productId, quantity) in cart.Items) {
+        var product = await _products.FindAsync(productId, cancellationToken);
+        total += (product?.Price ?? 0M) * quantity;
+    }
+    return total;
+}
+```
+---
+# HelloCart: Service Registration
+
+```cs
+var services = new ServiceCollection();
+services.AddFusion(fusion => {
+    fusion.AddComputeService<IProductService, InMemoryProductService>();
+    fusion.AddComputeService<ICartService, InMemoryCartService>();
+});
+ClientServices = HostServices = services.BuildServiceProvider()
+```
+---
+# HelloCart: DbProductService.EditAsync
+
+```cs
+public virtual async Task EditAsync(
+    EditCommand<Product> command, CancellationToken cancellationToken = default)
+{
+    var (productId, product) = command;
+    if (Computed.IsInvalidating()) {
+        FindAsync(productId, default).Ignore();
+        return;
+    }
+
+    await using var dbContext = await CreateCommandDbContextAsync(cancellationToken);
+    var dbProduct = await dbContext.Products.FindAsync(ComposeKey(productId), cancellationToken);
+    if (product == null) {
+        if (dbProduct != null)
+            dbContext.Remove(dbProduct);
+    }
+    else {
+        if (dbProduct != null)
+            dbProduct.Price = product.Price;
+        else
+            dbContext.Add(new DbProduct { Id = productId, Price = product.Price });
+    }
+    await dbContext.SaveChangesAsync(cancellationToken);
+}
+```
+---
+# HelloCart: DbProductService.FindAsync
+
+```cs
+public virtual async Task<Product?> FindAsync(
+    string id, CancellationToken cancellationToken = default)
+{
+    await using var dbContext = CreateDbContext();
+    var dbProduct = await dbContext.Products.FindAsync(ComposeKey(id), cancellationToken);
+    if (dbProduct == null)
+        return null;
+    return new Product() { Id = dbProduct.Id, Price = dbProduct.Price };
+}
+```
 
 ---
 # Can we *replicate* `IComputed` on a remote host?
