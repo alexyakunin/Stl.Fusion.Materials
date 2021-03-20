@@ -780,51 +780,51 @@ public record EditCommand<TValue>(string Id, TValue? Value = null) : ICommand<Un
 public interface IProductService
 {
     [CommandHandler]
-    Task EditAsync(EditCommand<Product> command, CancellationToken cancellationToken);
+    Task Edit(EditCommand<Product> command, CancellationToken cancellationToken);
     [ComputeMethod]
-    Task<Product?> FindAsync(string id, CancellationToken cancellationToken);
+    Task<Product?> TryGet(string id, CancellationToken cancellationToken);
 }
 
 public interface ICartService
 {
     [CommandHandler]
-    Task EditAsync(EditCommand<Cart> command, CancellationToken cancellationToken);
+    Task Edit(EditCommand<Cart> command, CancellationToken cancellationToken);
     [ComputeMethod]
-    Task<Cart?> FindAsync(string id, CancellationToken cancellationToken);
+    Task<Cart?> TryGet(string id, CancellationToken cancellationToken);
     [ComputeMethod]
-    Task<decimal> GetTotalAsync(string id, CancellationToken cancellationToken);
+    Task<decimal> GetTotal(string id, CancellationToken cancellationToken);
 }
 ```
 ---
 ![bg height:90%](./img/Samples-HelloCart.gif)
 
 ---
-# HelloCart: Cart Watcher
+# Cart Watcher
 
 ```cs
-public async Task WatchCartTotalAsync(
+public async Task WatchCartTotal(
     string cartId, CancellationToken cancellationToken)
 {
     var cartService = ClientServices.GetRequiredService<ICartService>();
-    var computed = await Computed.CaptureAsync(
-        ct => cartService.GetTotalAsync(cartId, ct), 
+    var computed = await Computed.Capture(
+        ct => cartService.GetTotal(cartId, ct), 
         cancellationToken);
     while (true) {
         WriteLine($"  {cartId}: total = {computed.Value}");
-        await computed.WhenInvalidatedAsync(cancellationToken);
-        computed = await computed.UpdateAsync(false, cancellationToken);
+        await computed.WhenInvalidated(cancellationToken);
+        computed = await computed.Update(false, cancellationToken);
     }
 }
 ```
 ---
-# HelloCart: InMemoryProductService
+# InMemoryProductService
 
 ```cs
 public class InMemoryProductService : IProductService
 {
     private readonly ConcurrentDictionary<string, Product> _products = new();
 
-    public virtual Task EditAsync(EditCommand<Product> command, CancellationToken cancellationToken)
+    public virtual Task Edit(EditCommand<Product> command, CancellationToken cancellationToken)
     {
         var (productId, product) = command;
         if (product == null)
@@ -835,28 +835,28 @@ public class InMemoryProductService : IProductService
         using (Computed.Invalidate()) {
             // Every [ComputeMethod] result you call here 
             // gets invalidated
-            FindAsync(productId, default).Ignore();
+            TryGet(productId, default).Ignore();
         }
         return Task.CompletedTask;
     }
 
-    public virtual Task<Product?> FindAsync(string id, CancellationToken cancellationToken)
+    public virtual Task<Product?> TryGet(string id, CancellationToken cancellationToken)
         => Task.FromResult(_products.GetValueOrDefault(id));
 }
 ```
 ---
-# HelloCart: InMemoryProductService (Actual)
+# InMemoryProductService - Actual One
 
 ```cs
 public class InMemoryProductService : IProductService
 {
     private readonly ConcurrentDictionary<string, Product> _products = new();
 
-    public virtual Task EditAsync(EditCommand<Product> command, CancellationToken cancellationToken)
+    public virtual Task Edit(EditCommand<Product> command, CancellationToken cancellationToken)
     {
         var (productId, product) = command;
-        if (Computed.IsInvalidating()) { // This block changed!
-            FindAsync(productId, default).Ignore();
+        if (Computed.IsInvalidating()) { // !!!
+            TryGet(productId, default).Ignore();
             return Task.CompletedTask;
         }
 
@@ -867,12 +867,12 @@ public class InMemoryProductService : IProductService
         return Task.CompletedTask;
     }
 
-    public virtual Task<Product?> FindAsync(string id, CancellationToken cancellationToken)
+    public virtual Task<Product?> TryGet(string id, CancellationToken cancellationToken)
         => Task.FromResult(_products.GetValueOrDefault(id));
 }
 ```
 ---
-# HelloCart: InMemoryCartService
+# InMemoryCartService
 
 ```cs
 public class InMemoryCartService : ICartService
@@ -882,11 +882,11 @@ public class InMemoryCartService : ICartService
 
     public InMemoryCartService(IProductService products) => _products = products;
 
-    public virtual Task EditAsync(EditCommand<Cart> command, CancellationToken cancellationToken = default)
+    public virtual Task Edit(EditCommand<Cart> command, CancellationToken cancellationToken = default)
     {
         var (cartId, cart) = command;
         if (Computed.IsInvalidating()) {
-            FindAsync(cartId, default).Ignore();
+            TryGet(cartId, default).Ignore();
             return Task.CompletedTask;
         }
 
@@ -897,30 +897,29 @@ public class InMemoryCartService : ICartService
         return Task.CompletedTask;
     }
 
-    public virtual Task<Cart?> FindAsync(string id, CancellationToken cancellationToken = default)
+    public virtual Task<Cart?> TryGet(string id, CancellationToken cancellationToken = default)
         => Task.FromResult(_carts.GetValueOrDefault(id));
 ```
 ---
-# HelloCart: InMemoryCartService.GetTotalAsync
+# InMemoryCartService.GetTotal
 
 ```cs
-public virtual async Task<decimal> GetTotalAsync(
-    string id, 
-    CancellationToken cancellationToken = default)
+public virtual async Task<decimal> GetTotal(
+    string id, CancellationToken cancellationToken = default)
 {
-    var cart = await FindAsync(id, cancellationToken);
+    var cart = await TryGet(id, cancellationToken);
     if (cart == null)
         return 0;
     var total = 0M;
     foreach (var (productId, quantity) in cart.Items) {
-        var product = await _products.FindAsync(productId, cancellationToken);
+        var product = await _products.TryGet(productId, cancellationToken);
         total += (product?.Price ?? 0M) * quantity;
     }
     return total;
 }
 ```
 ---
-# HelloCart: Service Registration
+# Service Registration
 
 ```cs
 var services = new ServiceCollection();
@@ -931,20 +930,36 @@ services.AddFusion(fusion => {
 ClientServices = HostServices = services.BuildServiceProvider()
 ```
 ---
-# HelloCart: DbProductService.EditAsync
+# DbProductService.TryGet
 
 ```cs
-public virtual async Task EditAsync(
+public virtual async Task<Product?> TryGet(
+    string id, CancellationToken cancellationToken = default)
+{
+    await using var dbContext = CreateDbContext();
+    var dbProduct = await dbContext.Products.FindAsync((object) id, cancellationToken);
+    if (dbProduct == null)
+        return null;
+    return new Product() { Id = dbProduct.Id, Price = dbProduct.Price };
+}
+```
+
+---
+# DbProductService.Edit
+
+```cs
+public virtual async Task Edit(
     EditCommand<Product> command, CancellationToken cancellationToken = default)
 {
     var (productId, product) = command;
     if (Computed.IsInvalidating()) {
-        FindAsync(productId, default).Ignore();
+        // This block is "replayed" on every host!
+        TryGet(productId, default).Ignore();
         return;
     }
 
-    await using var dbContext = await CreateCommandDbContextAsync(cancellationToken);
-    var dbProduct = await dbContext.Products.FindAsync(ComposeKey(productId), cancellationToken);
+    await using var dbContext = await CreateCommandDbContext(cancellationToken);
+    var dbProduct = await dbContext.Products.FindAsync((object) productId, cancellationToken);
     if (product == null) {
         if (dbProduct != null)
             dbContext.Remove(dbProduct);
@@ -959,71 +974,100 @@ public virtual async Task EditAsync(
 }
 ```
 ---
-# HelloCart: DbProductService.FindAsync
+# Can we replicate `IComputed` on a remote host?
 
 ```cs
-public virtual async Task<Product?> FindAsync(
-    string id, CancellationToken cancellationToken = default)
-{
-    await using var dbContext = CreateDbContext();
-    var dbProduct = await dbContext.Products.FindAsync(ComposeKey(id), cancellationToken);
-    if (dbProduct == null)
-        return null;
-    return new Product() { Id = dbProduct.Id, Price = dbProduct.Price };
-}
-```
-
----
-# Can we *replicate* `IComputed` on a remote host?
-
-```cs
-public class ReplicaComputed<T> : IComputed<T> 
+public class ComputedReplica<T> : IComputed<T> 
 {
     ConsistencyState ConsistencyState { get; }
     T Value { get; }
     Exception Error { get; }
     event Action Invalidated;
     
-    public ReplicaComputed<T>(IComputed<T> source) 
+    public ComputedReplica<T>(IComputed<T> source) 
     {
         source.ThrowIfComputing();
         (Value, Error) = (source.Value, source.Error);
         ConsistencyState = source.ConsistencyState;
-        source.Invalidated += () => Invalidate();
+        source.Invalidated += () => Invalidate(); // !!!
     }
 
     // ...
 }
 ```
-
-Do the same, but deliver the invalidation event via RPC.
-
----
-# Your Web API call:
-<!-- _class: highlight invert -->
-
-&rarr; How's my app doing?
-&larr; Still alive. 
-
-**1 request = 1 response.**
-
-![bg right](./img/RegularDog.jpg)
+Do the same, but deliver the invalidation event via RPC!
 
 ---
-# Fusion API call:
-<!-- _class: highlight invert -->
+# Your Web API call
+<!-- _class: highlight -->
+![bg right:40%](./img/RegularDog.jpg)
 
-&rarr; How's my app doing? *+publish*
-&larr; Still alive. *+watch pub-666*
-*&larr; Be brave, pub-666 is... Invalidated.*
+<img src="./diagrams/replica-service/regular.dio.svg" style="width: 100%"/>
 
-**1 request = 1 or 2 responses, 
-the 2nd one might come much later.** 
+---
+# Fusion API call
+<!-- _class: highlight -->
+![bg left:40%](./img/CoolDog.jpg)
 
-The invalidation notifications are delivered via Publisher-Replicator channel. Fusion uses WebSocket connection for such channels now, but more options to be available *eventually*.
+<img src="./diagrams/replica-service/fusion.dio.svg" style="width: 100%"/>
 
-![bg left](./img/CoolDog.jpg)
+---
+# Blazor Component: AppUserBadge
 
+```cs
+@inherits LiveComponentBase<bool>
+@inject IAppUserService AppUserService
+
+[Parameter]
+public string CssClass { get; set; } = "";
+[Parameter]
+public Color Color { get; set; } = Color.Primary;
+[Parameter]
+public AppUser User { get; set; } = AppUser.None;
+
+protected override async Task<bool> ComputeState(CancellationToken cancellationToken)
+{
+    if (User.Id <= 0)
+        return false;
+    return await AppUserService.IsOnline(User.Id, cancellationToken);
+}
+```
+---
+# Blazor Component: AppUserBadge - markup
+
+```html
+@{
+    var isOnline = State.LastValue;
+}
+
+<Badge Color="@Color" Class="@CssClass" Style="@(isOnline ? "" : "opacity: 0.5;")">
+    <Blazorise.Icon Name="@(isOnline ? FontAwesomeIcons.User : FontAwesomeIcons.UserClock)" />
+    @User.Name
+</Badge>
+```
+---
+# Blazor Component: AppUserBadges
+
+```cs
+[Parameter]
+public IEnumerable<AppUser> Users { get; set; } = Enumerable.Empty<AppUser>();
+[Parameter]
+public bool UseAndDelimiter { get; set; } = true;
+
+private string GetDelimiter(int index)
+    => index switch {
+        0 => "",
+        1 => UseAndDelimiter ? " and " : ", ",
+        _ => ", "
+    };
+```
+Markup:
+```html
+@foreach(var (user, index) in Users.Select((user, index) => (user, index))) {
+    <span>@GetDelimiter(index)</span>
+    <AppUserBadge User="@user" />
+}
+```
 ---
 ## `ComposerService` - an example service relying on remote replicas
 
@@ -1031,71 +1075,20 @@ See it live: https://fusion-samples.servicetitan.com/composition
 Source code: [ComposerService](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/Server/Services/ComposerService.cs), [LocalComposerService](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/UI/Services/LocalComposerService.cs).
 
 ```cs
-public virtual async Task<ComposedValue> GetComposedValueAsync(
-    string parameter, Session session)
+public virtual async Task<ComposedValue> GetComposedValue(
+    string parameter, Session session, CancellationToken cancellationToken)
 {
-  // Fusion magic: all these seemingly RPC call complete instantly w/o
-  // a real RPC while the result they produce is known to be consistent.
-  var chatTail = await ChatService.GetChatTailAsync(1);
-  var uptime = await TimeService.GetUptimeAsync(TimeSpan.FromSeconds(10));
-  var sum = (double?) null;
-  if (double.TryParse(parameter, out var value))
-      sum = await SumService.SumAsync(new [] { value }, true);
-  var lastChatMessage = chatTail.Messages.SingleOrDefault()?.Text ?? "(no messages)";
-  var user = await AuthService.GetUserAsync(session);
-  var activeUserCount = await ChatService.GetActiveUserCountAsync();
-  return new ComposedValue(
-    $"{parameter} - server", uptime, sum, 
-    lastChatMessage, user, activeUserCount);
+    var chatTail = await ChatService.GetChatTail(1, cancellationToken);
+    var uptime = await TimeService.GetUptime(TimeSpan.FromSeconds(10), cancellationToken);
+    var sum = (double?) null;
+    if (double.TryParse(parameter, out var value))
+        sum = await SumService.GetSum(new [] { value }, true, cancellationToken);
+    var lastChatMessage = chatTail.Messages.SingleOrDefault()?.Text ?? "(no messages)";
+    var user = await AuthService.GetUser(session, cancellationToken);
+    var activeUserCount = await ChatService.GetActiveUserCount(cancellationToken);
+    return new ComposedValue($"{parameter} - server", uptime, sum, lastChatMessage, user, activeUserCount);
 }
 ```
-
----
-
-A real Blazor component that updates in real-time:
-```cs
-@inherits LiveComponentBase<ActiveTranscriptions.Model>
-@using System.Threading
-@using ServiceTitan.Speech.Abstractions
-@inject ITranscriber Transcriber
-
-@{
-    var state = State.LastValue; // We want to show the last correct model on error
-    var error = State.Error;
-}
-
-<DataGrid TItem="Transcript"
-          Data="@state.Transcripts"
-          TotalItems="@state.Transcripts.Length"
-          Sortable="false"
-          ShowPager="false">
-    <DataGridCommandColumn TItem="Transcript"/>
-    <DataGridColumn TItem="Transcript" Field="@nameof(Transcript.Id)" Caption="#"/>
-    <DataGridColumn TItem="Transcript" Field="@nameof(Transcript.StartTime)" Caption="Start Time"/>
-    <DataGridColumn TItem="Transcript" Field="@nameof(Transcript.Duration)" Caption="Duration"/>
-    <DataGridColumn TItem="Transcript" Field="@nameof(Transcript.Text)" Caption="Text" Width="75%" />
-</DataGrid>
-
-@code {
-    public class Model
-    {
-        public Transcript[] Transcripts { get; set; } = Array.Empty<Transcript>();
-    }
-
-    protected override void ConfigureState(LiveState<Model>.Options options)
-        // Update delays are configurable per-state / per-component
-        => options.WithUpdateDelayer(o => o.Delay = TimeSpan.FromSeconds(1));
-
-    protected override async Task<Model> ComputeStateAsync(CancellationToken cancellationToken)
-    {
-        var transcriptIds = await Transcriber.GetActiveTranscriptionIdsAsync(cancellationToken);
-        var transcriptTasks = transcriptIds.Select(id => Transcriber.GetAsync(id, cancellationToken));
-        var transcripts = await Task.WhenAll(transcriptTasks); // Get them all in parallel!
-        return new Model() { Transcripts = transcripts };
-    }
-}
-```
-
 ---
 # How efficient is Fusion caching?
 
