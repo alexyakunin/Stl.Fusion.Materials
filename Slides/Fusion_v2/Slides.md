@@ -919,7 +919,7 @@ public virtual async Task<decimal> GetTotal(
 }
 ```
 ---
-# Service Registration
+# Compute Service Registration
 
 ```cs
 var services = new ServiceCollection();
@@ -927,7 +927,7 @@ services.AddFusion(fusion => {
     fusion.AddComputeService<IProductService, InMemoryProductService>();
     fusion.AddComputeService<ICartService, InMemoryCartService>();
 });
-ClientServices = HostServices = services.BuildServiceProvider()
+var serviceProvider = services.BuildServiceProvider()
 ```
 ---
 # DbProductService.TryGet
@@ -973,16 +973,7 @@ public virtual async Task Edit(
     await dbContext.SaveChangesAsync(cancellationToken);
 }
 ```
----
-# How do you register Compute Services?
-```cs
-var services = new ServiceCollection();
-services.AddFusion(fusion => {
-    fusion.AddComputeService<IProductService, DbProductService>();
-    fusion.AddComputeService<ICartService, DbCartService>();
-});
-var serviceProvider = services.BuildServiceProvider();
-```
+
 ---
 # Can we replicate `IComputed` on a remote host?
 
@@ -1022,7 +1013,7 @@ Do the same, but deliver the invalidation event via RPC!
 <img src="./diagrams/replica-service/fusion.dio.svg" style="width: 100%"/>
 
 ---
-## How do you create Replica Service Controller?
+## Replica Service - Controller
 ```cs
 [Route("api/[controller]/[action]")]
 [ApiController, JsonifyErrors]
@@ -1049,7 +1040,7 @@ public class CartController : ControllerBase, ICartService
 ```
 
 ---
-## How do you create Replica Service Client?
+## Replica Service - Client
 ```cs
 [BasePath("cart")]
 public interface ICartClient
@@ -1064,7 +1055,7 @@ public interface ICartClient
 ```
 
 ---
-# How do you register Replica Service?
+# Replica Service Registration
 ```cs
 var services = new ServiceCollection();
 services.AddFusion(fusion => {
@@ -1074,6 +1065,9 @@ services.AddFusion(fusion => {
             options.HttpClientActions.Add(httpClient => httpClient.BaseAddress = apiBaseUri);
         });
         client.ConfigureWebSocketChannel((c, options) => { options.BaseUri = baseUri; });
+        
+        // Actual registration:
+        client.AddReplicaService<IProductService, IProductClient>();
         client.AddReplicaService<ICartService, ICartClient>();
     });
 });
