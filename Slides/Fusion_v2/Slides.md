@@ -1309,9 +1309,9 @@ Fusion's Replica Client:
 ⌚ Almost always consistent
 🚀 Local = 1000 times faster
 ❌ No serialization/deserialization
-📌 Reuse vs copy on use
+📌 Ref. copy vs deep copy on use
 🧱 Incrementally-Build-Everything™
-🙀 Supports swapping to ext. cache!
+🙀 Supports swapping to ext. caches!
 
 ![bg left:45%](./img/FlyingCat.jpg)
 
