@@ -1019,7 +1019,7 @@ Fusion&#x27;s Replica Client:
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="109" data-class="video" data-theme="default" class="video" style="--class:video;--theme:default;"><iframe src="https://www.youtube.com/embed/lzP0JIzrYmM?start=24" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="highlight" data-theme="default" class="highlight" style="--class:highlight;--theme:default;--marpit-advanced-background-split:45%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="left"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/FlyingCat.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="55%" height="720" x="45%"><section id="110" data-class="highlight" data-theme="default" class="highlight" style="--class:highlight;--theme:default;--marpit-advanced-background-split:45%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="left">
-<h1>Fusion vs Redis &amp; other caches</h1>
+<h1>Fusion vs Redis, memcached, ...</h1>
 
 <p><img class="emoji" draggable="false" alt="⌚" src="https://twemoji.maxcdn.com/2/svg/231a.svg" data-marp-twemoji=""/> Almost always consistent<br />
 <img class="emoji" draggable="false" alt="🚀" src="https://twemoji.maxcdn.com/2/svg/1f680.svg" data-marp-twemoji=""/> Local = 1000 times faster<br />
@@ -1047,7 +1047,7 @@ Fusion&#x27;s Replica Client:
 <h1>Fusion vs MobX, KO, ...</h1>
 
 <ul>
-<li>&quot;Wraps&quot; APIs, not models</li>
+<li>Decorates APIs (services), not models</li>
 <li>Thread-safe, asynchronous</li>
 <li>Works on the server side</li>
 <li>Explicit consistent / inconsistent states</li>
@@ -1064,9 +1064,9 @@ Fusion&#x27;s Replica Client:
 
 <p>Action, Dispatcher, Store, View.<br />
 Usable only in the UI.<br />
-Irrelevant to real-time.</p>
+Real-time? Sorry, DIY.</p>
 <p>And it worth studying because...<br />
-Ah, Facebook made it!</p>
+Ah, Facebook created it!</p>
 </section>
 </foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="115" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h1>The price you pay for Fusion</h1>
@@ -1074,7 +1074,6 @@ Ah, Facebook made it!</p>
 <li><strong>Money:</strong> thanks to <a href="servicetitan.com">ServiceTitan</a>, Fusion is free (MIT license)</li>
 <li><strong>CPU:</strong> free your CPUs! The torture of making them to run recurring computations again and again must be stopped!</li>
 <li><strong>RAM:</strong> is where the cost is really paid. Besides that, <a href="https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part08.md#large-working-sets-and-gc-pauses">remember about GC pauses</a> and other downsides of local caching. But the upside is so bright + Fusion actually supports external caching via <a href="https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part05.md#caching-options">&quot;swapping&quot; feature</a>.</li>
-<li><strong>Your soul</strong>, but only if you didn't read this line</li>
 <li><strong>Learning curve:</strong> is relatively shallow in the beginning, but getting steeper once you start to dig deeper. Though Fusion is definitely not as complex as e.g. TPL with its <code>ExecutionContext</code>, <code>ValueTask&lt;T&gt;</code>, and other tricky parts.</li>
 <li><strong>Other risks:</strong> First lines of Fusion code were written ~ 1 year ago. What &quot;other risks&quot; are you talking about?</li>
 </ul>

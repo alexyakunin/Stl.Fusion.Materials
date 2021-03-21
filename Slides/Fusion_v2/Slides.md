@@ -1303,7 +1303,7 @@ Fusion's Replica Client:
 <iframe src="https://www.youtube.com/embed/lzP0JIzrYmM?start=24" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ---
-# Fusion vs Redis & other caches
+# Fusion vs Redis, memcached, ...
 <!-- _class: highlight -->
 
 ⌚ Almost always consistent
@@ -1339,7 +1339,7 @@ Server:
 # Fusion vs MobX, KO, ...
 <!-- _class: highlight -->
 
-- "Wraps" APIs, not models
+- Decorates APIs (services), not models
 - Thread-safe, asynchronous
 - Works on the server side
 - Explicit consistent / inconsistent states
@@ -1360,10 +1360,10 @@ Server:
 
 Action, Dispatcher, Store, View.
 Usable only in the UI.
-Irrelevant to real-time.
+Real-time? Sorry, DIY.
 
 And it worth studying because...
-Ah, Facebook made it!
+Ah, Facebook created it!
 
 ![bg right:55%](./img/IDareYou-Flux.jpg)
 
@@ -1373,7 +1373,6 @@ Ah, Facebook made it!
 - **Money:** thanks to [ServiceTitan](servicetitan.com), Fusion is free (MIT license)
 - **CPU:** free your CPUs! The torture of making them to run recurring computations again and again must be stopped!
 - **RAM:** is where the cost is really paid. Besides that, [remember about GC pauses](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part08.md#large-working-sets-and-gc-pauses) and other downsides of local caching. But the upside is so bright + Fusion actually supports external caching via ["swapping" feature](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part05.md#caching-options).
-- **Your soul**, but only if you didn't read this line
 - **Learning curve:** is relatively shallow in the beginning, but getting steeper once you start to dig deeper. Though Fusion is definitely not as complex as e.g. TPL with its `ExecutionContext`, `ValueTask<T>`, and other tricky parts.
 - **Other risks:** First lines of Fusion code were written ~ 1 year ago. What "other risks" are you talking about?
 
