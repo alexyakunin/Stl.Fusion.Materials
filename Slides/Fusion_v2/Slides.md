@@ -974,6 +974,16 @@ public virtual async Task Edit(
 }
 ```
 ---
+# How do you register Compute Services?
+```cs
+var services = new ServiceCollection();
+services.AddFusion(fusion => {
+    fusion.AddComputeService<IProductService, DbProductService>();
+    fusion.AddComputeService<ICartService, DbCartService>();
+});
+var serviceProvider = services.BuildServiceProvider();
+```
+---
 # Can we replicate `IComputed` on a remote host?
 
 ```cs
@@ -1005,11 +1015,70 @@ Do the same, but deliver the invalidation event via RPC!
 <img src="./diagrams/replica-service/regular.dio.svg" style="width: 100%"/>
 
 ---
-# Fusion API call
+# Fusion Web API call
 <!-- _class: highlight -->
 ![bg left:40%](./img/CoolDog.jpg)
 
 <img src="./diagrams/replica-service/fusion.dio.svg" style="width: 100%"/>
+
+---
+## How do you create Replica Service Controller?
+```cs
+[Route("api/[controller]/[action]")]
+[ApiController, JsonifyErrors]
+public class CartController : ControllerBase, ICartService
+{
+    private readonly ICartService _cartService;
+
+    public CartController(ICartService cartService) => _cartService = cartService;
+
+    [HttpPost]
+    public Task Edit(
+      [FromBody] EditCommand<Cart> command, 
+      CancellationToken cancellationToken = default)
+        => _cartService.Edit(command, cancellationToken);
+
+    [HttpGet, Publish]
+    public Task<Cart?> TryGet(string id, CancellationToken cancellationToken = default)
+        => _cartService.TryGet(id, cancellationToken);
+
+    [HttpGet, Publish]
+    public Task<decimal> GetTotal(string id, CancellationToken cancellationToken = default)
+        => _cartService.GetTotal(id, cancellationToken);
+}
+```
+
+---
+## How do you create Replica Service Client?
+```cs
+[BasePath("cart")]
+public interface ICartClient
+{
+    [Post("edit")]
+    Task Edit([Body] EditCommand<Cart> command, CancellationToken cancellationToken);
+    [Get("tryGet")]
+    Task<Cart?> TryGet(string id, CancellationToken cancellationToken);
+    [Get("getTotal")]
+    Task<decimal> GetTotal(string id, CancellationToken cancellationToken);
+}
+```
+
+---
+# How do you register Replica Service?
+```cs
+var services = new ServiceCollection();
+services.AddFusion(fusion => {
+    fusion.AddRestEaseClient(client => {
+        client.ConfigureHttpClientFactory((c, name, options) => {
+            var apiBaseUri = new Uri($"{baseUri}api/");
+            options.HttpClientActions.Add(httpClient => httpClient.BaseAddress = apiBaseUri);
+        });
+        client.ConfigureWebSocketChannel((c, options) => { options.BaseUri = baseUri; });
+        client.AddReplicaService<ICartService, ICartClient>();
+    });
+});
+var serviceProvider = services.BuildServiceProvider();
+```
 
 ---
 # Blazor Component: AppUserBadge
@@ -1032,6 +1101,7 @@ protected override async Task<bool> ComputeState(CancellationToken cancellationT
     return await AppUserService.IsOnline(User.Id, cancellationToken);
 }
 ```
+
 ---
 # Blazor Component: AppUserBadge - markup
 
@@ -1045,6 +1115,7 @@ protected override async Task<bool> ComputeState(CancellationToken cancellationT
     @User.Name
 </Badge>
 ```
+
 ---
 # Blazor Component: AppUserBadges
 
@@ -1068,10 +1139,50 @@ Markup:
     <AppUserBadge User="@user" />
 }
 ```
----
-## `ComposerService` - an example service relying on remote replicas
 
-See it live: https://fusion-samples.servicetitan.com/composition
+---
+![bg width:90%](./diagrams/use-cases/1.dio.svg)
+
+---
+![bg height:90%](./diagrams/use-cases/2.dio.svg)
+
+---
+![bg height:90%](./diagrams/use-cases/3.dio.svg)
+
+---
+![bg height:90%](./diagrams/use-cases/4.dio.svg)
+
+---
+![bg height:90%](./diagrams/use-cases/4a.dio.svg)
+
+---
+![bg height:90%](./diagrams/use-cases/5.dio.svg)
+
+---
+![bg height:90%](./diagrams/use-cases/6.dio.svg)
+
+---
+![bg height:90%](./diagrams/use-cases/7.dio.svg)
+
+---
+![bg height:90%](./diagrams/use-cases/8.dio.svg)
+
+---
+![bg height:90%](./diagrams/use-cases/9.dio.svg)
+
+---
+![bg height:90%](./diagrams/use-cases/10.dio.svg)
+
+---
+![bg height:90%](./diagrams/use-cases/11.dio.svg)
+
+---
+## `(Local)ComposerService`
+
+> Client-side or server-side? You decide - the code & behavior is +/- identical!
+
+See the power of distributed incremental build in action!
+Live demo: https://fusion-samples.servicetitan.com/composition
 Source code: [ComposerService](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/Server/Services/ComposerService.cs), [LocalComposerService](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/UI/Services/LocalComposerService.cs).
 
 ```cs
@@ -1089,10 +1200,11 @@ public virtual async Task<ComposedValue> GetComposedValue(
     return new ComposedValue($"{parameter} - server", uptime, sum, lastChatMessage, user, activeUserCount);
 }
 ```
----
-# How efficient is Fusion caching?
 
-The method we're repeatedly calling in our [performance test](https://github.com/servicetitan/Stl.Fusion/blob/master/tests/Stl.Fusion.Tests/PerformanceTest.cs):
+---
+# Fusion's caching performance
+
+Most important part of the [performance test](https://github.com/servicetitan/Stl.Fusion/blob/master/tests/Stl.Fusion.Tests/PerformanceTest.cs):
 ```cs
 public virtual async Task<User?> TryGetAsync(long userId)
 {
@@ -1101,12 +1213,8 @@ public virtual async Task<User?> TryGetAsync(long userId)
   var user = await dbContext.Users.FindAsync(new[] {(object) userId});
   return user;
 }
-```
----
-# How efficient is Fusion caching?
 
-The `Reader` async task (the test runs 3 readers per core):
-```cs
+// Many readers, 1 (similar) mutator
 async Task<long> Reader(string name, int iterationCount)
 {
     var rnd = new Random();
@@ -1121,10 +1229,9 @@ async Task<long> Reader(string name, int iterationCount)
     return count;
 }
 ```
-There is also a similar `Mutator`, but only one instance of it is running.
 
 ---
-# How efficient is Fusion caching?
+# Fusion's caching performance
 <!-- _class: highlight invert -->
 
 Sqlite EF provider: **16,070x**
@@ -1165,10 +1272,10 @@ Without Stl.Fusion:
 </pre>
 </div>
 
-And that's just a plain caching, i.e. no any extra benefits from the "incremental build for everything" that Fusion adds!
+And that's just *plain caching*, i.e. no benefits from "incrementally-build-everything"!
 
 ---
-# Fusion's Caching Sample
+# Caching Sample & more data points on caching
 <!-- _class: highlight invert -->
 
 A very similar code, but exposing the service via Web API. The results: 
@@ -1202,68 +1309,82 @@ Fusion's Replica Client:
 <iframe src="https://www.youtube.com/embed/lzP0JIzrYmM?start=24" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ---
-## What do you get with Fusion?
-<!-- _class: highlight invert -->
+# Fusion vs Redis & other caches
+<!-- _class: highlight -->
 
-**The feeling of flight:**
-- Caching - with automatic dependency tracking and cascading invalidation
-- The same value is never computed concurrently
-- But: all `[ComputeMethod]`-s can run concurrently!
+⌚ Almost always consistent
+🚀 Local = 1000 times faster
+❌ No serialization/deserialization
+📌 Reuse vs copy on use
+🧱 Incrementally-Build-Everything™
+🙀 Supports swapping to ext. cache!
 
-![bg right:40%](./img/FlyingCat.jpg)
-
----
-## What do you get with Fusion?
-<!-- _class: highlight invert -->
-
-**The feeling of awesomeness** of your clean code:
-* *You describe the substance.*
-  "That's what I want to get"
-* *Fusion allows you to express this substance in the clean form.*
-  By ensuring you get what you want as efficiently as possible.
-
-Just imagine, Fusion's Replica Services resolve 99.9% of your RPC calls locally, but still produce the right answers. And to achieve that, they span the web of their invalidation chains across multiple servers. Awesome, right?
-
-![bg right:20% fit](./img/Substance.jpg)
+![bg left:45%](./img/FlyingCat.jpg)
 
 ---
-## What do you get with Fusion?
-<!-- _class: highlight invert -->
+# Fusion vs SignalR
+<!-- _class: highlight -->
 
-**The feeling of laziness:** you get all of that with almost zero changes in code!
-
+🦌 All SignalR events = 🦄 "X is invalidated".
 </br>
 
-> Just add <strike>water</strike> `Computed.Invalidate(...)`.
-> &ndash; AY, Fusion's creator
+Client / UI:
+❌ No 📪/unsub. UI models to groups/topics
+❌ No update-on-event logic
+⌛ Custom update delays (scalability)
+👍 Guaranteed eventual consistency!
+</br>
 
-![bg right:45%](./img/LazyCat.jpg)
+Server:
+❌ No events, groups/topics
+💋 (# of invalidation points) ≪ (# of events)
+
+![bg right:43%](./img/LazyCat.jpg)
 
 ---
-## What do you get with Fusion?
+# Fusion vs MobX, KO, ...
+<!-- _class: highlight -->
+
+- "Wraps" APIs, not models
+- Thread-safe, asynchronous
+- Works on the server side
+- Explicit consistent / inconsistent states
+- No sync. auto-recompute
+- Distributed.
+
+![bg left:43%](./img/CoolSquirrel.jpg)
+
+---
+# Fusion vs Flux, Redux, ...
 <!-- _class: highlight invert -->
 
-**The feeling of ultimate super power** (together with Blazor):
-
-- You can run Fusion services on the client too!
-- Moreover, Fusion includes `LiveComponent` - a base base type for your Blazor components that has everything you need for real-time updates!
-- So you don't need a Knockout or MobX alternative for Blazor. Just use Fusion - everywhere!
-
-Moreover, if you use the same interfaces for your Fusion services and their client-side replicas, your UI code will run equally well on the server side too! This is what allows Fusions samples to support both Blazor WebAssembly and Blazor Server mode.
-
-![bg blur:5px brightness:0.5](./img/Incredibles.gif)
+<img src="./img/FluxExplained.png" style="height: 100%">
 
 ---
-## What's the cost?
+# Fusion vs Flux, Redux, ...
+<!-- _class: highlight invert -->
+
+Action, Dispatcher, Store, View.
+Usable only in the UI.
+Irrelevant to real-time.
+
+And it worth studying because...
+Ah, Facebook made it!
+
+![bg right:55%](./img/IDareYou-Flux.jpg)
+
+---
+# The price you pay for Fusion
 
 - **Money:** thanks to [ServiceTitan](servicetitan.com), Fusion is free (MIT license)
 - **CPU:** free your CPUs! The torture of making them to run recurring computations again and again must be stopped!
 - **RAM:** is where the cost is really paid. Besides that, [remember about GC pauses](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part08.md#large-working-sets-and-gc-pauses) and other downsides of local caching. But the upside is so bright + Fusion actually supports external caching via ["swapping" feature](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part05.md#caching-options).
+- **Your soul**, but only if you didn't read this line
 - **Learning curve:** is relatively shallow in the beginning, but getting steeper once you start to dig deeper. Though Fusion is definitely not as complex as e.g. TPL with its `ExecutionContext`, `ValueTask<T>`, and other tricky parts.
-- **Other risks:** First lines of Fusion code were written 9 months ago. What "other risks" are you talking about?
+- **Other risks:** First lines of Fusion code were written ~ 1 year ago. What "other risks" are you talking about?
 
 ---
-## What's the cost?
+## But...
 
 If you need a real-time UI, Fusion is probably the lesser of many evils you'll have to deal with otherwise. *
 </br>
@@ -1279,16 +1400,35 @@ If you need a real-time UI, Fusion is probably the lesser of many evils you'll h
 ---
 <!-- _class: center invert-->
 
-## Why having real-time UI is important?
-
----
-![bg fit](./img/IT_ETF.png)
+## Why real-time matters nowadays?
 
 ---
 
 On a serious note: [Real-Time is #1 Feature Your Next Web App Needs](https://alexyakunin.medium.com/features-of-the-future-web-apps-part-1-e32cf4e4e4f4?sk=65dacdbf670ef9b5d961c4c666e223e2)
 
 ![bg left](./img/Mosaic.png)
+
+---
+<!-- _class: -->
+![bg fit](./img/Evolution.jpg)
+
+> It is not the strongest of the species that survives, nor the most intelligent; 
+> it is the one most adaptable to change.
+> **— Charles Darwin**
+
+</br></br></br></br></br></br></br></br></br></br>
+
+---
+<!-- _class: highlight -->
+![bg fit](./img/Toyota.jpg)
+
+---
+<!-- _class: highlight -->
+![bg fit](./img/Tesla.jpg)
+
+---
+<!-- _class: highlight -->
+![bg fit](./img/VGT-Fund.jpg)
 
 ---
 <!-- _class: center invert-->
@@ -1304,4 +1444,3 @@ P.S. We need your stars and forks! <img src="https://img.shields.io/github/stars
 </footer>
 
 ![bg](./img/FusionBg.jpg)
-

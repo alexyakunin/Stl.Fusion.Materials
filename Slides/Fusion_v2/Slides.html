@@ -747,6 +747,16 @@ ClientServices = HostServices = services.BuildServiceProvider()
 </span></span></foreignObject></svg></code></pre>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="82" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+<h1>How do you register Compute Services?</h1>
+<pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">var</span> services = <span class="hljs-keyword">new</span> ServiceCollection();
+services.AddFusion(fusion =&gt; {
+    fusion.AddComputeService&lt;IProductService, DbProductService&gt;();
+    fusion.AddComputeService&lt;ICartService, DbCartService&gt;();
+});
+<span class="hljs-keyword">var</span> serviceProvider = services.BuildServiceProvider();
+</span></span></foreignObject></svg></code></pre>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="83" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h1>Can we replicate <code>IComputed</code> on a remote host?</h1>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">ComputedReplica</span>&lt;<span class="hljs-title">T</span>&gt; : <span class="hljs-title">IComputed</span>&lt;<span class="hljs-title">T</span>&gt; 
 {
@@ -768,15 +778,71 @@ ClientServices = HostServices = services.BuildServiceProvider()
 </span></span></foreignObject></svg></code></pre>
 <p>Do the same, but deliver the invalidation event via RPC!</p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="highlight" data-theme="default" class="highlight" style="--class:highlight;--theme:default;--marpit-advanced-background-split:40%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="right"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/RegularDog.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="60%" height="720"><section id="83" data-class="highlight" data-theme="default" class="highlight" style="--class:highlight;--theme:default;--marpit-advanced-background-split:40%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="right">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="highlight" data-theme="default" class="highlight" style="--class:highlight;--theme:default;--marpit-advanced-background-split:40%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="right"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/RegularDog.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="60%" height="720"><section id="84" data-class="highlight" data-theme="default" class="highlight" style="--class:highlight;--theme:default;--marpit-advanced-background-split:40%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="right">
 <h1>Your Web API call</h1>
 <img src="./diagrams/replica-service/regular.dio.svg" style="width: 100%" />
 </section>
-</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="highlight" data-theme="default" class="highlight" style="--class:highlight;--theme:default;--marpit-advanced-background-split:40%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="left"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/CoolDog.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="60%" height="720" x="40%"><section id="84" data-class="highlight" data-theme="default" class="highlight" style="--class:highlight;--theme:default;--marpit-advanced-background-split:40%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="left">
-<h1>Fusion API call</h1>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="highlight" data-theme="default" class="highlight" style="--class:highlight;--theme:default;--marpit-advanced-background-split:40%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="left"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/CoolDog.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="60%" height="720" x="40%"><section id="85" data-class="highlight" data-theme="default" class="highlight" style="--class:highlight;--theme:default;--marpit-advanced-background-split:40%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="left">
+<h1>Fusion Web API call</h1>
 <img src="./diagrams/replica-service/fusion.dio.svg" style="width: 100%" />
 </section>
-</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="85" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="86" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+<h2>How do you create Replica Service Controller?</h2>
+<pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap>[<span class="hljs-meta">Route(<span class="hljs-meta-string">&quot;api/[controller]/[action]&quot;</span>)</span>]
+[<span class="hljs-meta">ApiController, JsonifyErrors</span>]
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">CartController</span> : <span class="hljs-title">ControllerBase</span>, <span class="hljs-title">ICartService</span>
+{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> ICartService _cartService;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">CartController</span>(<span class="hljs-params">ICartService cartService</span>)</span> =&gt; _cartService = cartService;
+
+    [<span class="hljs-meta">HttpPost</span>]
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Task <span class="hljs-title">Edit</span>(<span class="hljs-params">
+      [FromBody] EditCommand&lt;Cart&gt; command, 
+      CancellationToken cancellationToken = <span class="hljs-literal">default</span></span>)</span>
+        =&gt; _cartService.Edit(command, cancellationToken);
+
+    [<span class="hljs-meta">HttpGet, Publish</span>]
+    <span class="hljs-keyword">public</span> Task&lt;Cart?&gt; TryGet(<span class="hljs-built_in">string</span> id, CancellationToken cancellationToken = <span class="hljs-literal">default</span>)
+        =&gt; _cartService.TryGet(id, cancellationToken);
+
+    [<span class="hljs-meta">HttpGet, Publish</span>]
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Task&lt;<span class="hljs-built_in">decimal</span>&gt; <span class="hljs-title">GetTotal</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> id, CancellationToken cancellationToken = <span class="hljs-literal">default</span></span>)</span>
+        =&gt; _cartService.GetTotal(id, cancellationToken);
+}
+</span></span></foreignObject></svg></code></pre>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="87" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+<h2>How do you create Replica Service Client?</h2>
+<pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap>[<span class="hljs-meta">BasePath(<span class="hljs-meta-string">&quot;cart&quot;</span>)</span>]
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title">ICartClient</span>
+{
+    [<span class="hljs-meta">Post(<span class="hljs-meta-string">&quot;edit&quot;</span>)</span>]
+    <span class="hljs-function">Task <span class="hljs-title">Edit</span>(<span class="hljs-params">[Body] EditCommand&lt;Cart&gt; command, CancellationToken cancellationToken</span>)</span>;
+    [<span class="hljs-meta">Get(<span class="hljs-meta-string">&quot;tryGet&quot;</span>)</span>]
+    Task&lt;Cart?&gt; TryGet(<span class="hljs-built_in">string</span> id, CancellationToken cancellationToken);
+    [<span class="hljs-meta">Get(<span class="hljs-meta-string">&quot;getTotal&quot;</span>)</span>]
+    <span class="hljs-function">Task&lt;<span class="hljs-built_in">decimal</span>&gt; <span class="hljs-title">GetTotal</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> id, CancellationToken cancellationToken</span>)</span>;
+}
+</span></span></foreignObject></svg></code></pre>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="88" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+<h1>How do you register Replica Service?</h1>
+<pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">var</span> services = <span class="hljs-keyword">new</span> ServiceCollection();
+services.AddFusion(fusion =&gt; {
+    fusion.AddRestEaseClient(client =&gt; {
+        client.ConfigureHttpClientFactory((c, name, options) =&gt; {
+            <span class="hljs-keyword">var</span> apiBaseUri = <span class="hljs-keyword">new</span> Uri(<span class="hljs-string">$&quot;<span class="hljs-subst">{baseUri}</span>api/&quot;</span>);
+            options.HttpClientActions.Add(httpClient =&gt; httpClient.BaseAddress = apiBaseUri);
+        });
+        client.ConfigureWebSocketChannel((c, options) =&gt; { options.BaseUri = baseUri; });
+        client.AddReplicaService&lt;ICartService, ICartClient&gt;();
+    });
+});
+<span class="hljs-keyword">var</span> serviceProvider = services.BuildServiceProvider();
+</span></span></foreignObject></svg></code></pre>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="89" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h1>Blazor Component: AppUserBadge</h1>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap>@inherits LiveComponentBase&lt;<span class="hljs-built_in">bool</span>&gt;
 @inject IAppUserService AppUserService
@@ -796,7 +862,7 @@ ClientServices = HostServices = services.BuildServiceProvider()
 }
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="86" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="90" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h1>Blazor Component: AppUserBadge - markup</h1>
 <pre><code class="language-html"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap>@{
     var isOnline = State.LastValue;
@@ -808,7 +874,7 @@ ClientServices = HostServices = services.BuildServiceProvider()
 <span class="hljs-tag">&lt;/<span class="hljs-name">Badge</span>&gt;</span>
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="87" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="91" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h1>Blazor Component: AppUserBadges</h1>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap>[<span class="hljs-meta">Parameter</span>]
 <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">IEnumerable</span>&lt;<span class="hljs-title">AppUser</span>&gt; Users</span> { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; } = Enumerable.Empty&lt;AppUser&gt;();
@@ -829,9 +895,25 @@ ClientServices = HostServices = services.BuildServiceProvider()
 }
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="88" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
-<h2><code>ComposerService</code> - an example service relying on remote replicas</h2>
-<p>See it live: <a href="https://fusion-samples.servicetitan.com/composition">https://fusion-samples.servicetitan.com/composition</a><br />
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./diagrams/use-cases/1.dio.svg&quot;);background-size:90% auto;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="92" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="content"></section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./diagrams/use-cases/2.dio.svg&quot;);background-size:auto 90%;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="93" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="content"></section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./diagrams/use-cases/3.dio.svg&quot;);background-size:auto 90%;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="94" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="content"></section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./diagrams/use-cases/4.dio.svg&quot;);background-size:auto 90%;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="95" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="content"></section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./diagrams/use-cases/4a.dio.svg&quot;);background-size:auto 90%;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="96" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="content"></section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./diagrams/use-cases/5.dio.svg&quot;);background-size:auto 90%;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="97" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="content"></section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./diagrams/use-cases/6.dio.svg&quot;);background-size:auto 90%;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="98" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="content"></section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./diagrams/use-cases/7.dio.svg&quot;);background-size:auto 90%;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="99" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="content"></section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./diagrams/use-cases/8.dio.svg&quot;);background-size:auto 90%;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="100" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="content"></section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./diagrams/use-cases/9.dio.svg&quot;);background-size:auto 90%;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="101" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="content"></section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./diagrams/use-cases/10.dio.svg&quot;);background-size:auto 90%;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="102" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="content"></section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./diagrams/use-cases/11.dio.svg&quot;);background-size:auto 90%;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="103" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="content"></section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="104" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+<h2><code>(Local)ComposerService</code></h2>
+<blockquote>
+<p>Client-side or server-side? You decide - the code &amp; behavior is +/- identical!</p>
+</blockquote>
+<p>See the power of distributed incremental build in action!<br />
+Live demo: <a href="https://fusion-samples.servicetitan.com/composition">https://fusion-samples.servicetitan.com/composition</a><br />
 Source code: <a href="https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/Server/Services/ComposerService.cs">ComposerService</a>, <a href="https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/UI/Services/LocalComposerService.cs">LocalComposerService</a>.</p>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">async</span> Task&lt;ComposedValue&gt; <span class="hljs-title">GetComposedValue</span>(<span class="hljs-params">
     <span class="hljs-built_in">string</span> parameter, Session session, CancellationToken cancellationToken</span>)</span>
@@ -848,9 +930,9 @@ Source code: <a href="https://github.com/servicetitan/Stl.Fusion.Samples/blob/ma
 }
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="89" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
-<h1>How efficient is Fusion caching?</h1>
-<p>The method we're repeatedly calling in our <a href="https://github.com/servicetitan/Stl.Fusion/blob/master/tests/Stl.Fusion.Tests/PerformanceTest.cs">performance test</a>:</p>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="105" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+<h1>Fusion's caching performance</h1>
+<p>Most important part of the <a href="https://github.com/servicetitan/Stl.Fusion/blob/master/tests/Stl.Fusion.Tests/PerformanceTest.cs">performance test</a>:</p>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">public</span> <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">async</span> Task&lt;User?&gt; TryGetAsync(<span class="hljs-built_in">long</span> userId)
 {
   <span class="hljs-keyword">await</span> Everything(); <span class="hljs-comment">// LMK if you know what&#x27;s the role of this call!</span>
@@ -858,12 +940,9 @@ Source code: <a href="https://github.com/servicetitan/Stl.Fusion.Samples/blob/ma
   <span class="hljs-keyword">var</span> user = <span class="hljs-keyword">await</span> dbContext.Users.FindAsync(<span class="hljs-keyword">new</span>[] {(<span class="hljs-built_in">object</span>) userId});
   <span class="hljs-keyword">return</span> user;
 }
-</span></span></foreignObject></svg></code></pre>
-</section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="90" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
-<h1>How efficient is Fusion caching?</h1>
-<p>The <code>Reader</code> async task (the test runs 3 readers per core):</p>
-<pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">async</span> Task&lt;<span class="hljs-built_in">long</span>&gt; <span class="hljs-title">Reader</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> name, <span class="hljs-built_in">int</span> iterationCount</span>)</span>
+
+<span class="hljs-comment">// Many readers, 1 (similar) mutator</span>
+<span class="hljs-function"><span class="hljs-keyword">async</span> Task&lt;<span class="hljs-built_in">long</span>&gt; <span class="hljs-title">Reader</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> name, <span class="hljs-built_in">int</span> iterationCount</span>)</span>
 {
     <span class="hljs-keyword">var</span> rnd = <span class="hljs-keyword">new</span> Random();
     <span class="hljs-keyword">var</span> count = <span class="hljs-number">0L</span>;
@@ -877,10 +956,9 @@ Source code: <a href="https://github.com/servicetitan/Stl.Fusion.Samples/blob/ma
     <span class="hljs-keyword">return</span> count;
 }
 </span></span></foreignObject></svg></code></pre>
-<p>There is also a similar <code>Mutator</code>, but only one instance of it is running.</p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="91" data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;">
-<h1>How efficient is Fusion caching?</h1>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="106" data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;">
+<h1>Fusion's caching performance</h1>
 
 <p>Sqlite EF provider: <strong>16,070x</strong></p>
 <div class="col2" style="margin-top: 0px;">
@@ -918,10 +996,10 @@ Without Stl.Fusion:
     Speed:      26.143 K Ops/sec
 </pre>
 </div>
-<p>And that's just a plain caching, i.e. no any extra benefits from the &quot;incremental build for everything&quot; that Fusion adds!</p>
+<p>And that's just <em>plain caching</em>, i.e. no benefits from &quot;incrementally-build-everything&quot;!</p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="92" data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;">
-<h1>Fusion's Caching Sample</h1>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="107" data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;">
+<h1>Caching Sample &amp; more data points on caching</h1>
 
 <p>A very similar code, but exposing the service via Web API. The results:</p>
 <ul>
@@ -940,68 +1018,76 @@ Fusion&#x27;s Replica Client:
   Reads: 20.29M operations/s
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="93" data-class="center invert" data-theme="default" class="center invert" style="--class:center invert;--theme:default;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="108" data-class="center invert" data-theme="default" class="center invert" style="--class:center invert;--theme:default;">
 <h2>How 10x speed boost looks like?</h2>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="94" data-class="video" data-theme="default" class="video" style="--class:video;--theme:default;"><iframe src="https://www.youtube.com/embed/05pzUXujMJU?start=186" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="109" data-class="video" data-theme="default" class="video" style="--class:video;--theme:default;"><iframe src="https://www.youtube.com/embed/05pzUXujMJU?start=186" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="95" data-class="video" data-theme="default" class="video" style="--class:video;--theme:default;"><iframe src="https://www.youtube.com/embed/lzP0JIzrYmM?start=24" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="110" data-class="video" data-theme="default" class="video" style="--class:video;--theme:default;"><iframe src="https://www.youtube.com/embed/lzP0JIzrYmM?start=24" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;--marpit-advanced-background-split:40%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="right"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/FlyingCat.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="60%" height="720"><section id="96" data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;--marpit-advanced-background-split:40%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="right">
-<h2>What do you get with Fusion?</h2>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="highlight" data-theme="default" class="highlight" style="--class:highlight;--theme:default;--marpit-advanced-background-split:45%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="left"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/FlyingCat.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="55%" height="720" x="45%"><section id="111" data-class="highlight" data-theme="default" class="highlight" style="--class:highlight;--theme:default;--marpit-advanced-background-split:45%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="left">
+<h1>Fusion vs Redis &amp; other caches</h1>
 
-<p><strong>The feeling of flight:</strong></p>
+<p><img class="emoji" draggable="false" alt="⌚" src="https://twemoji.maxcdn.com/2/svg/231a.svg" data-marp-twemoji=""/> Almost always consistent<br />
+<img class="emoji" draggable="false" alt="🚀" src="https://twemoji.maxcdn.com/2/svg/1f680.svg" data-marp-twemoji=""/> Local = 1000 times faster<br />
+<img class="emoji" draggable="false" alt="❌" src="https://twemoji.maxcdn.com/2/svg/274c.svg" data-marp-twemoji=""/> No serialization/deserialization<br />
+<img class="emoji" draggable="false" alt="📌" src="https://twemoji.maxcdn.com/2/svg/1f4cc.svg" data-marp-twemoji=""/> Reuse vs copy on use<br />
+<img class="emoji" draggable="false" alt="🧱" src="https://twemoji.maxcdn.com/2/svg/1f9f1.svg" data-marp-twemoji=""/> Incrementally-Build-Everything™<br />
+<img class="emoji" draggable="false" alt="🙀" src="https://twemoji.maxcdn.com/2/svg/1f640.svg" data-marp-twemoji=""/> Supports swapping to ext. cache!</p>
+</section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="highlight" data-theme="default" class="highlight" style="--class:highlight;--theme:default;--marpit-advanced-background-split:43%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="right"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/LazyCat.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="57%" height="720"><section id="112" data-class="highlight" data-theme="default" class="highlight" style="--class:highlight;--theme:default;--marpit-advanced-background-split:43%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="right">
+<h1>Fusion vs SignalR</h1>
+
+<p><img class="emoji" draggable="false" alt="🦌" src="https://twemoji.maxcdn.com/2/svg/1f98c.svg" data-marp-twemoji=""/> All SignalR events = <img class="emoji" draggable="false" alt="🦄" src="https://twemoji.maxcdn.com/2/svg/1f984.svg" data-marp-twemoji=""/> &quot;X is invalidated&quot;.<br />
+<br /></p>
+<p>Client / UI:<br />
+<img class="emoji" draggable="false" alt="❌" src="https://twemoji.maxcdn.com/2/svg/274c.svg" data-marp-twemoji=""/> No <img class="emoji" draggable="false" alt="📪" src="https://twemoji.maxcdn.com/2/svg/1f4ea.svg" data-marp-twemoji=""/>/unsub. UI models to groups/topics<br />
+<img class="emoji" draggable="false" alt="❌" src="https://twemoji.maxcdn.com/2/svg/274c.svg" data-marp-twemoji=""/> No update-on-event logic<br />
+<img class="emoji" draggable="false" alt="⌛" src="https://twemoji.maxcdn.com/2/svg/231b.svg" data-marp-twemoji=""/> Custom update delays (scalability)<br />
+<img class="emoji" draggable="false" alt="👍" src="https://twemoji.maxcdn.com/2/svg/1f44d.svg" data-marp-twemoji=""/> Guaranteed eventual consistency!<br />
+<br /></p>
+<p>Server:<br />
+<img class="emoji" draggable="false" alt="❌" src="https://twemoji.maxcdn.com/2/svg/274c.svg" data-marp-twemoji=""/> No events, groups/topics<br />
+<img class="emoji" draggable="false" alt="💋" src="https://twemoji.maxcdn.com/2/svg/1f48b.svg" data-marp-twemoji=""/> (# of invalidation points) ≪ (# of events)</p>
+</section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="highlight" data-theme="default" class="highlight" style="--class:highlight;--theme:default;--marpit-advanced-background-split:43%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="left"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/CoolSquirrel.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="57%" height="720" x="43%"><section id="113" data-class="highlight" data-theme="default" class="highlight" style="--class:highlight;--theme:default;--marpit-advanced-background-split:43%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="left">
+<h1>Fusion vs MobX, KO, ...</h1>
+
 <ul>
-<li>Caching - with automatic dependency tracking and cascading invalidation</li>
-<li>The same value is never computed concurrently</li>
-<li>But: all <code>[ComputeMethod]</code>-s can run concurrently!</li>
+<li>&quot;Wraps&quot; APIs, not models</li>
+<li>Thread-safe, asynchronous</li>
+<li>Works on the server side</li>
+<li>Explicit consistent / inconsistent states</li>
+<li>No sync. auto-recompute</li>
+<li>Distributed.</li>
 </ul>
 </section>
-</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-marpit-fragments="2" data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;--marpit-advanced-background-split:20%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="right"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/Substance.jpg&quot;);background-size:contain;"></figure></div></section></foreignObject><foreignObject width="80%" height="720"><section id="97" data-marpit-fragments="2" data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;--marpit-advanced-background-split:20%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="right">
-<h2>What do you get with Fusion?</h2>
-
-<p><strong>The feeling of awesomeness</strong> of your clean code:</p>
-<ul>
-<li data-marpit-fragment="1"><em>You describe the substance.</em><br />
-&quot;That's what I want to get&quot;</li>
-<li data-marpit-fragment="2"><em>Fusion allows you to express this substance in the clean form.</em><br />
-By ensuring you get what you want as efficiently as possible.</li>
-</ul>
-<p>Just imagine, Fusion's Replica Services resolve 99.9% of your RPC calls locally, but still produce the right answers. And to achieve that, they span the web of their invalidation chains across multiple servers. Awesome, right?</p>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="114" data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;">
+<h1>Fusion vs Flux, Redux, ...</h1>
+<img src="./img/FluxExplained.png" style="height: 100%" />
 </section>
-</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;--marpit-advanced-background-split:45%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="right"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/LazyCat.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="55%" height="720"><section id="98" data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;--marpit-advanced-background-split:45%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="right">
-<h2>What do you get with Fusion?</h2>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;--marpit-advanced-background-split:55%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="right"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/IDareYou-Flux.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="45%" height="720"><section id="115" data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;--marpit-advanced-background-split:55%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="right">
+<h1>Fusion vs Flux, Redux, ...</h1>
 
-<p><strong>The feeling of laziness:</strong> you get all of that with almost zero changes in code!</p>
-<br />
-<blockquote>
-<p>Just add <strike>water</strike> <code>Computed.Invalidate(...)</code>.<br />
-– AY, Fusion's creator</p>
-</blockquote>
+<p>Action, Dispatcher, Store, View.<br />
+Usable only in the UI.<br />
+Irrelevant to real-time.</p>
+<p>And it worth studying because...<br />
+Ah, Facebook made it!</p>
 </section>
-</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/Incredibles.gif&quot;);filter:blur(5px) brightness(0.5);"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="99" data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;" data-marpit-advanced-background="content">
-<h2>What do you get with Fusion?</h2>
-
-<p><strong>The feeling of ultimate super power</strong> (together with Blazor):</p>
-<ul>
-<li>You can run Fusion services on the client too!</li>
-<li>Moreover, Fusion includes <code>LiveComponent</code> - a base base type for your Blazor components that has everything you need for real-time updates!</li>
-<li>So you don't need a Knockout or MobX alternative for Blazor. Just use Fusion - everywhere!</li>
-</ul>
-<p>Moreover, if you use the same interfaces for your Fusion services and their client-side replicas, your UI code will run equally well on the server side too! This is what allows Fusions samples to support both Blazor WebAssembly and Blazor Server mode.</p>
-</section>
-</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="100" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
-<h2>What's the cost?</h2>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="116" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+<h1>The price you pay for Fusion</h1>
 <ul>
 <li><strong>Money:</strong> thanks to <a href="servicetitan.com">ServiceTitan</a>, Fusion is free (MIT license)</li>
 <li><strong>CPU:</strong> free your CPUs! The torture of making them to run recurring computations again and again must be stopped!</li>
 <li><strong>RAM:</strong> is where the cost is really paid. Besides that, <a href="https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part08.md#large-working-sets-and-gc-pauses">remember about GC pauses</a> and other downsides of local caching. But the upside is so bright + Fusion actually supports external caching via <a href="https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part05.md#caching-options">&quot;swapping&quot; feature</a>.</li>
+<li><strong>Your soul</strong>, but only if you didn't read this line</li>
 <li><strong>Learning curve:</strong> is relatively shallow in the beginning, but getting steeper once you start to dig deeper. Though Fusion is definitely not as complex as e.g. TPL with its <code>ExecutionContext</code>, <code>ValueTask&lt;T&gt;</code>, and other tricky parts.</li>
-<li><strong>Other risks:</strong> First lines of Fusion code were written 9 months ago. What &quot;other risks&quot; are you talking about?</li>
+<li><strong>Other risks:</strong> First lines of Fusion code were written ~ 1 year ago. What &quot;other risks&quot; are you talking about?</li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/StitchAndOthers.jpg&quot;);filter:brightness(0.7);"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="101" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="content">
-<h2>What's the cost?</h2>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/StitchAndOthers.jpg&quot;);filter:brightness(0.7);"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="117" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="content">
+<h2>But...</h2>
 <p>If you need a real-time UI, Fusion is probably the lesser of many evils you'll have to deal with otherwise. *<br />
 <br /><br />
 <br /></p>
@@ -1009,14 +1095,24 @@ By ensuring you get what you want as efficiently as possible.</li>
 <h2></h2>
 <h2></h2>
 </section>
-</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="102" data-class="center invert" data-theme="default" class="center invert" style="--class:center invert;--theme:default;">
-<h2>Why having real-time UI is important?</h2>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="118" data-class="center invert" data-theme="default" class="center invert" style="--class:center invert;--theme:default;">
+<h2>Why real-time matters nowadays?</h2>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/IT_ETF.png&quot;);background-size:contain;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="103" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="content"></section>
-</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;--marpit-advanced-background-split:50%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="left"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/Mosaic.png&quot;);"></figure></div></section></foreignObject><foreignObject width="50%" height="720" x="50%"><section id="104" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;--marpit-advanced-background-split:50%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="left">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;--marpit-advanced-background-split:50%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="left"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/Mosaic.png&quot;);"></figure></div></section></foreignObject><foreignObject width="50%" height="720" x="50%"><section id="119" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;--marpit-advanced-background-split:50%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="left">
 <p>On a serious note: <a href="https://alexyakunin.medium.com/features-of-the-future-web-apps-part-1-e32cf4e4e4f4?sk=65dacdbf670ef9b5d961c4c666e223e2">Real-Time is #1 Feature Your Next Web App Needs</a></p>
 </section>
-</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="center invert" data-theme="default" class="center invert" style="--class:center invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/FusionBg.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="105" data-class="center invert" data-theme="default" class="center invert" style="--class:center invert;--theme:default;" data-marpit-advanced-background="content">
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-theme="default" style="--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/Evolution.jpg&quot;);background-size:contain;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="120" data-theme="default" style="--theme:default;" data-marpit-advanced-background="content">
+<blockquote>
+<p>It is not the strongest of the species that survives, nor the most intelligent;<br />
+it is the one most adaptable to change.<br />
+<strong>— Charles Darwin</strong></p>
+</blockquote>
+<p><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /></p>
+</section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="highlight" data-theme="default" class="highlight" style="--class:highlight;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/Toyota.jpg&quot;);background-size:contain;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="121" data-class="highlight" data-theme="default" class="highlight" style="--class:highlight;--theme:default;" data-marpit-advanced-background="content"></section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="highlight" data-theme="default" class="highlight" style="--class:highlight;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/Tesla.jpg&quot;);background-size:contain;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="122" data-class="highlight" data-theme="default" class="highlight" style="--class:highlight;--theme:default;" data-marpit-advanced-background="content"></section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="highlight" data-theme="default" class="highlight" style="--class:highlight;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/VGT-Fund.jpg&quot;);background-size:contain;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="123" data-class="highlight" data-theme="default" class="highlight" style="--class:highlight;--theme:default;" data-marpit-advanced-background="content"></section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="center invert" data-theme="default" class="center invert" style="--class:center invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/FusionBg.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="124" data-class="center invert" data-theme="default" class="center invert" style="--class:center invert;--theme:default;" data-marpit-advanced-background="content">
 <p><br /><br /><br /><br /></p>
 <h2 style="font-size: 60pt">Thank you!</h1>
 <footer style="width: 95%; text-align: right; font-size: 20pt; color: white">
