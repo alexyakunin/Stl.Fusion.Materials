@@ -509,7 +509,16 @@ Coincidentally, <a href="https://twitter.com/StevenSanderson">Mr. Sanderson</a> 
 </ul>
 <footer>(*) Almost immutable</footer>
 </section>
-</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;--marpit-advanced-background-split:30%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="right"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./diagrams/consistency-state/transitions.dio.svg&quot;);background-size:contain;"></figure></div></section></foreignObject><foreignObject width="70%" height="720"><section id="68" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;--marpit-advanced-background-split:30%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="right">
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="center" data-theme="default" class="center" style="--class:center;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/Samples-Blazor.gif&quot;);"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="68" data-class="center" data-theme="default" class="center" style="--class:center;--theme:default;" data-marpit-advanced-background="content"><div style="font-size: 100px; color: #eee; text-shadow: 2px 2px #000;">
+  <a href="http://fusion-samples.servicetitan.com/" 
+     style="color: #eee">DEMO</a>
+</div>
+<footer>
+  <a href="http://fusion-samples.servicetitan.com/"
+     style="background: white; padding: 3pt;">https://fusion-samples.servicetitan.com</a>
+</footer>
+</section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="center" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;--marpit-advanced-background-split:30%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="right"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./diagrams/consistency-state/transitions.dio.svg&quot;);background-size:contain;"></figure></div></section></foreignObject><foreignObject width="70%" height="720"><section id="69" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;--marpit-advanced-background-split:30%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="right">
 <h1>Fusion's <code>IComputed&lt;T&gt;</code>:</h1>
 
 <p>A bit simplified version of actual <code>IComputed&lt;T&gt;</code>:</p>
@@ -519,23 +528,14 @@ Coincidentally, <a href="https://twitter.com/StevenSanderson">Mr. Sanderson</a> 
   Exception Error { <span class="hljs-keyword">get</span>; }
   
   <span class="hljs-keyword">event</span> Action Invalidated; <span class="hljs-comment">// Event, triggered just once on invalidation</span>
-  <span class="hljs-function">Task <span class="hljs-title">WhenInvalidatedAsync</span>(<span class="hljs-params"></span>)</span>; <span class="hljs-comment">// Alternative way to await for invalidation</span>
+  <span class="hljs-function">Task <span class="hljs-title">WhenInvalidated</span>(<span class="hljs-params"></span>)</span>; <span class="hljs-comment">// Alternative way to await for invalidation</span>
   <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Invalidate</span>(<span class="hljs-params"></span>)</span>;
-  Task&lt;IComputed&lt;T&gt;&gt; UpdateAsync(); <span class="hljs-comment">// Notice it returns a new instance!</span>
+  Task&lt;IComputed&lt;T&gt;&gt; Update(); <span class="hljs-comment">// Notice it returns a new instance!</span>
 }
 </span></span></foreignObject></svg></code></pre>
 </section>
-</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./diagrams/consistency-state/instances.dio.svg&quot;);background-size:auto 90%;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="69" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="content"></section>
-</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="center" data-theme="default" class="center" style="--class:center;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/Samples-Blazor.gif&quot;);"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="70" data-class="center" data-theme="default" class="center" style="--class:center;--theme:default;" data-marpit-advanced-background="content"><div style="font-size: 100px; color: #eee; text-shadow: 2px 2px #000;">
-  <a href="http://fusion-samples.servicetitan.com/" 
-     style="color: #eee">DEMO</a>
-</div>
-<footer>
-  <a href="http://fusion-samples.servicetitan.com/"
-     style="background: white; padding: 3pt;">https://fusion-samples.servicetitan.com</a>
-</footer>
-</section>
-</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="center" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="71" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./diagrams/consistency-state/instances.dio.svg&quot;);background-size:auto 90%;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="70" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="content"></section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="71" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h1>HelloCart: API Models</h1>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">public</span> <span class="hljs-keyword">record</span> <span class="hljs-title">Product</span> : <span class="hljs-title">IHasId</span>&lt;<span class="hljs-title">string</span>&gt;
 {
@@ -625,7 +625,7 @@ Coincidentally, <a href="https://twitter.com/StevenSanderson">Mr. Sanderson</a> 
 </span></span></foreignObject></svg></code></pre>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="76" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
-<h1>InMemoryProductService - Actual One</h1>
+<h1>InMemoryProductService - the actual one</h1>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">InMemoryProductService</span> : <span class="hljs-title">IProductService</span>
 {
     <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> ConcurrentDictionary&lt;<span class="hljs-built_in">string</span>, Product&gt; _products = <span class="hljs-keyword">new</span>();
@@ -777,7 +777,7 @@ services.AddFusion(fusion =&gt; {
 <img src="./diagrams/replica-service/fusion.dio.svg" style="width: 100%" />
 </section>
 </foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="85" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
-<h2>Replica Service - Controller</h2>
+<h1>Replica Service - Controller</h1>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap>[<span class="hljs-meta">Route(<span class="hljs-meta-string">&quot;api/[controller]/[action]&quot;</span>)</span>]
 [<span class="hljs-meta">ApiController, JsonifyErrors</span>]
 <span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">CartController</span> : <span class="hljs-title">ControllerBase</span>, <span class="hljs-title">ICartService</span>
@@ -803,7 +803,7 @@ services.AddFusion(fusion =&gt; {
 </span></span></foreignObject></svg></code></pre>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="86" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
-<h2>Replica Service - Client</h2>
+<h1>Replica Service - Client</h1>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap>[<span class="hljs-meta">BasePath(<span class="hljs-meta-string">&quot;cart&quot;</span>)</span>]
 <span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title">ICartClient</span>
 {
@@ -926,7 +926,7 @@ Source code: <a href="https://github.com/servicetitan/Stl.Fusion.Samples/blob/ma
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="104" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h1>Fusion's caching performance</h1>
 <p>Most important part of the <a href="https://github.com/servicetitan/Stl.Fusion/blob/master/tests/Stl.Fusion.Tests/PerformanceTest.cs">performance test</a>:</p>
-<pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">public</span> <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">async</span> Task&lt;User?&gt; TryGetAsync(<span class="hljs-built_in">long</span> userId)
+<pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">public</span> <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">async</span> Task&lt;User?&gt; TryGet(<span class="hljs-built_in">long</span> userId)
 {
   <span class="hljs-keyword">await</span> Everything(); <span class="hljs-comment">// LMK if you know what&#x27;s the role of this call!</span>
   <span class="hljs-keyword">await</span> <span class="hljs-keyword">using</span> <span class="hljs-keyword">var</span> dbContext = DbContextFactory.CreateDbContext(); <span class="hljs-comment">// Pooled</span>
@@ -941,7 +941,7 @@ Source code: <a href="https://github.com/servicetitan/Stl.Fusion.Samples/blob/ma
     <span class="hljs-keyword">var</span> count = <span class="hljs-number">0L</span>;
     <span class="hljs-keyword">for</span> (; iterationCount &gt; <span class="hljs-number">0</span>; iterationCount--) {
         <span class="hljs-keyword">var</span> userId = (<span class="hljs-built_in">long</span>) rnd.Next(UserCount);
-        <span class="hljs-keyword">var</span> user = <span class="hljs-keyword">await</span> users.TryGetAsync(userId);
+        <span class="hljs-keyword">var</span> user = <span class="hljs-keyword">await</span> users.TryGet(userId);
         <span class="hljs-keyword">if</span> (user!.Id == userId)
             count++;
         extraAction.Invoke(user!); <span class="hljs-comment">// Optionally serializes the user</span>

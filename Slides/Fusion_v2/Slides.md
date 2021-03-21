@@ -714,27 +714,6 @@ Func<TIn, TOut> ToAwesome<TIn, TOut>(Func<TIn, TOut> fn)
 <footer>(*) Almost immutable</footer>
 
 ---
-# Fusion's `IComputed<T>`:
-![bg fit right:30%](./diagrams/consistency-state/transitions.dio.svg)
-
-A bit simplified version of actual `IComputed<T>`:
-
-```cs
-interface IComputed<T> {
-  ConsistencyState ConsistencyState { get; } 
-  T Value { get; }
-  Exception Error { get; }
-  
-  event Action Invalidated; // Event, triggered just once on invalidation
-  Task WhenInvalidatedAsync(); // Alternative way to await for invalidation
-  void Invalidate();
-  Task<IComputed<T>> UpdateAsync(); // Notice it returns a new instance!
-}
-```
----
-![bg height:90%](./diagrams/consistency-state/instances.dio.svg)
-
----
 ![bg](./img/Samples-Blazor.gif)
 <!-- _class: center -->
 
@@ -747,6 +726,29 @@ interface IComputed<T> {
   <a href="http://fusion-samples.servicetitan.com/"
      style="background: white; padding: 3pt;">https://fusion-samples.servicetitan.com</a>
 </footer>
+
+
+---
+# Fusion's `IComputed<T>`:
+![bg fit right:30%](./diagrams/consistency-state/transitions.dio.svg)
+
+A bit simplified version of actual `IComputed<T>`:
+
+```cs
+interface IComputed<T> {
+  ConsistencyState ConsistencyState { get; } 
+  T Value { get; }
+  Exception Error { get; }
+  
+  event Action Invalidated; // Event, triggered just once on invalidation
+  Task WhenInvalidated(); // Alternative way to await for invalidation
+  void Invalidate();
+  Task<IComputed<T>> Update(); // Notice it returns a new instance!
+}
+```
+
+---
+![bg height:90%](./diagrams/consistency-state/instances.dio.svg)
 
 
 ---
@@ -845,7 +847,7 @@ public class InMemoryProductService : IProductService
 }
 ```
 ---
-# InMemoryProductService - Actual One
+# InMemoryProductService - the actual one
 
 ```cs
 public class InMemoryProductService : IProductService
@@ -1013,7 +1015,7 @@ Do the same, but deliver the invalidation event via RPC!
 <img src="./diagrams/replica-service/fusion.dio.svg" style="width: 100%"/>
 
 ---
-## Replica Service - Controller
+# Replica Service - Controller
 ```cs
 [Route("api/[controller]/[action]")]
 [ApiController, JsonifyErrors]
@@ -1040,7 +1042,7 @@ public class CartController : ControllerBase, ICartService
 ```
 
 ---
-## Replica Service - Client
+# Replica Service - Client
 ```cs
 [BasePath("cart")]
 public interface ICartClient
@@ -1200,7 +1202,7 @@ public virtual async Task<ComposedValue> GetComposedValue(
 
 Most important part of the [performance test](https://github.com/servicetitan/Stl.Fusion/blob/master/tests/Stl.Fusion.Tests/PerformanceTest.cs):
 ```cs
-public virtual async Task<User?> TryGetAsync(long userId)
+public virtual async Task<User?> TryGet(long userId)
 {
   await Everything(); // LMK if you know what's the role of this call!
   await using var dbContext = DbContextFactory.CreateDbContext(); // Pooled
@@ -1215,7 +1217,7 @@ async Task<long> Reader(string name, int iterationCount)
     var count = 0L;
     for (; iterationCount > 0; iterationCount--) {
         var userId = (long) rnd.Next(UserCount);
-        var user = await users.TryGetAsync(userId);
+        var user = await users.TryGet(userId);
         if (user!.Id == userId)
             count++;
         extraAction.Invoke(user!); // Optionally serializes the user
