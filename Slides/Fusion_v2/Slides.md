@@ -56,15 +56,17 @@ div.col2 .break {
 ![bg](./img/TwitterMinusOneLike.jpg)
 
 ---
-<!-- _class: highlight invert -->
-![bg right:40%](./img/DogOnFire.jpg)
 
-## You'll learn:
-- What do you *really need* to build a *real-time web app*?
-- How real-time is related to *eventual consistency*, *caching*,
-  and *functional programming*
-- What really makes *React and Blazor* so awesome?
+<!-- _class: invert highlight -->
+> *Our real discoveries come from chaos, from going to the place that looks wrong and stupid and foolish.*
+> ― Chuck Palahniuk, Invisible Monsters
 
+---
+![bg opacity:0.7](./img/CrazyGuy.jpg)
+
+<p style="text-align: center">
+<img src="./diagrams/keywords.dio.svg" style="width: 80%"/>
+</p>
 
 ---
 <!-- _class: highlight center invert -->
@@ -74,22 +76,27 @@ div.col2 .break {
 # But first, let's talk about</br>*incremental builds*
 
 ---
+<!-- _class: highlight center -->
 ![bg height:90%](./diagrams/inc-build/1.dio.svg)
 <footer><h2>Initial state</h2></footer>
 
 ---
+<!-- _class: highlight center -->
 ![bg height:90%](./diagrams/inc-build/2.dio.svg)
 <footer><h2>Edit "Services.cs"</h2></footer>
 
 ---
+<!-- _class: highlight center -->
 ![bg height:90%](./diagrams/inc-build/3.dio.svg)
 <footer><h2>Artifacts to rebuild</h2></footer>
 
 ---
+<!-- _class: highlight center -->
 ![bg height:90%](./diagrams/inc-build/4.dio.svg)
 <footer><h2>Build "App.exe"</h2></footer>
 
 ---
+<!-- _class: highlight center -->
 ![bg right:40%](./img/Let-me-explain.jpg)
 
 # How the hell this is relevant to real-time?
@@ -145,12 +152,15 @@ decimal GetCartTotal(string cartId)
 </footer>
 
 ---
+<!-- _class: highlight center -->
 ![bg height:90%](./diagrams/inc-build/final2.dio.svg)
 
 ---
+<!-- _class: highlight center -->
 ![bg height:90%](./diagrams/inc-build/final1.dio.svg)
 
 ---
+<!-- _class: highlight center -->
 ![bg height:90%](./diagrams/inc-build/4.dio.svg)
 
 ---
@@ -196,12 +206,14 @@ means to store and reuse the results of computations executed in past.
 **Do we always cache everything?**
 
 ---
+<!-- _class: highlight center -->
 ![bg width:90%](./diagrams/caching-decorator/1.dio.svg)
 <header>
 <h1>Caching as a Higher Order Function</h1>
 </header>
 
 ---
+<!-- _class: highlight center -->
 ![bg height:90%](./diagrams/caching-decorator/2.dio.svg)
 <header>
 <h1>Caching as a Higher Order Function</h1>
@@ -336,18 +348,22 @@ void Update(Product product)
 ```
 
 ---
+<!-- _class: highlight center -->
 ![bg height:90%](./diagrams/invalidation/1.dio.svg)
 <footer><h2>Initial state</h2></footer>
 
 ---
+<!-- _class: highlight center -->
 ![bg height:90%](./diagrams/invalidation/2.dio.svg)
 <footer><h2>Invalidate Products.Get("carrot")</h2></footer>
 
 ---
+<!-- _class: highlight center -->
 ![bg height:90%](./diagrams/invalidation/4.dio.svg)
 <footer><h2>Invalidate Prices.Get("apple")</h2></footer>
 
 ---
+<!-- _class: highlight center -->
 ![bg height:90%](./diagrams/invalidation/5.dio.svg)
 <footer><h2>Call SpecialOffers.GetActive()</h2></footer>
 
@@ -1344,6 +1360,7 @@ Server:
 - Decorates APIs (services), not models
 - Thread-safe, asynchronous
 - Works on the server side
+- Designed for immutable (and shared) models
 - Explicit consistent / inconsistent states
 - No sync. auto-recompute
 - Distributed.
@@ -1351,23 +1368,84 @@ Server:
 ![bg left:43%](./img/CoolSquirrel.jpg)
 
 ---
-# Fusion vs Flux, Redux, ...
-<!-- _class: highlight invert -->
+# Flux
+<!-- _class: highlight -->
 
-<img src="./img/FluxExplained.png" style="height: 100%">
+<img src="./diagrams/vs/flux.dio.svg" style="height: 90%">
 
 ---
-# Fusion vs Flux, Redux, ...
+# Redux
+<!-- _class: highlight -->
+
+<img src="./diagrams/vs/redux.dio.svg" style="height: 90%">
+
+---
+# MVC
+<!-- _class: highlight -->
+
+<img src="./diagrams/vs/mvc.dio.svg" style="height: 90%">
+
+---
+# MVC + KO/MobX
+<!-- _class: highlight -->
+
+<img src="./diagrams/vs/ko.dio.svg" style="height: 90%">
+
+---
+# Fusion
+<!-- _class: highlight -->
+
+<img src="./diagrams/vs/fusion0.dio.svg" style="height: 90%">
+
+---
+# Fusion
+<!-- _class: highlight -->
+
+<img src="./diagrams/vs/fusion1.dio.svg" style="height: 90%">
+
+---
+# Fusion
+<!-- _class: highlight -->
+
+<img src="./diagrams/vs/fusion2.dio.svg" style="height: 90%">
+
+---
+# Fusion vs Flux, Redux, MVC, MobX, ...
 <!-- _class: highlight invert -->
 
-Action, Dispatcher, Store, View.
-Usable only in the UI.
-Real-time? Sorry, DIY.
+🙀 Client- & server-side
+🚀 Real-time updates
 
-And it worth studying because...
-Ah, Facebook created it!
+One 💍 to rule them all!
 
-![bg right:55%](./img/IDareYou-Flux.jpg)
+![bg right:60%](./img/IDareYou-Flux.jpg)
+
+---
+## What about .NET Remoting?
+<!-- _class: highlight invert -->
+
+.NET Remoting was:
+🤬 Chatty
+🔓 Insecure
+
+And Fusion:
+🤖 Memoizes everything
+🔒 Is secure
+
+![bg right:63%](./img/SoChatty.jpg)
+
+---
+![bg opacity:0.7](./img/CrazyGuy.jpg)
+
+<p style="text-align: center">
+<img src="./diagrams/keywords.dio.svg" style="width: 80%"/>
+</p>
+
+---
+
+<!-- _class: invert highlight -->
+> *Discovery consists of looking at the same thing as everyone else and thinking something different.*
+> ― Albert Szent-Gyorgyi
 
 ---
 # The price you pay for Fusion
