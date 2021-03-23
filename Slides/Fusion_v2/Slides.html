@@ -475,8 +475,8 @@ Coincidentally, <a href="https://twitter.com/StevenSanderson">Mr. Sanderson</a> 
 &nbsp;&nbsp;<img src="./img/RaptorJesus.gif" style="width: 11.5%" />
 </div>
 </section>
-</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight center" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="center" data-theme="default" class="center" style="--class:center;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/FusionWebsite.jpg&quot;);background-size:contain;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="66" data-class="center" data-theme="default" class="center" style="--class:center;--theme:default;" data-marpit-advanced-background="content"></section>
-</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="center" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="67" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight center" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="center invert" data-theme="default" class="center invert" style="--class:center invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/Fusion-GitHub.jpg&quot;);background-size:contain;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="66" data-class="center invert" data-theme="default" class="center invert" style="--class:center invert;--theme:default;" data-marpit-advanced-background="content"></section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="center invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="67" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h2>Remember Caching Decorator with Dependency Tracking?</h2>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-title">Func</span>&lt;<span class="hljs-title">TIn</span>, <span class="hljs-title">TOut</span>&gt; <span class="hljs-title">ToAwesome</span>&lt;<span class="hljs-title">TIn</span>, <span class="hljs-title">TOut</span>&gt;(<span class="hljs-params">Func&lt;TIn, TOut&gt; fn</span>)</span>
   =&gt; input =&gt; {
@@ -836,7 +836,19 @@ services.AddFusion(fusion =&gt; {
 </span></span></foreignObject></svg></code></pre>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="89" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
-<h1>Blazor Component: AppUserBadge</h1>
+<h1>Blazor Component: AppUserBadge - markup</h1>
+<pre><code class="language-html"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap>@{
+    var isOnline = State.Value;
+}
+
+<span class="hljs-tag">&lt;<span class="hljs-name">Badge</span> <span class="hljs-attr">Color</span>=<span class="hljs-string">&quot;@Color&quot;</span> <span class="hljs-attr">Class</span>=<span class="hljs-string">&quot;@CssClass&quot;</span> <span class="hljs-attr">Style</span>=<span class="hljs-string">&quot;@(isOnline ? &quot;</span>&quot; <span class="hljs-attr">:</span> &quot;<span class="hljs-attr">opacity:</span> <span class="hljs-attr">0.5</span>;&quot;)&quot;&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">Blazorise.Icon</span> <span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;@(isOnline ? FontAwesomeIcons.User : FontAwesomeIcons.UserClock)&quot;</span> /&gt;</span>
+    @User.Name
+<span class="hljs-tag">&lt;/<span class="hljs-name">Badge</span>&gt;</span>
+</span></span></foreignObject></svg></code></pre>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="90" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+<h1>Blazor Component: AppUserBadge - code</h1>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap>@inherits LiveComponentBase&lt;<span class="hljs-built_in">bool</span>&gt;
 @inject IAppUserService AppUserService
 
@@ -853,18 +865,6 @@ services.AddFusion(fusion =&gt; {
         <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> AppUserService.IsOnline(User.Id, cancellationToken);
 }
-</span></span></foreignObject></svg></code></pre>
-</section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="90" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
-<h1>Blazor Component: AppUserBadge - markup</h1>
-<pre><code class="language-html"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap>@{
-    var isOnline = State.LastValue;
-}
-
-<span class="hljs-tag">&lt;<span class="hljs-name">Badge</span> <span class="hljs-attr">Color</span>=<span class="hljs-string">&quot;@Color&quot;</span> <span class="hljs-attr">Class</span>=<span class="hljs-string">&quot;@CssClass&quot;</span> <span class="hljs-attr">Style</span>=<span class="hljs-string">&quot;@(isOnline ? &quot;</span>&quot; <span class="hljs-attr">:</span> &quot;<span class="hljs-attr">opacity:</span> <span class="hljs-attr">0.5</span>;&quot;)&quot;&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">Blazorise.Icon</span> <span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;@(isOnline ? FontAwesomeIcons.User : FontAwesomeIcons.UserClock)&quot;</span> /&gt;</span>
-    @User.Name
-<span class="hljs-tag">&lt;/<span class="hljs-name">Badge</span>&gt;</span>
 </span></span></foreignObject></svg></code></pre>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="91" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
@@ -1138,9 +1138,9 @@ Fusion&#x27;s Replica Client:
 </section>
 </foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-theme="default" style="--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/Evolution.jpg&quot;);background-size:contain;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="129" data-theme="default" style="--theme:default;" data-marpit-advanced-background="content">
 <blockquote>
-<p>It is not the strongest of the species that survives, nor the most intelligent;<br />
-it is the one most adaptable to change.<br />
-<strong>— Charles Darwin</strong></p>
+<p style="color: #000">It is not the strongest of the species that survives, nor the most intelligent; 
+it is the one most adaptable to change.</p>
+— Charles Darwin
 </blockquote>
 <p><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /></p>
 </section>

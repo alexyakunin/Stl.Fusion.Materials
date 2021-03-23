@@ -689,9 +689,9 @@ See it on BlazorREPL: https://blazorrepl.com/repl/wluHuIOv061KS9Vt31
 </div>
 
 ---
-<!-- _class: center -->
+<!-- _class: center invert -->
 
-![bg fit](./img/FusionWebsite.jpg)
+![bg fit](./img/Fusion-GitHub.jpg)
 
 ---
 ## Remember Caching Decorator with Dependency Tracking?
@@ -1092,7 +1092,21 @@ var serviceProvider = services.BuildServiceProvider();
 ```
 
 ---
-# Blazor Component: AppUserBadge
+# Blazor Component: AppUserBadge - markup
+
+```html
+@{
+    var isOnline = State.Value;
+}
+
+<Badge Color="@Color" Class="@CssClass" Style="@(isOnline ? "" : "opacity: 0.5;")">
+    <Blazorise.Icon Name="@(isOnline ? FontAwesomeIcons.User : FontAwesomeIcons.UserClock)" />
+    @User.Name
+</Badge>
+```
+
+---
+# Blazor Component: AppUserBadge - code
 
 ```cs
 @inherits LiveComponentBase<bool>
@@ -1111,20 +1125,6 @@ protected override async Task<bool> ComputeState(CancellationToken cancellationT
         return false;
     return await AppUserService.IsOnline(User.Id, cancellationToken);
 }
-```
-
----
-# Blazor Component: AppUserBadge - markup
-
-```html
-@{
-    var isOnline = State.LastValue;
-}
-
-<Badge Color="@Color" Class="@CssClass" Style="@(isOnline ? "" : "opacity: 0.5;")">
-    <Blazorise.Icon Name="@(isOnline ? FontAwesomeIcons.User : FontAwesomeIcons.UserClock)" />
-    @User.Name
-</Badge>
 ```
 
 ---
@@ -1484,9 +1484,9 @@ On a serious note: [Real-Time is #1 Feature Your Next Web App Needs](https://ale
 <!-- _class: -->
 ![bg fit](./img/Evolution.jpg)
 
-> It is not the strongest of the species that survives, nor the most intelligent; 
-> it is the one most adaptable to change.
-> **— Charles Darwin**
+> <p style="color: #000">It is not the strongest of the species that survives, nor the most intelligent; 
+> it is the one most adaptable to change.</p>
+> — Charles Darwin
 
 </br></br></br></br></br></br></br></br></br></br>
 
