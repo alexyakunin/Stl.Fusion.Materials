@@ -127,10 +127,19 @@ string RenderCartTotal(string cartId) {
 ```
 
 ---
-# Imagine your app is a composition of functions...
+<!-- _class: highlight -->
+# Why don't we write everything this way?
+
+We'll hit every possible threshold:
+1. Recompute everything → **saturate CPU**
+2. Chatty client-server RPC → **saturate NIC**
+
+![bg right:43%](./img/GrumpyCat.jpg)
+
+---
+# Let's depict the call tree of one of such functions:
 
 ```cs
-// Server-side ICartService implementation (*)
 decimal GetCartTotal(string cartId) 
 {
   var cartTotal = 0M;
@@ -148,7 +157,7 @@ decimal GetCartTotal(string cartId)
 }
 ```
 <footer>
-(*) Let's ignore such minor issues as the absence of async code &ndash; for now.
+(*) We ignore such minor issues as the absence of async code &ndash; for now.
 </footer>
 
 ---
@@ -175,23 +184,13 @@ decimal GetCartTotal(string cartId)
 ![bg height:100%](./img/NoSpoon.jpg)
 
 ---
-<!-- _class: highlight -->
-# Why don't we write everything this way?
-
-We'll hit every possible threshold:
-1. Recompute everything → **saturate CPU**
-2. Chatty client-server RPC → **saturate NIC**
-
-![bg right:43%](./img/GrumpyCat.jpg)
-
----
 <!-- _class: highlight invert-->
-# Incremental Build remember you must!
+# A new Incremental Builder build you must!
 
 1. Recompute everything → saturate CPU
-   **May the Cache be with you?**
+   **May the Cache be with you!**
 2. Chatty client-server RPC → saturate NIC
-   **And the Client-Side Cache too?**
+   **And the Client-Side Cache too!**
 
 ![bg brightness:0.2](./img/Yoda1.jpg)
 
