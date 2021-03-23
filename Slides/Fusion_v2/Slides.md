@@ -1412,8 +1412,9 @@ Server:
 # Fusion vs Flux, Redux, MVC, MobX, ...
 <!-- _class: highlight invert -->
 
-🙀 Client- & server-side
-🚀 Real-time updates
+🙀 Client- & server-side!
+🚀 Real-time-everything!
+❌ No need for custom events!
 
 One 💍 to rule them all!
 
