@@ -688,7 +688,7 @@ See it on BlazorREPL: https://blazorrepl.com/repl/wluHuIOv061KS9Vt31
   <span style="background: #9F0; color: #000; padding: 3pt;">
   Live samples:&nbsp;</br>
   &nbsp;&ndash; <a href="http://fusion-samples.servicetitan.com/">https://fusion-samples.servicetitan.com</a>&nbsp;&nbsp;</br>
-  &nbsp;&ndash; <a href="http://boardgames.alexyakuni.com/">https://boardgames.alexyakuni.com</a>&nbsp;
+  &nbsp;&ndash; <a href="http://boardgames.alexyakunin.com/">https://boardgames.alexyakunin.com</a>&nbsp;
   </span>
 </footer>
 
