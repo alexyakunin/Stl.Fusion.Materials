@@ -803,7 +803,7 @@ and exposes an error (if any) via its property rather than throwing it.</p>
 <h1>TodoService: command handler method</h1>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">TodoService</span> : <span class="hljs-title">ITodoService</span>
 {
-    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> IIsolatedKeyValueStore _store;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> ISandboxedKeyValueStore _store;
     <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> IAuthService _authService;
 
     <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">async</span> Task <span class="hljs-title">Remove</span>(<span class="hljs-params">RemoveTodoCommand command</span>)</span>
@@ -843,13 +843,13 @@ and exposes an error (if any) via its property rather than throwing it.</p>
 </span></span></foreignObject></svg></code></pre>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="88" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
-<h1>IIsolatedKeyValueStore</h1>
-<pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title">IIsolatedKeyValueStore</span>
+<h1>ISandboxedKeyValueStore</h1>
+<pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title">ISandboxedKeyValueStore</span>
 {
-    [<span class="hljs-meta">CommandHandler</span>] <span class="hljs-function">Task <span class="hljs-title">Set</span>(<span class="hljs-params">IsolatedSetCommand command</span>)</span>;
-    [<span class="hljs-meta">CommandHandler</span>] <span class="hljs-function">Task <span class="hljs-title">SetMany</span>(<span class="hljs-params">IsolatedSetManyCommand command</span>)</span>;
-    [<span class="hljs-meta">CommandHandler</span>] <span class="hljs-function">Task <span class="hljs-title">Remove</span>(<span class="hljs-params">IsolatedRemoveCommand command</span>)</span>;
-    [<span class="hljs-meta">CommandHandler</span>] <span class="hljs-function">Task <span class="hljs-title">RemoveMany</span>(<span class="hljs-params">IsolatedRemoveManyCommand command</span>)</span>;
+    [<span class="hljs-meta">CommandHandler</span>] <span class="hljs-function">Task <span class="hljs-title">Set</span>(<span class="hljs-params">SandboxedSetCommand command</span>)</span>;
+    [<span class="hljs-meta">CommandHandler</span>] <span class="hljs-function">Task <span class="hljs-title">SetMany</span>(<span class="hljs-params">SandboxedSetManyCommand command</span>)</span>;
+    [<span class="hljs-meta">CommandHandler</span>] <span class="hljs-function">Task <span class="hljs-title">Remove</span>(<span class="hljs-params">SandboxedRemoveCommand command</span>)</span>;
+    [<span class="hljs-meta">CommandHandler</span>] <span class="hljs-function">Task <span class="hljs-title">RemoveMany</span>(<span class="hljs-params">SandboxedRemoveManyCommand command</span>)</span>;
 
     [<span class="hljs-meta">ComputeMethod</span>] Task&lt;<span class="hljs-built_in">string</span>?&gt; TryGet(Session session, <span class="hljs-built_in">string</span> key);
     [<span class="hljs-meta">ComputeMethod</span>] <span class="hljs-function">Task&lt;<span class="hljs-built_in">int</span>&gt; <span class="hljs-title">Count</span>(<span class="hljs-params">Session session, <span class="hljs-built_in">string</span> prefix</span>)</span>;
@@ -999,7 +999,7 @@ fusionClient.AddReplicaService&lt;ITodoService, ITodoClient&gt;();
   <h2 style="
     position: relative; left: -1em; top: 1.2em;
     background: #9F0; color: #000; padding: 3pt;">
-    &nbsp;TodoApp, v4: Client-side TodoService + server-side IsolatedKeyValueStore&nbsp;
+    &nbsp;TodoApp, v4: Client-side TodoService + server-side SandboxedKeyValueStore&nbsp;
   </h2>
 </footer>
 </section>

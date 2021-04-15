@@ -1063,7 +1063,7 @@ public interface IFusionTime
 ```cs
 public class TodoService : ITodoService
 {
-    private readonly IIsolatedKeyValueStore _store;
+    private readonly ISandboxedKeyValueStore _store;
     private readonly IAuthService _authService;
 
     public virtual async Task Remove(RemoveTodoCommand command)
@@ -1105,15 +1105,15 @@ public virtual async Task<TodoSummary> GetSummary(Session session)
 ```
 
 ---
-# IIsolatedKeyValueStore
+# ISandboxedKeyValueStore
 
 ```cs
-public interface IIsolatedKeyValueStore
+public interface ISandboxedKeyValueStore
 {
-    [CommandHandler] Task Set(IsolatedSetCommand command);
-    [CommandHandler] Task SetMany(IsolatedSetManyCommand command);
-    [CommandHandler] Task Remove(IsolatedRemoveCommand command);
-    [CommandHandler] Task RemoveMany(IsolatedRemoveManyCommand command);
+    [CommandHandler] Task Set(SandboxedSetCommand command);
+    [CommandHandler] Task SetMany(SandboxedSetManyCommand command);
+    [CommandHandler] Task Remove(SandboxedRemoveCommand command);
+    [CommandHandler] Task RemoveMany(SandboxedRemoveManyCommand command);
 
     [ComputeMethod] Task<string?> TryGet(Session session, string key);
     [ComputeMethod] Task<int> Count(Session session, string prefix);
@@ -1302,7 +1302,7 @@ fusionClient.AddReplicaService<ITodoService, ITodoClient>();
   <h2 style="
     position: relative; left: -1em; top: 1.2em;
     background: #9F0; color: #000; padding: 3pt;">
-    &nbsp;TodoApp, v4: Client-side TodoService + server-side IsolatedKeyValueStore&nbsp;
+    &nbsp;TodoApp, v4: Client-side TodoService + server-side SandboxedKeyValueStore&nbsp;
   </h2>
 </footer>
 
