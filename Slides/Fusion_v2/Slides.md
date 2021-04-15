@@ -867,11 +867,9 @@ public virtual async Task<Todo> AddOrUpdate(AddOrUpdateTodoCommand command)
 
 ```cs
 var services = new ServiceCollection();
-services.AddFusion(fusion => {
-    fusion.AddComputeService<ITodoService, SimpleTodoService>();
-    // Typically you want to expose an interface, though this also works:
-    // fusion.AddComputeService<SimpleTodoService>();
-});
+var fusion = services.AddFusion();
+// ~ Like service.AddSingleton<ITodoService, SimpleTodoService>()
+fusion.AddComputeService<ITodoService, SimpleTodoService>();
 var serviceProvider = services.BuildServiceProvider()
 ```
 
