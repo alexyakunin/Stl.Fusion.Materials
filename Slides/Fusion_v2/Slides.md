@@ -51,20 +51,13 @@ div.col2 .break {
 
 ---
 <!-- _class: invert center -->
-### </br>Twitter can do it,</br>so you can do it too!
-
 ![bg](./img/TwitterMinusOneLike.jpg)
-
----
-
-<!-- _class: invert highlight -->
-> *Our real discoveries come from chaos, from going to the place that looks wrong and stupid and foolish.*
-> ― Chuck Palahniuk, Invisible Monsters
+### </br>Twitter can do it,</br>so you can do it too!
 
 ---
 ![bg opacity:0.7](./img/CrazyGuy.jpg)
 
-<p style="text-align: center">
+<p style="text-align: right">
 <img src="./diagrams/keywords.dio.svg" style="width: 80%"/>
 </p>
 
@@ -134,10 +127,12 @@ We'll hit every possible threshold:
 1. Recompute everything → **saturate CPU**
 2. Chatty client-server RPC → **saturate NIC**
 
+**Valid points. It won't work. Can we go now?**
+
 ![bg right:43%](./img/GrumpyCat.jpg)
 
 ---
-# Let's depict the call tree of one of such functions:
+# No! Let's write a function!
 
 ```cs
 decimal GetCartTotal(string cartId) 
@@ -281,7 +276,7 @@ Func<TIn, TOut> ToAwesome<TIn, TOut>(Func<TIn, TOut> fn)
         computed.Value = fn(input);
 
       Cache[key] = computed;
-      return computed.Value;
+      return computed.Use();
     }
   }
 ```
@@ -436,6 +431,7 @@ Let me show 50+ more slides first!
 
 ---
 <!-- _class: center invert highlight-->
+![bg top:50%](./img/Inception.gif)
 <h1 style="color: white">
 </br>
 </br>
@@ -447,30 +443,18 @@ What about <em>React</em> and <em>Blazor</em>?</br>
 We need to go deeper!
 </h1>
 
-![bg top:50%](./img/Inception.gif)
-
----
-<!-- _class: highlight invert -->
-## Flash Slothmore is eventually consistent:
-
-He will close all of his tasks-in-slow-progress *eventually*.
-*Once* [Judy Hopps](https://zootopia.fandom.com/wiki/Judy_Hopps) stops distracting him with her problems 
-(stops giving him more tasks).
-
-![bg brightness:0.4](./img/Zootopia.jpg)
-
 ---
 <!-- _class: invert center -->
+![bg](./img/TwitterMinusOneLike.jpg)
 <h3></br>
 What is worse than</br>
 eventual consistency?</br>
 Permanent inconsistency.
 </h3>
 
-![bg](./img/TwitterMinusOneLike.jpg)
-
 ---
 <!-- _class: center -->
+![bg fit](./img/TwoDogs.jpg)
 <h3>
 </br>
 Two eventually consistent systems were left at your doorstep.</br>
@@ -483,8 +467,6 @@ Which one you should marry?
 <h2>#2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h1>
 <br/>
 </div>
-
-![bg fit](./img/TwoDogs.jpg)
 
 ---
 <!-- _class:  -->
@@ -694,6 +676,23 @@ See it on BlazorREPL: https://blazorrepl.com/repl/wluHuIOv061KS9Vt31
 ![bg fit](./img/Fusion-GitHub.jpg)
 
 ---
+![bg](./img/Samples-Blazor.gif)
+<!-- _class: center -->
+
+<div style="font-size: 100px; color: #eee; text-shadow: 2px 2px #000;">
+  <a href="http://fusion-samples.servicetitan.com/" 
+     style="color: #eee">DEMO</a>
+</div>
+
+<footer style="text-align: left">
+  <span style="background: #9F0; color: #000; padding: 3pt;">
+  Live samples:&nbsp;</br>
+  &nbsp;&ndash; <a href="http://fusion-samples.servicetitan.com/">https://fusion-samples.servicetitan.com</a>&nbsp;&nbsp;</br>
+  &nbsp;&ndash; <a href="http://boardgames.alexyakuni.com/">https://boardgames.alexyakuni.com</a>&nbsp;
+  </span>
+</footer>
+
+---
 ## Remember Caching Decorator with Dependency Tracking?
 
 ```cs
@@ -729,21 +728,6 @@ Func<TIn, TOut> ToAwesome<TIn, TOut>(Func<TIn, TOut> fn)
 <footer>(*) Almost immutable</footer>
 
 ---
-![bg](./img/Samples-Blazor.gif)
-<!-- _class: center -->
-
-<div style="font-size: 100px; color: #eee; text-shadow: 2px 2px #000;">
-  <a href="http://fusion-samples.servicetitan.com/" 
-     style="color: #eee">DEMO</a>
-</div>
-
-<footer>
-  <a href="http://fusion-samples.servicetitan.com/"
-     style="background: white; padding: 3pt;">https://fusion-samples.servicetitan.com</a>
-</footer>
-
-
----
 # Fusion's `IComputed<T>`:
 ![bg fit right:30%](./diagrams/consistency-state/transitions.dio.svg)
 
@@ -765,231 +749,407 @@ interface IComputed<T> {
 ---
 ![bg height:90%](./diagrams/consistency-state/instances.dio.svg)
 
+---
+![bg fit](./img/Samples-TodoApp.gif)
+
+<footer style="position: absolute">
+  <h2 style="
+    position: relative; left: -1em; top: 1.2em;
+    background: #9F0; color: #000; padding: 3pt;">
+    &nbsp;TodoApp, v1: SimpleTodoService running on the client&nbsp;
+  </h2>
+</footer>
 
 ---
-# HelloCart: API Models
+# TodoApp: API models / DTOs
 
 ```cs
-public record Product : IHasId<string>
+public record Todo(string Id, string Title, bool IsDone = false)
 {
-    public string Id { get; init; } = "";
-    public decimal Price { get; init; } = 0;
+    public Todo() : this("", "") { }
 }
 
-public record Cart : IHasId<string>
+public record TodoSummary(int Count, int DoneCount)
 {
-    public string Id { get; init; } = "";
-    public ImmutableDictionary<string, decimal> Items { get; init; } =
-      ImmutableDictionary<string, decimal>.Empty;
+    public TodoSummary() : this(0, 0) { }
 }
 
-public record EditCommand<TValue>(string Id, TValue? Value = null) : ICommand<Unit>
-    where TValue : class, IHasId<string>
+// Commands
+
+public record AddOrUpdateTodoCommand(Session Session, Todo Item) : ISessionCommand<Todo>
 {
-    public EditCommand(TValue value) : this(value.Id, value) { }
-    public EditCommand() : this("", null) { } // JSON deserialization .ctor
+    public AddOrUpdateTodoCommand() : this(Session.Null, default(Todo)!) { }
+}
+
+public record RemoveTodoCommand(Session Session, string Id) : ISessionCommand<Unit>
+{
+    public RemoveTodoCommand() : this(Session.Null, "") { }
 }
 ```
 ---
-# HelloCart: API
+# TodoApp: `ITodoService` API
+
+**Note:** `CancellationToken` argument is removed here to keep things simple.
 
 ```cs
-public interface IProductService
+public interface ITodoService
 {
+    // Commands
     [CommandHandler]
-    Task Edit(EditCommand<Product> command, CancellationToken cancellationToken);
-    [ComputeMethod]
-    Task<Product?> TryGet(string id, CancellationToken cancellationToken);
-}
-
-public interface ICartService
-{
+    Task<Todo> AddOrUpdate(AddOrUpdateTodoCommand command);
     [CommandHandler]
-    Task Edit(EditCommand<Cart> command, CancellationToken cancellationToken);
+    Task Remove(RemoveTodoCommand command);
+
+    // Queries
     [ComputeMethod]
-    Task<Cart?> TryGet(string id, CancellationToken cancellationToken);
+    Task<Todo?> TryGet(Session session, string id);
     [ComputeMethod]
-    Task<decimal> GetTotal(string id, CancellationToken cancellationToken);
+    Task<Todo[]> List(Session session, PageRef<string> pageRef);
+    [ComputeMethod]
+    Task<TodoSummary> GetSummary(Session session);
 }
 ```
 ---
-![bg height:90%](./img/Samples-HelloCart.gif)
+![bg height:90%](./diagrams/todo-app/1.dio.svg)
 
 ---
-# Cart Watcher
+# SimpleTodoService: query method examples
 
 ```cs
-public async Task WatchCartTotal(
-    string cartId, CancellationToken cancellationToken)
+public class SimpleTodoService : ITodoService
 {
-    var cartService = ClientServices.GetRequiredService<ICartService>();
-    var computed = await Computed.Capture(
-        ct => cartService.GetTotal(cartId, ct), 
-        cancellationToken);
-    while (true) {
-        WriteLine($"  {cartId}: total = {computed.Value}");
-        await computed.WhenInvalidated(cancellationToken);
-        computed = await computed.Update(false, cancellationToken);
-    }
-}
-```
----
-# InMemoryProductService
+    private ImmutableList<Todo> _store = ImmutableList<Todo>.Empty;
 
-```cs
-public class InMemoryProductService : IProductService
-{
-    private readonly ConcurrentDictionary<string, Product> _products = new();
+    [ComputeMethod]
+    public virtual async Task<Todo?> TryGet(Session session, string id)
+        =>_store.SingleOrDefault(i => i.Id == id);
 
-    public virtual Task Edit(EditCommand<Product> command, CancellationToken cancellationToken)
+    [ComputeMethod]
+    public virtual async Task<TodoSummary> GetSummary(Session session)
     {
-        var (productId, product) = command;
-        if (product == null)
-            _products.Remove(productId, out _);
-        else
-            _products[productId] = product;
-        
-        using (Computed.Invalidate()) {
-            // Every [ComputeMethod] result you call here 
-            // gets invalidated
-            TryGet(productId, default).Ignore();
-        }
-        return Task.CompletedTask;
+        await PseudoGetAllItems(session);
+        var count = _store.Count();
+        var doneCount = _store.Count(i => i.IsDone);
+        return new TodoSummary(count, doneCount);
     }
 
-    public virtual Task<Product?> TryGet(string id, CancellationToken cancellationToken)
-        => Task.FromResult(_products.GetValueOrDefault(id));
+    // Pseudo queries
+
+    [ComputeMethod]
+    protected virtual Task<Unit> PseudoGetAllItems(Session session)
+        => TaskEx.UnitTask;
 }
 ```
 ---
-# InMemoryProductService - the actual one
+# SimpleTodoService: command handler example
 
 ```cs
-public class InMemoryProductService : IProductService
+[CommandHandler]
+public virtual async Task<Todo> AddOrUpdate(AddOrUpdateTodoCommand command)
 {
-    private readonly ConcurrentDictionary<string, Product> _products = new();
+    // I'll explain further why this line is needed
+    if (Computed.IsInvalidating()) return null!;
 
-    public virtual Task Edit(EditCommand<Product> command, CancellationToken cancellationToken)
-    {
-        var (productId, product) = command;
-        if (Computed.IsInvalidating()) { // !!!
-            TryGet(productId, default).Ignore();
-            return Task.CompletedTask;
-        }
+    var (session, todo) = command;
+    if (string.IsNullOrEmpty(todo.Id))
+        todo = todo with { Id = Ulid.NewUlid().ToString() };
+    _store = _store.RemoveAll(i => i.Id == todo.Id).Add(todo);
 
-        if (product == null)
-            _products.Remove(productId, out _);
-        else
-            _products[productId] = product;
-        return Task.CompletedTask;
-    }
-
-    public virtual Task<Product?> TryGet(string id, CancellationToken cancellationToken)
-        => Task.FromResult(_products.GetValueOrDefault(id));
+    using var _ = Computed.Invalidate();
+    TryGet(session, todo.Id, CancellationToken.None).Ignore();
+    PseudoGetAllItems(session).Ignore();
+    return todo;
 }
 ```
+
 ---
-# InMemoryCartService
-
-```cs
-public class InMemoryCartService : ICartService
-{
-    private readonly ConcurrentDictionary<string, Cart> _carts = new();
-    private readonly IProductService _products;
-
-    public InMemoryCartService(IProductService products) => _products = products;
-
-    public virtual Task Edit(EditCommand<Cart> command, CancellationToken cancellationToken = default)
-    {
-        var (cartId, cart) = command;
-        if (Computed.IsInvalidating()) {
-            TryGet(cartId, default).Ignore();
-            return Task.CompletedTask;
-        }
-
-        if (cart == null)
-            _carts.Remove(cartId, out _);
-        else
-            _carts[cartId] = cart;
-        return Task.CompletedTask;
-    }
-
-    public virtual Task<Cart?> TryGet(string id, CancellationToken cancellationToken = default)
-        => Task.FromResult(_carts.GetValueOrDefault(id));
-```
----
-# InMemoryCartService.GetTotal
-
-```cs
-public virtual async Task<decimal> GetTotal(
-    string id, CancellationToken cancellationToken = default)
-{
-    var cart = await TryGet(id, cancellationToken);
-    if (cart == null)
-        return 0;
-    var total = 0M;
-    foreach (var (productId, quantity) in cart.Items) {
-        var product = await _products.TryGet(productId, cancellationToken);
-        total += (product?.Price ?? 0M) * quantity;
-    }
-    return total;
-}
-```
----
-# Compute Service Registration
+# SimpleTodoService: registration
 
 ```cs
 var services = new ServiceCollection();
 services.AddFusion(fusion => {
-    fusion.AddComputeService<IProductService, InMemoryProductService>();
-    fusion.AddComputeService<ICartService, InMemoryCartService>();
+    fusion.AddComputeService<ITodoService, SimpleTodoService>();
+    // Typically you want to expose an interface, though this also works:
+    // fusion.AddComputeService<SimpleTodoService>();
 });
 var serviceProvider = services.BuildServiceProvider()
 ```
+
 ---
-# DbProductService.TryGet
+# TodoPage.razor (p. 1)
 
 ```cs
-public virtual async Task<Product?> TryGet(
-    string id, CancellationToken cancellationToken = default)
-{
-    await using var dbContext = CreateDbContext();
-    var dbProduct = await dbContext.Products.FindAsync((object) id, cancellationToken);
-    if (dbProduct == null)
-        return null;
-    return new Product() { Id = dbProduct.Id, Price = dbProduct.Price };
+@page "/todo"
+@inherits ComputedStateComponent<Todo[]>
+@inject ITodoService Todos
+@inject Session Session
+@inject CommandRunner CommandRunner
+@inject ILogger<TodoPage> Log
+
+@{
+    Log.LogInformation(
+        "Rendering, State.Computed.Version = {Version}", 
+        State.Computed.Version);
+
+    var error = State.Error;
+    var todos = State.ValueOrDefault ?? Array.Empty<Todo>();
 }
 ```
 
 ---
-# DbProductService.Edit
+# TodoPage.razor (p. 2)
+
+```xml
+<h1>Todo List</h1>
+<StateOfStateBadge State="@State" />
+<Text>
+    Updated: <MomentsAgoBadge Value="LastStateUpdateTime" />
+</Text>
+
+<AuthorizeView>
+    <NotAuthorized><SignInDropdown Why="to use this page" /></NotAuthorized>
+    <Authorized>
+        <WhenException Exception="error" />
+        <WhenCommandError Exception="CommandRunner.Error" />
+        
+        <TodoSummaryBadge/>
+        @foreach (var todo in todos) {
+            <TodoItemView @key="@todo.Id" Value="@todo" CommandRunner="@CommandRunner"/>
+        }
+        @if (HasMore) {
+            <Button Clicked="_ => LoadMore()">Load @PageSize more</Button>
+        }
+        <Form @onsubmit="_ => Create()">
+            <Button Type="@ButtonType.Submit"><Icon Name="@FontAwesomeIcons.PlusSquare"/></Button>
+            <input @bind="NewTodoTitle" @bind:event="onchange" />
+        </Form>
+    </Authorized>
+</AuthorizeView>
+```
+
+---
+# TodoPage.razor (p. 3)
 
 ```cs
-public virtual async Task Edit(
-    EditCommand<Product> command, CancellationToken cancellationToken = default)
+protected override async Task<Todo[]> ComputeState()
 {
-    var (productId, product) = command;
-    if (Computed.IsInvalidating()) {
-        // This block is "replayed" on every host!
-        TryGet(productId, default).Ignore();
-        return;
-    }
+    var items = await Todos.List(Session, PageSize + 1);
+    HasMore = items.Length > PageSize;
+    if (HasMore)
+        items = items[0..PageSize];
+    LastStateUpdateTime = DateTime.UtcNow;
+    return items;
+}
 
-    await using var dbContext = await CreateCommandDbContext(cancellationToken);
-    var dbProduct = await dbContext.Products.FindAsync((object) productId, cancellationToken);
-    if (product == null) {
-        if (dbProduct != null)
-            dbContext.Remove(dbProduct);
-    }
-    else {
-        if (dbProduct != null)
-            dbProduct.Price = product.Price;
-        else
-            dbContext.Add(new DbProduct { Id = productId, Price = product.Price });
-    }
-    await dbContext.SaveChangesAsync(cancellationToken);
+private void LoadMore()
+{
+    PageSize *= 2;
+    State.Recompute();
+}
+
+private void Create()
+{
+    var todo = new Todo("", NewTodoTitle);
+    NewTodoTitle = "";
+    CommandRunner.Call(new AddOrUpdateTodoCommand(Session, todo));
 }
 ```
+
+---
+# CommandRunner.Call
+
+Invokes CommandR-based command execution pipeline for the specified command
+and exposes an error (if any) via its property rather than throwing it.
+
+```cs
+public async Task<TResult> Call<TResult>(ICommand<TResult> command)
+{
+    Error = null;
+    try {
+        return await Commander.Call(command);
+    }
+    catch (Exception e) {
+        Error = e;
+        return default!;
+    }
+    finally {
+        if (Component is StatefulComponentBase { UntypedState: IComputedState state })
+            // This call just "speeds up" the update that follows user action 
+            // by decreasing IComputedState's update delay to zero.
+            state.ApplyUserCausedUpdate(); 
+    }
+}
+```
+
+---
+# TodoSummaryBadge.razor
+
+Did you notice auto-updating summary? That's all the code displaying it!
+
+```cs
+@inherits ComputedStateComponent<TodoSummary>
+@inject ITodoService Todos
+@inject Session Session
+
+@{
+    var summary = State.ValueOrDefault;
+}
+
+@if (summary != null) {
+    <Badge Color="Color.Success"><b>@summary.DoneCount</b> done</Badge>
+    <Badge Color="Color.Primary"><b>@summary.Count</b> total</Badge>
+}
+
+@code {
+    protected override Task<TodoSummary> ComputeState()
+        => Todos.GetSummary(Session);
+}
+```
+
+---
+# MomentsAgoBadge.razor
+
+Another auto-updating component.
+
+```cs
+@inherits ComputedStateComponent<string>
+@inject IFusionTime _fusionTime
+
+@State.Value
+
+@code {
+    [Parameter] public DateTime? Value { get; set; }
+    [Parameter] public string None { get; set; } = "n/a";
+
+    protected override Task<string> ComputeState()
+        => Value.HasValue 
+            ? _fusionTime.GetMomentsAgo(Value.Value) 
+            : Task.FromResult(None);
+}
+```
+
+---
+# IFusionTime
+
+Fusion-style time service invalidating its outputs after certain time period.
+
+```cs
+public interface IFusionTime
+{
+    [ComputeMethod]
+    Task<DateTime> GetUtcNow();
+    [ComputeMethod]
+    Task<DateTime> GetUtcNow(TimeSpan updatePeriod);
+    [ComputeMethod]
+    Task<string> GetMomentsAgo(DateTime time);
+}
+```
+
+---
+![bg fit](./img/Samples-TodoApp.gif)
+
+<footer style="position: absolute">
+  <h2 style="
+    position: relative; left: -1em; top: 1.2em;
+    background: #9F0; color: #000; padding: 3pt;">
+    &nbsp;TodoApp, v2: TodoService + IKeyValueStore running on the client&nbsp;
+  </h2>
+</footer>
+
+---
+![bg width:90%](./diagrams/todo-app/2.dio.svg)
+
+---
+# TodoService: command handler method
+
+```cs
+public class TodoService : ITodoService
+{
+    private readonly IIsolatedKeyValueStore _store;
+    private readonly IAuthService _authService;
+
+    public virtual async Task Remove(RemoveTodoCommand command)
+    {
+        if (Computed.IsInvalidating()) return;
+
+        var (session, id) = command;
+        var user = await _authService.GetUser(session);
+        user.MustBeAuthenticated();
+
+        var key = GetTodoKey(user, id);
+        var doneKey = GetDoneKey(user, id);
+        await _store.Remove(session, key);
+        await _store.Remove(session, doneKey);
+    }
+
+    private string GetTodoKey(User user, string id) => $"{GetTodoKeyPrefix(user)}/{id}";
+    private string GetDoneKey(User user, string id) => $"{GetDoneKeyPrefix(user)}/{id}";
+    private string GetTodoKeyPrefix(User user) => $"@user/{user.Id}/todo/items";
+    private string GetDoneKeyPrefix(User user) => $"@user/{user.Id}/todo/done";
+
+    // ...
+
+```
+
+---
+# TodoService: query method
+
+```cs
+public virtual async Task<TodoSummary> GetSummary(Session session)
+{
+    var user = await _authService.GetUser(session);
+    user.MustBeAuthenticated();
+
+    var count = await _store.Count(session, GetTodoKeyPrefix(user));
+    var doneCount = await _store.Count(session, GetDoneKeyPrefix(user));
+    return new TodoSummary(count, doneCount);
+}
+```
+
+---
+# IIsolatedKeyValueStore
+
+```cs
+public interface IIsolatedKeyValueStore
+{
+    [CommandHandler] Task Set(IsolatedSetCommand command);
+    [CommandHandler] Task SetMany(IsolatedSetManyCommand command);
+    [CommandHandler] Task Remove(IsolatedRemoveCommand command);
+    [CommandHandler] Task RemoveMany(IsolatedRemoveManyCommand command);
+
+    [ComputeMethod] Task<string?> TryGet(Session session, string key);
+    [ComputeMethod] Task<int> Count(Session session, string prefix);
+    [ComputeMethod] Task<string[]> ListKeySuffixes(
+        Session session,
+        string prefix,
+        PageRef<string> pageRef,
+        SortDirection sortDirection = SortDirection.Ascending);
+}
+```
+
+---
+# IKeyValueStore
+
+```cs
+public interface IKeyValueStore
+{
+    [CommandHandler] Task Set(SetCommand command);
+    [CommandHandler] Task SetMany(SetManyCommand command);
+    [CommandHandler] Task Remove(RemoveCommand command);
+    [CommandHandler] Task RemoveMany(RemoveManyCommand command);
+
+    [ComputeMethod] Task<string?> TryGet(string key);
+    [ComputeMethod] Task<int> Count(string prefix);
+    [ComputeMethod] Task<string[]> ListKeySuffixes(
+        string prefix,
+        PageRef<string> pageRef,
+        SortDirection sortDirection = SortDirection.Ascending);
+}
+```
+
+---
+![bg height:90%](./diagrams/todo-app/3.dio.svg)
+
 
 ---
 # Can we replicate `IComputed` on a remote host?
@@ -1004,10 +1164,9 @@ public class ComputedReplica<T> : IComputed<T>
     
     public ComputedReplica<T>(IComputed<T> source) 
     {
-        source.ThrowIfComputing();
         (Value, Error) = (source.Value, source.Error);
         ConsistencyState = source.ConsistencyState;
-        source.Invalidated += () => Invalidate(); // !!!
+        source.Invalidated += () => Invalidate();
     }
 
     // ...
@@ -1018,174 +1177,214 @@ Do the same, but deliver the invalidation event via RPC!
 ---
 # Your Web API call
 <!-- _class: highlight -->
-![bg right:40%](./img/RegularDog.jpg)
+![bg right:40% width:90%](./img/DogStuckInBush.jpg)
 
 <img src="./diagrams/replica-service/regular.dio.svg" style="width: 100%"/>
 
 ---
 # Fusion Web API call
 <!-- _class: highlight -->
-![bg left:40%](./img/CoolDog.jpg)
+![bg right:40% width:90%](./img/SpecialSkills.jpg)
 
-<img src="./diagrams/replica-service/fusion.dio.svg" style="width: 100%"/>
+<img src="./diagrams/replica-service/fusion1.dio.svg" style="width: 100%"/>
+
+---
+# Fusion Replica Service
+<!-- _class: highlight -->
+![bg right:40% width:90%](./img/DogeToTheMoon.jpg)
+
+<img src="./diagrams/replica-service/fusion2.dio.svg" style="width: 100%"/>
 
 ---
 # Replica Service - Controller
 ```cs
 [Route("api/[controller]/[action]")]
 [ApiController, JsonifyErrors]
-public class CartController : ControllerBase, ICartService
+public class TodoController : ControllerBase, ITodoService
 {
-    private readonly ICartService _cartService;
-
-    public CartController(ICartService cartService) => _cartService = cartService;
-
+    private readonly ITodoService _todos;
+    private readonly ISessionResolver _sessionResolver;
+    
     [HttpPost]
-    public Task Edit(
-      [FromBody] EditCommand<Cart> command, 
-      CancellationToken cancellationToken = default)
-        => _cartService.Edit(command, cancellationToken);
+    public Task<Todo> AddOrUpdate([FromBody] AddOrUpdateTodoCommand command)
+    {
+        command.UseDefaultSession(_sessionResolver);
+        return _todos.AddOrUpdate(command);
+    }
 
     [HttpGet, Publish]
-    public Task<Cart?> TryGet(string id, CancellationToken cancellationToken = default)
-        => _cartService.TryGet(id, cancellationToken);
+    public Task<Todo?> TryGet(Session? session, string id)
+    {
+        session ??= _sessionResolver.Session;
+        return _todos.TryGet(session, id);
+    }
 
-    [HttpGet, Publish]
-    public Task<decimal> GetTotal(string id, CancellationToken cancellationToken = default)
-        => _cartService.GetTotal(id, cancellationToken);
+    // ...
 }
 ```
 
 ---
-# Replica Service - Client
+# Replica Service - Client Definition
+
+It's not the actual type you consume - the actual runtime-generated replica service (AKA Fusion client) implements the same `ITodoService`. `ITodoClient` type just maps its endpoints to the web API relying on [RestEase](https://github.com/canton7/RestEase) under the hood.
+
 ```cs
-[BasePath("cart")]
-public interface ICartClient
+[BasePath("todo")]
+public interface ITodoClient 
 {
-    [Post("edit")]
-    Task Edit([Body] EditCommand<Cart> command, CancellationToken cancellationToken);
-    [Get("tryGet")]
-    Task<Cart?> TryGet(string id, CancellationToken cancellationToken);
-    [Get("getTotal")]
-    Task<decimal> GetTotal(string id, CancellationToken cancellationToken);
+    [Post(nameof(AddOrUpdate))]
+    Task<Todo> AddOrUpdate([Body] AddOrUpdateTodoCommand command);
+    [Post(nameof(Remove))]
+    Task Remove([Body] RemoveTodoCommand command);
+
+    [Get(nameof(TryGet))]
+    Task<Todo?> TryGet(Session session, string id);
+    [Get(nameof(List))]
+    Task<Todo[]> List(Session session, PageRef<string> pageRef);
+    [Get(nameof(GetSummary))]
+    Task<TodoSummary> GetSummary(Session session);
 }
 ```
 
 ---
-# Replica Service Registration
+# Replica Service - Registration
 ```cs
-var services = new ServiceCollection();
-services.AddFusion(fusion => {
-    fusion.AddRestEaseClient(client => {
-        client.ConfigureHttpClientFactory((c, name, options) => {
-            var apiBaseUri = new Uri($"{baseUri}api/");
-            options.HttpClientActions.Add(httpClient => httpClient.BaseAddress = apiBaseUri);
-        });
-        client.ConfigureWebSocketChannel((c, options) => { options.BaseUri = baseUri; });
-        
-        // Actual registration:
-        client.AddReplicaService<IProductService, IProductClient>();
-        client.AddReplicaService<ICartService, ICartClient>();
-    });
+var fusion = services.AddFusion();
+
+// Adding & configuring services required for Replica Services to operate
+var baseUri = new Uri(builder.HostEnvironment.BaseAddress);
+var apiBaseUri = new Uri($"{baseUri}api/");
+var fusionClient = fusion.AddRestEaseClient((_, o) => {
+    o.BaseUri = baseUri;
+    o.MessageLogLevel = LogLevel.Information;
 });
-var serviceProvider = services.BuildServiceProvider();
+fusionClient.ConfigureHttpClientFactory((c, name, o) => {
+    var isFusionClient = (name ?? "").StartsWith("Stl.Fusion");
+    var clientBaseUri = isFusionClient ? baseUri : apiBaseUri;
+    o.HttpClientActions.Add(client => client.BaseAddress = clientBaseUri);
+});
+
+// Adding actual replica service
+fusionClient.AddReplicaService<ITodoService, ITodoClient>();
 ```
 
 ---
-# Blazor Component: AppUserBadge - markup
+![bg fit](./img/Samples-TodoApp.gif)
 
-```html
-@{
-    var isOnline = State.Value;
-}
-
-<Badge Color="@Color" Class="@CssClass" Style="@(isOnline ? "" : "opacity: 0.5;")">
-    <Blazorise.Icon Name="@(isOnline ? FontAwesomeIcons.User : FontAwesomeIcons.UserClock)" />
-    @User.Name
-</Badge>
-```
+<footer style="position: absolute">
+  <h2 style="
+    position: relative; left: -1em; top: 1.2em;
+    background: #9F0; color: #000; padding: 3pt;">
+    &nbsp;TodoApp, v3: Client-side replica service + server-side TodoService&nbsp;
+  </h2>
+</footer>
 
 ---
-# Blazor Component: AppUserBadge - code
+![bg width:90%](./diagrams/todo-app/4.dio.svg)
+
+---
+![bg width:90%](./diagrams/todo-app/5.dio.svg)
+
+---
+![bg height:90%](./diagrams/todo-app/6.dio.svg)
+
+---
+![bg width:90%](./diagrams/todo-app/7.dio.svg)
+
+---
+![bg width:90%](./diagrams/todo-app/8.dio.svg)
+
+---
+![bg width:90%](./diagrams/todo-app/9.dio.svg)
+
+---
+![bg fit](./img/Samples-TodoApp.gif)
+
+<footer style="position: absolute">
+  <h2 style="
+    position: relative; left: -1em; top: 1.2em;
+    background: #9F0; color: #000; padding: 3pt;">
+    &nbsp;TodoApp, v4: Client-side TodoService + server-side IsolatedKeyValueStore&nbsp;
+  </h2>
+</footer>
+
+---
+![bg height:90%](./diagrams/use-cases/distributed.dio.svg)
+
+---
+![bg height:90%](./diagrams/use-cases/multi-host.dio.svg)
+
+---
+![bg fit](./img/Samples-TodoApp.gif)
+
+<footer style="position: absolute">
+  <h2 style="
+    position: relative; left: -1em; top: 1.2em;
+    background: #9F0; color: #000; padding: 3pt;">
+    &nbsp;TodoApp, v5: Multi-host&nbsp;
+  </h2>
+</footer>
+
+---
+# HelloCart: [Any]CartService.GetTotal
 
 ```cs
-@inherits LiveComponentBase<bool>
-@inject IAppUserService AppUserService
-
-[Parameter]
-public string CssClass { get; set; } = "";
-[Parameter]
-public Color Color { get; set; } = Color.Primary;
-[Parameter]
-public AppUser User { get; set; } = AppUser.None;
-
-protected override async Task<bool> ComputeState(CancellationToken cancellationToken)
+public virtual async Task<decimal> GetTotal(string id)
 {
-    if (User.Id <= 0)
-        return false;
-    return await AppUserService.IsOnline(User.Id, cancellationToken);
+    var cart = await TryGet(id);
+    if (cart == null)
+        return 0;
+    var total = 0M;
+    foreach (var (productId, quantity) in cart.Items) {
+        var product = await _products.TryGet(productId);
+        total += (product?.Price ?? 0M) * quantity;
+    }
+    return total;
 }
 ```
 
 ---
-# Blazor Component: AppUserBadges
+# HelloCart: DbProductService.TryGet (query)
 
 ```cs
-[Parameter]
-public IEnumerable<AppUser> Users { get; set; } = Enumerable.Empty<AppUser>();
-[Parameter]
-public bool UseAndDelimiter { get; set; } = true;
-
-private string GetDelimiter(int index)
-    => index switch {
-        0 => "",
-        1 => UseAndDelimiter ? " and " : ", ",
-        _ => ", "
-    };
-```
-Markup:
-```html
-@foreach(var (user, index) in Users.Select((user, index) => (user, index))) {
-    <span>@GetDelimiter(index)</span>
-    <AppUserBadge User="@user" />
+public virtual async Task<Product?> TryGet(string id)
+{
+    await using var dbContext = CreateDbContext();
+    var dbProduct = await dbContext.Products.FindAsync((object) id);
+    if (dbProduct == null)
+        return null;
+    return new Product() { Id = dbProduct.Id, Price = dbProduct.Price };
 }
 ```
 
 ---
-![bg width:90%](./diagrams/use-cases/1.dio.svg)
+# HelloCart: DbProductService.Edit (command)
 
----
-![bg height:90%](./diagrams/use-cases/2.dio.svg)
+```cs
+public virtual async Task Edit(EditCommand<Product> command)
+{
+    var (productId, product) = command;
+    if (Computed.IsInvalidating()) {
+        // This block is "replayed" on every host!
+        TryGet(productId).Ignore();
+        return;
+    }
 
----
-![bg height:90%](./diagrams/use-cases/3.dio.svg)
-
----
-![bg height:90%](./diagrams/use-cases/4.dio.svg)
-
----
-![bg height:90%](./diagrams/use-cases/4a.dio.svg)
-
----
-![bg height:90%](./diagrams/use-cases/5.dio.svg)
-
----
-![bg height:90%](./diagrams/use-cases/6.dio.svg)
-
----
-![bg height:90%](./diagrams/use-cases/7.dio.svg)
-
----
-![bg height:90%](./diagrams/use-cases/8.dio.svg)
-
----
-![bg height:90%](./diagrams/use-cases/9.dio.svg)
-
----
-![bg height:90%](./diagrams/use-cases/10.dio.svg)
-
----
-![bg height:90%](./diagrams/use-cases/11.dio.svg)
+    await using var dbContext = await CreateCommandDbContext();
+    var dbProduct = await dbContext.Products.FindAsync((object) productId);
+    if (product == null) {
+        if (dbProduct != null)
+            dbContext.Remove(dbProduct);
+    }
+    else {
+        if (dbProduct != null)
+            dbProduct.Price = product.Price;
+        else
+            dbContext.Add(new DbProduct { Id = productId, Price = product.Price });
+    }
+    await dbContext.SaveChangesAsync();
+}
+```
 
 ---
 ## `(Local)ComposerService`
@@ -1219,8 +1418,7 @@ Most important part of the [performance test](https://github.com/servicetitan/St
 ```cs
 public virtual async Task<User?> TryGet(long userId)
 {
-  await Everything(); // LMK if you know what's the role of this call!
-  await using var dbContext = DbContextFactory.CreateDbContext(); // Pooled
+  await using var dbContext = DbContextFactory.CreateDbContext();
   var user = await dbContext.Users.FindAsync(new[] {(object) userId});
   return user;
 }
@@ -1353,6 +1551,20 @@ Server:
 ![bg right:43%](./img/LazyCat.jpg)
 
 ---
+## Fusion vs .NET Remoting
+![bg right:50% width:120%](./img/SoChatty.jpg)
+
+<!-- _class: highlight -->
+
+.NET Remoting was:
+🤬 Chatty
+🔓 Insecure
+
+And Fusion:
+🤖 Kills chattiness 
+🔒 Is secure
+
+---
 # Fusion vs MobX, KO, ...
 <!-- _class: highlight -->
 
@@ -1409,57 +1621,52 @@ Server:
 <img src="./diagrams/vs/fusion2.dio.svg" style="height: 90%">
 
 ---
+![bg right:40% height:66%](./img/IDareYou-Flux.jpg)
 # Fusion vs Flux, Redux, MVC, MobX, ...
 <!-- _class: highlight invert -->
 
-🙀 Client- & server-side!
-🚀 Real-time-everything!
-❌ No need for custom events!
+💍 One ring to rule them all - clients, servers, UI
+🚀 Real-time & caching everywhere!
+👌 Everything is eventually consistent
+💃 CQRS + other bells and whistles.
 
-One 💍 to rule them all!
-
-![bg right:60%](./img/IDareYou-Flux.jpg)
-
----
-## What about .NET Remoting?
-<!-- _class: highlight invert -->
-
-.NET Remoting was:
-🤬 Chatty
-🔓 Insecure
-
-And Fusion:
-🤖 Memoizes everything
-🔒 Is secure
-
-![bg right:63%](./img/SoChatty.jpg)
+Things you don't need with Fusion:
+👾 Reducers, stores
+🤬 Observable models. Of observable models. 
+&nbsp;&nbsp;&nbsp;&nbsp; Full of other observable models.
+✉ Server-side push notifications
 
 ---
 ![bg opacity:0.7](./img/CrazyGuy.jpg)
 
-<p style="text-align: center">
+<p style="text-align: right">
 <img src="./diagrams/keywords.dio.svg" style="width: 80%"/>
 </p>
 
 ---
 
 <!-- _class: invert highlight -->
-> *Discovery consists of looking at the same thing as everyone else and thinking something different.*
-> ― Albert Szent-Gyorgyi
+![bg opacity:0.7](./img/BilboOneRing.jpg)
+
+> <span style="color: white">Discovery consists of looking at the same thing as everyone else and thinking something different.</span>
+> *― Albert Szent-Gyorgyi*
 
 ---
+<!-- _class: invert highlight -->
+![bg blur:5px opacity:0.25](./img/Gollum.jpg)
 # The price you pay for Fusion
 
 - **Money:** thanks to [ServiceTitan](servicetitan.com), Fusion is free (MIT license)
 - **CPU:** free your CPUs! The torture of making them to run recurring computations again and again must be stopped!
 - **RAM:** is where the cost is really paid. Besides that, [remember about GC pauses](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part08.md#large-working-sets-and-gc-pauses) and other downsides of local caching. But the upside is so bright + Fusion actually supports external caching via ["swapping" feature](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part05.md#caching-options).
-- **Learning curve:** is relatively shallow in the beginning, but getting steeper once you start to dig deeper. Though Fusion is definitely not as complex as e.g. TPL with its `ExecutionContext`, `ValueTask<T>`, and other tricky parts.
-- **Other risks:** First lines of Fusion code were written ~ 1 year ago. What "other risks" are you talking about?
+- **Learning curve:** relatively shallow in the beginning, but getting steeper once you start to dig deeper &ndash; like TPL with its `ExecutionContext`, `ValueTask<T>`, etc.
+- **Other risks:** first lines of Fusion code were written ~ 1 year ago. What "other risks" are you talking about?
 
 ---
+![bg brightness:0.5](./img/StitchAndOthers.jpg)
 ## But...
 
-If you need a real-time UI, Fusion is probably the lesser of many evils you'll have to deal with otherwise. *
+If you need a real-time UI or a robust caching, Fusion is probably the lesser of many evils you'll have to deal with otherwise. *
 </br>
 </br>
 
@@ -1468,12 +1675,10 @@ If you need a real-time UI, Fusion is probably the lesser of many evils you'll h
 ## &nbsp;
 ## &nbsp;
 
-![bg brightness:0.7](./img/StitchAndOthers.jpg)
-
 ---
 <!-- _class: center invert-->
 
-## Why real-time matters nowadays?
+## Does real-time matter?
 
 ---
 
