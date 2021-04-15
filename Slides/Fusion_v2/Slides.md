@@ -1610,7 +1610,7 @@ And Fusion:
 <img src="./diagrams/vs/fusion2.dio.svg" style="height: 90%">
 
 ---
-<!-- _class: highlight invert -->
+<!-- _class: -->
 ![bg right:40% height:66%](./img/IDareYou-Flux.jpg)
 # Fusion vs Flux, Redux, MVC, MobX, ...
 
