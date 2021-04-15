@@ -623,7 +623,7 @@ Coincidentally, <a href="https://twitter.com/StevenSanderson">Mr. Sanderson</a> 
     _store = _store.RemoveAll(i =&gt; i.Id == todo.Id).Add(todo);
 
     <span class="hljs-keyword">using</span> <span class="hljs-keyword">var</span> _ = Computed.Invalidate();
-    TryGet(session, todo.Id, CancellationToken.None).Ignore();
+    TryGet(session, todo.Id).Ignore();
     PseudoGetAllItems(session).Ignore();
     <span class="hljs-keyword">return</span> todo;
 }
@@ -1078,17 +1078,16 @@ fusionClient.AddReplicaService&lt;ITodoService, ITodoClient&gt;();
 <p>See the power of distributed incremental build in action!<br />
 Live demo: <a href="https://fusion-samples.servicetitan.com/composition">https://fusion-samples.servicetitan.com/composition</a><br />
 Source code: <a href="https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/Server/Services/ComposerService.cs">ComposerService</a>, <a href="https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/UI/Services/LocalComposerService.cs">LocalComposerService</a>.</p>
-<pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">async</span> Task&lt;ComposedValue&gt; <span class="hljs-title">GetComposedValue</span>(<span class="hljs-params">
-    <span class="hljs-built_in">string</span> parameter, Session session, CancellationToken cancellationToken</span>)</span>
+<pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">async</span> Task&lt;ComposedValue&gt; <span class="hljs-title">GetComposedValue</span>(<span class="hljs-params">Session session, <span class="hljs-built_in">string</span> parameter</span>)</span>
 {
-    <span class="hljs-keyword">var</span> chatTail = <span class="hljs-keyword">await</span> ChatService.GetChatTail(<span class="hljs-number">1</span>, cancellationToken);
-    <span class="hljs-keyword">var</span> uptime = <span class="hljs-keyword">await</span> TimeService.GetUptime(TimeSpan.FromSeconds(<span class="hljs-number">10</span>), cancellationToken);
+    <span class="hljs-keyword">var</span> chatTail = <span class="hljs-keyword">await</span> ChatService.GetChatTail(<span class="hljs-number">1</span>);
+    <span class="hljs-keyword">var</span> uptime = <span class="hljs-keyword">await</span> TimeService.GetUptime(TimeSpan.FromSeconds(<span class="hljs-number">10</span>));
     <span class="hljs-keyword">var</span> sum = (<span class="hljs-built_in">double</span>?) <span class="hljs-literal">null</span>;
     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">double</span>.TryParse(parameter, <span class="hljs-keyword">out</span> <span class="hljs-keyword">var</span> <span class="hljs-keyword">value</span>))
-        sum = <span class="hljs-keyword">await</span> SumService.GetSum(<span class="hljs-keyword">new</span> [] { <span class="hljs-keyword">value</span> }, <span class="hljs-literal">true</span>, cancellationToken);
+        sum = <span class="hljs-keyword">await</span> SumService.GetSum(<span class="hljs-keyword">new</span> [] { <span class="hljs-keyword">value</span> }, <span class="hljs-literal">true</span>);
     <span class="hljs-keyword">var</span> lastChatMessage = chatTail.Messages.SingleOrDefault()?.Text ?? <span class="hljs-string">&quot;(no messages)&quot;</span>;
-    <span class="hljs-keyword">var</span> user = <span class="hljs-keyword">await</span> AuthService.GetUser(session, cancellationToken);
-    <span class="hljs-keyword">var</span> activeUserCount = <span class="hljs-keyword">await</span> ChatService.GetActiveUserCount(cancellationToken);
+    <span class="hljs-keyword">var</span> user = <span class="hljs-keyword">await</span> AuthService.GetUser(session);
+    <span class="hljs-keyword">var</span> activeUserCount = <span class="hljs-keyword">await</span> ChatService.GetActiveUserCount();
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ComposedValue(<span class="hljs-string">$&quot;<span class="hljs-subst">{parameter}</span> - server&quot;</span>, uptime, sum, lastChatMessage, user, activeUserCount);
 }
 </span></span></foreignObject></svg></code></pre>

@@ -856,7 +856,7 @@ public virtual async Task<Todo> AddOrUpdate(AddOrUpdateTodoCommand command)
     _store = _store.RemoveAll(i => i.Id == todo.Id).Add(todo);
 
     using var _ = Computed.Invalidate();
-    TryGet(session, todo.Id, CancellationToken.None).Ignore();
+    TryGet(session, todo.Id).Ignore();
     PseudoGetAllItems(session).Ignore();
     return todo;
 }
@@ -1396,17 +1396,16 @@ Live demo: https://fusion-samples.servicetitan.com/composition
 Source code: [ComposerService](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/Server/Services/ComposerService.cs), [LocalComposerService](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/src/Blazor/UI/Services/LocalComposerService.cs).
 
 ```cs
-public virtual async Task<ComposedValue> GetComposedValue(
-    string parameter, Session session, CancellationToken cancellationToken)
+public virtual async Task<ComposedValue> GetComposedValue(Session session, string parameter)
 {
-    var chatTail = await ChatService.GetChatTail(1, cancellationToken);
-    var uptime = await TimeService.GetUptime(TimeSpan.FromSeconds(10), cancellationToken);
+    var chatTail = await ChatService.GetChatTail(1);
+    var uptime = await TimeService.GetUptime(TimeSpan.FromSeconds(10));
     var sum = (double?) null;
     if (double.TryParse(parameter, out var value))
-        sum = await SumService.GetSum(new [] { value }, true, cancellationToken);
+        sum = await SumService.GetSum(new [] { value }, true);
     var lastChatMessage = chatTail.Messages.SingleOrDefault()?.Text ?? "(no messages)";
-    var user = await AuthService.GetUser(session, cancellationToken);
-    var activeUserCount = await ChatService.GetActiveUserCount(cancellationToken);
+    var user = await AuthService.GetUser(session);
+    var activeUserCount = await ChatService.GetActiveUserCount();
     return new ComposedValue($"{parameter} - server", uptime, sum, lastChatMessage, user, activeUserCount);
 }
 ```
