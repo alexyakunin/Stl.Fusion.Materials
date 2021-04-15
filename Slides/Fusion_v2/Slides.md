@@ -982,7 +982,7 @@ public async Task<TResult> Call<TResult>(ICommand<TResult> command)
 ---
 # TodoSummaryBadge.razor
 
-Did you notice auto-updating summary? That's all the code displaying it!
+Auto-updating "done / total". That's all the code displaying it!
 
 ```cs
 @inherits ComputedStateComponent<TodoSummary>
@@ -990,7 +990,7 @@ Did you notice auto-updating summary? That's all the code displaying it!
 @inject Session Session
 
 @{
-    var summary = State.ValueOrDefault;
+    var summary = State.ValueOrDefault ?? new();
 }
 
 @if (summary != null) {
