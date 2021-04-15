@@ -63,7 +63,6 @@ div.col2 .break {
 
 ---
 <!-- _class: highlight center invert -->
-
 ![bg right:40%](./img/WaitWhat.jpg)
 
 # But first, let's talk about</br>*incremental builds*
@@ -180,6 +179,7 @@ decimal GetCartTotal(string cartId)
 
 ---
 <!-- _class: highlight invert-->
+![bg brightness:0.2](./img/Yoda1.jpg)
 # A new Incremental Builder build you must!
 
 1. Recompute everything → saturate CPU
@@ -187,13 +187,10 @@ decimal GetCartTotal(string cartId)
 2. Chatty client-server RPC → saturate NIC
    **And the Client-Side Cache too!**
 
-![bg brightness:0.2](./img/Yoda1.jpg)
-
 ---
 <!-- _class: highlight invert -->
-# To Cache
-
 ![bg right](./img/ShockedDog.jpg)
+# To Cache
 
 means to store and reuse the results of computations executed in past.
 
@@ -236,9 +233,8 @@ var cartTotal = cachingGetCartTotal.Invoke("cart1");
 ```
 
 ---
-# A Tiny Problem
-
 ![bg right:38%](./img/ValentinesDay.jpg)
+# A Tiny Problem
 
 To make it work, <tt>fn</tt> must be a **pure function**.
 
@@ -390,6 +386,7 @@ The original functions weren't changed!
 
 ---
 <!-- _class: highlight invert -->
+![bg left:50%](./img/YouDontNeedIt.jpg)
 # Do we really need delegates to decorate them?
 
 We don't. 
@@ -400,19 +397,17 @@ Making DI container to provide a proxy implementing such decorators is a 🍰
 
 So it can be <span style="opacity: 0.05">absolutely transparent!</span>
 
-![bg left:50%](./img/YouDontNeedIt.jpg)
-
 ---
+![bg right:50%](./img/Stitch1.gif)
 # ⚒️ Incrementally-Build-Everything Decorator
 
 "So, tell me, my little one-eyed one, on what poor, pitiful, defenseless planet has my monstrosity been unleashed?"
 
 &ndash; [Dr. Jumba Jookiba](https://disney.fandom.com/wiki/Jumba_Jookiba), #1 scientist in my list
 
-![bg right:50%](./img/Stitch1.gif)
-
 ---
 <!-- _class: highlight invert -->
+![bg left:50%](./img/MuskWeed.jpg)
 # Can I use it now?
 
 Not quite:
@@ -426,7 +421,6 @@ Not quite:
 
 Let me show 50+ more slides first!
 
-![bg left:50%](./img/MuskWeed.jpg)
 <footer>(*) Pretty sure he said this at least once
 
 ---
@@ -487,6 +481,7 @@ Which one you should marry?
 
 ---
 <!-- _class: highlight invert -->
+![bg left:40%](./img/AllTheThings.jpg)
 # Real-time updates require you to...
 
 - Know when a result of a function changes
@@ -498,7 +493,6 @@ Which one you should marry?
 - Ideally, as a compact diff to the prev. state
   **Diff can be computed in `O(diffSize)` for immutable types (<a href="https://medium.com/swlh/fusion-current-state-and-upcoming-features-88bc4201594b?source=friends_link&sk=375290c4538167fe99419a744f3d42d5">details</a>).</span>**
 
-![bg left:40%](./img/AllTheThings.jpg)
 
 ---
 <!-- _class: highlight invert -->
@@ -518,6 +512,7 @@ A  collection of other "two things in computer science" memes: <a href="https://
 <header><h1>WHAT ABOUT...</h1></header>
 
 ---
+![bg right:35%](./img/SteveSanderson.jpg)
 # Blazor is:
 
 - .NET running in your browser on top of WASM!
@@ -533,13 +528,12 @@ Blazor fans, see the image of the Blazor God!</br>
 Coincidentally, <a href="https://twitter.com/StevenSanderson">Mr. Sanderson</a> is also the creator of <a href="https://knockoutjs.com/">Knockout.js.</a>
 </footer>
 
-![bg right:35%](./img/Steve.jpg)
-
 ---
 ![bg fit](./img/Blazor.jpg)
 
 ---
 <!-- _class: highlight invert -->
+![bg right:40%](./img/React-Vs-Blazor.jpg)
 # Blazor &ndash; cons:
 
 - 1🧵 for now &ndash; but **JS developers live with this 💩 for 25 years, SO WE CAN!**
@@ -548,8 +542,6 @@ Coincidentally, <a href="https://twitter.com/StevenSanderson">Mr. Sanderson</a> 
   10🧵 x 20x AOT ≃ 200x🚀**
 - Even a small project downloads 2…4 MB of .NET .dlls (gzipped!) - and that's after linking with tree shaking.
   **Cmon, it's 21 century &ndash; size doesn't matter! At least online, right?**
-
-![bg right:40%](./img/React-Vs-Blazor.jpg)
 
 ---
 ## React Component - UI markup example
@@ -672,12 +664,11 @@ See it on BlazorREPL: https://blazorrepl.com/repl/wluHuIOv061KS9Vt31
 
 ---
 <!-- _class: center invert -->
-
 ![bg fit](./img/Fusion-GitHub.jpg)
 
 ---
-![bg](./img/Samples-Blazor.gif)
 <!-- _class: center -->
+![bg](./img/Samples-Blazor.gif)
 
 <div style="font-size: 100px; color: #eee; text-shadow: 2px 2px #000;">
   <a href="http://fusion-samples.servicetitan.com/" 
@@ -713,9 +704,8 @@ Func<TIn, TOut> ToAwesome<TIn, TOut>(Func<TIn, TOut> fn)
   }
 ```
 ---
-
-## Fusion's version of this decorator is:
 ![bg right:48%](./img/SuperSquirrel.gif)
+## Fusion's version of this decorator is:
 
 - GC-friendly
 - Async, thread-safe
@@ -728,8 +718,8 @@ Func<TIn, TOut> ToAwesome<TIn, TOut>(Func<TIn, TOut> fn)
 <footer>(*) Almost immutable</footer>
 
 ---
-# Fusion's `IComputed<T>`:
 ![bg fit right:30%](./diagrams/consistency-state/transitions.dio.svg)
+# Fusion's `IComputed<T>`:
 
 A bit simplified version of actual `IComputed<T>`:
 
@@ -840,6 +830,7 @@ public class SimpleTodoService : ITodoService
         => TaskEx.UnitTask;
 }
 ```
+
 ---
 # SimpleTodoService: command handler example
 
@@ -868,8 +859,11 @@ public virtual async Task<Todo> AddOrUpdate(AddOrUpdateTodoCommand command)
 ```cs
 var services = new ServiceCollection();
 var fusion = services.AddFusion();
+
 // ~ Like service.AddSingleton<ITodoService, SimpleTodoService>()
 fusion.AddComputeService<ITodoService, SimpleTodoService>();
+
+// ...
 var serviceProvider = services.BuildServiceProvider()
 ```
 
@@ -1148,7 +1142,6 @@ public interface IKeyValueStore
 ---
 ![bg height:90%](./diagrams/todo-app/3.dio.svg)
 
-
 ---
 # Can we replicate `IComputed` on a remote host?
 
@@ -1173,28 +1166,35 @@ public class ComputedReplica<T> : IComputed<T>
 Do the same, but deliver the invalidation event via RPC!
 
 ---
-# Your Web API call
 <!-- _class: highlight -->
 ![bg right:40% width:90%](./img/DogStuckInBush.jpg)
-
+# Your Web API call
 <img src="./diagrams/replica-service/regular.dio.svg" style="width: 100%"/>
 
 ---
-# Fusion Web API call
 <!-- _class: highlight -->
 ![bg right:40% width:90%](./img/SpecialSkills.jpg)
-
+# Fusion Web API call
 <img src="./diagrams/replica-service/fusion1.dio.svg" style="width: 100%"/>
 
 ---
-# Fusion Replica Service
+<!-- _class: highlight invert-->
+![bg brightness:0.2](./img/Yoda1.jpg)
+# A new Incremental Builder build you must!
+
+1. Recompute everything → saturate CPU
+   **May the Cache be with you!**
+2. Chatty client-server RPC → saturate NIC
+   **And the Client-Side Cache too!**
+
+---
 <!-- _class: highlight -->
 ![bg right:40% width:90%](./img/DogeToTheMoon.jpg)
-
+# Fusion Replica Service
 <img src="./diagrams/replica-service/fusion2.dio.svg" style="width: 100%"/>
 
 ---
-# Replica Service - Controller
+# Replica Service: controller
 ```cs
 [Route("api/[controller]/[action]")]
 [ApiController, JsonifyErrors]
@@ -1222,7 +1222,7 @@ public class TodoController : ControllerBase, ITodoService
 ```
 
 ---
-# Replica Service - Client Definition
+# Replica Service: client definition
 
 It's not the actual type you consume - the actual runtime-generated replica service (AKA Fusion client) implements the same `ITodoService`. `ITodoClient` type just maps its endpoints to the web API relying on [RestEase](https://github.com/canton7/RestEase) under the hood.
 
@@ -1245,8 +1245,9 @@ public interface ITodoClient
 ```
 
 ---
-# Replica Service - Registration
+# Replica Service: registration
 ```cs
+var services = new ServiceCollection();
 var fusion = services.AddFusion();
 
 // Adding & configuring services required for Replica Services to operate
@@ -1515,8 +1516,9 @@ Fusion's Replica Client:
 <iframe src="https://www.youtube.com/embed/lzP0JIzrYmM?start=24" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ---
-# Fusion vs Redis, memcached, ...
 <!-- _class: highlight -->
+![bg left:45%](./img/FlyingCat.jpg)
+# Fusion vs Redis, memcached, ...
 
 ⌚ Almost always consistent
 🚀 Local = 1000 times faster
@@ -1525,11 +1527,10 @@ Fusion's Replica Client:
 🧱 Incrementally-Build-Everything™
 🙀 Supports swapping to ext. caches!
 
-![bg left:45%](./img/FlyingCat.jpg)
-
 ---
-# Fusion vs SignalR
 <!-- _class: highlight -->
+![bg right:43%](./img/LazyCat.jpg)
+# Fusion vs SignalR
 
 🦌 All SignalR events = 🦄 "X is invalidated".
 </br>
@@ -1545,25 +1546,25 @@ Server:
 ❌ No events, groups/topics
 💋 (# of invalidation points) ≪ (# of events)
 
-![bg right:43%](./img/LazyCat.jpg)
-
 ---
-## Fusion vs .NET Remoting
-![bg right:50% width:120%](./img/SoChatty.jpg)
-
 <!-- _class: highlight -->
+![bg right:50% width:120%](./img/SoChatty.jpg)
+## Fusion vs .NET Remoting
 
 .NET Remoting was:
 🤬 Chatty
 🔓 Insecure
+👽 Custom protocol
 
 And Fusion:
 🤖 Kills chattiness 
 🔒 Is secure
+👩 Relies on HTTP / REST + JSON
 
 ---
-# Fusion vs MobX, KO, ...
 <!-- _class: highlight -->
+![bg left:43%](./img/CoolSquirrel.jpg)
+# Fusion vs MobX, KO, ...
 
 - Decorates APIs (services), not models
 - Thread-safe, asynchronous
@@ -1573,54 +1574,45 @@ And Fusion:
 - No sync. auto-recompute
 - Distributed.
 
-![bg left:43%](./img/CoolSquirrel.jpg)
-
 ---
-# Flux
 <!-- _class: highlight -->
-
+# Flux
 <img src="./diagrams/vs/flux.dio.svg" style="height: 90%">
 
 ---
-# Redux
 <!-- _class: highlight -->
-
+# Redux
 <img src="./diagrams/vs/redux.dio.svg" style="height: 90%">
 
 ---
-# MVC
 <!-- _class: highlight -->
-
+# MVC
 <img src="./diagrams/vs/mvc.dio.svg" style="height: 90%">
 
 ---
-# MVC + KO/MobX
 <!-- _class: highlight -->
-
+# MVC + KO/MobX
 <img src="./diagrams/vs/ko.dio.svg" style="height: 90%">
 
 ---
-# Fusion
 <!-- _class: highlight -->
-
+# Fusion
 <img src="./diagrams/vs/fusion0.dio.svg" style="height: 90%">
 
 ---
-# Fusion
 <!-- _class: highlight -->
-
+# Fusion
 <img src="./diagrams/vs/fusion1.dio.svg" style="height: 90%">
 
 ---
-# Fusion
 <!-- _class: highlight -->
-
+# Fusion
 <img src="./diagrams/vs/fusion2.dio.svg" style="height: 90%">
 
 ---
+<!-- _class: highlight invert -->
 ![bg right:40% height:66%](./img/IDareYou-Flux.jpg)
 # Fusion vs Flux, Redux, MVC, MobX, ...
-<!-- _class: highlight invert -->
 
 💍 One ring to rule them all - clients, servers, UI
 🚀 Real-time & caching everywhere!
@@ -1641,7 +1633,6 @@ Things you don't need with Fusion:
 </p>
 
 ---
-
 <!-- _class: invert highlight -->
 ![bg opacity:0.7](./img/BilboOneRing.jpg)
 
@@ -1674,14 +1665,13 @@ If you need a real-time UI or a robust caching, Fusion is probably the lesser of
 
 ---
 <!-- _class: center invert-->
-
 ## Does real-time matter?
 
 ---
+![bg left](./img/Mosaic.png)
 
 On a serious note: [Real-Time is #1 Feature Your Next Web App Needs](https://alexyakunin.medium.com/features-of-the-future-web-apps-part-1-e32cf4e4e4f4?sk=65dacdbf670ef9b5d961c4c666e223e2)
 
-![bg left](./img/Mosaic.png)
 
 ---
 <!-- _class: -->
@@ -1707,6 +1697,7 @@ On a serious note: [Real-Time is #1 Feature Your Next Web App Needs](https://ale
 
 ---
 <!-- _class: center invert-->
+![bg](./img/FusionBg.jpg)
 
 <br><br><br><br>
 <h2 style="font-size: 60pt">Thank you!</h1>
@@ -1717,5 +1708,3 @@ The creator of Fusion, <a href="https://www.servicetitan.com/">ServiceTitan, Inc
 <a href="https://github.com/servicetitan/Stl.Fusion">https://github.com/servicetitan/Stl.Fusion</a></br>
 P.S. We need your stars and forks! <img src="https://img.shields.io/github/stars/servicetitan/Stl.Fusion?style=social" style="height: 1.1em; vertical-align: middle"/> <img src="https://img.shields.io/github/forks/servicetitan/Stl.Fusion?style=social" style="height: 1.1em; vertical-align: middle"/></br>
 </footer>
-
-![bg](./img/FusionBg.jpg)
