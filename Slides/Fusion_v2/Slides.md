@@ -1617,7 +1617,7 @@ And Fusion:
 💍 One ring to rule them all - clients, servers, UI
 🚀 Real-time & caching everywhere!
 👌 Everything is eventually consistent
-💃 CQRS + other bells and whistles.
+💃 CQRS, multi-host mode, bells, whistles.
 
 Things you don't need with Fusion:
 👾 Reducers, stores
