@@ -1491,16 +1491,20 @@ Fusion's Replica Client:
 
 ---
 <!-- _class: center invert-->
+![bg](./img/CaptainMarvel.jpg)
+<h2 style="background: #000; width:320px;">How 10x speed boost looks like?</h2>
 
-## How 10x speed boost looks like?
+---
+<!-- _class: center invert-->
+![bg](./img/BrieLarsonBeatSaber.gif)
+
+<footer style="text-align: left">
+  <a style="background: #9F0; color: #000; padding: 10pt;" href="https://www.youtube.com/watch?v=05pzUXujMJU&t=186s">Click here to see this video on YouTube</a>
+</footer>
 
 ---
 <!-- _class: video -->
-<iframe src="https://www.youtube.com/embed/05pzUXujMJU?start=186" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
----
-<!-- _class: video -->
-<iframe src="https://www.youtube.com/embed/lzP0JIzrYmM?start=24" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe src="https://www.youtube.com/embed/yNRPiM0hWgI?start=269" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ---
 <!-- _class: highlight -->
