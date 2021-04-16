@@ -1497,7 +1497,6 @@ Fusion's Replica Client:
 ---
 <!-- _class: center invert-->
 ![bg](./img/BrieLarsonBeatSaber.gif)
-
 <footer style="text-align: left">
   <a style="background: #9F0; color: #000; padding: 10pt;" href="https://www.youtube.com/watch?v=05pzUXujMJU&t=186s">Click here to see this video on YouTube</a>
 </footer>
@@ -1505,6 +1504,14 @@ Fusion's Replica Client:
 ---
 <!-- _class: video -->
 <iframe src="https://www.youtube.com/embed/yNRPiM0hWgI?start=269" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+---
+<!-- _class: center invert -->
+![bg blur:3px](./img/NeoVsBullets.gif)
+<h2 style="background: #000; width:300px;">
+Limits are meant
+to be broken.
+</h2>
 
 ---
 <!-- _class: highlight -->
@@ -1551,19 +1558,6 @@ And Fusion:
 🤖 Kills chattiness 
 🔒 Is secure
 👩 Relies on HTTP / REST + JSON
-
----
-<!-- _class: highlight -->
-![bg left:43%](./img/CoolSquirrel.jpg)
-# Fusion vs MobX, KO, ...
-
-- Decorates APIs (services), not models
-- Thread-safe, asynchronous
-- Works on the server side
-- Designed for immutable (and shared) models
-- Explicit consistent / inconsistent states
-- No sync. auto-recompute
-- Distributed.
 
 ---
 <!-- _class: highlight -->
