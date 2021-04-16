@@ -716,6 +716,9 @@ interface IComputed<T> {
 ![bg height:90%](./diagrams/consistency-state/instances.dio.svg)
 
 ---
+![bg width:95%](./img/TodoApp-Github.gif)
+
+---
 # TodoApp: `ITodoService` API
 
 **Note:** `CancellationToken` argument is removed here & further to keep things simple.
