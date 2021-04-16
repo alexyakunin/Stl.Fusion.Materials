@@ -45,8 +45,13 @@ div.col2 .break {
 }
 </style>
 
-![bg left:60%](./img/Racoon.gif)
+![bg opacity:0.7](./img/CrazyGuy.jpg)
+<p style="text-align: right">
+<img src="./diagrams/keywords.dio.svg" style="width: 80%"/>
+</p>
 
+---
+![bg left:60%](./img/Racoon.gif)
 ## Is real-time UI </br>really hard to code</br> or do I suck?
 
 ---
@@ -55,16 +60,8 @@ div.col2 .break {
 ### </br>Twitter can do it,</br>so you can do it too!
 
 ---
-![bg opacity:0.7](./img/CrazyGuy.jpg)
-
-<p style="text-align: right">
-<img src="./diagrams/keywords.dio.svg" style="width: 80%"/>
-</p>
-
----
 <!-- _class: highlight center invert -->
 ![bg right:40%](./img/WaitWhat.jpg)
-
 # But first, let's talk about</br>*incremental builds*
 
 ---
@@ -358,31 +355,25 @@ void Update(Product product)
 <footer><h2>Call SpecialOffers.GetActive()</h2></footer>
 
 ---
+![bg right:50%](./img/Stitch1.gif)
+# ⚒️ Incrementally-Build-Everything Decorator
+
+"So, tell me, my little one-eyed one, on what poor, pitiful, defenseless planet has my monstrosity been unleashed?"
+
+&ndash; [Dr. Jumba Jookiba](https://disney.fandom.com/wiki/Jumba_Jookiba), #1 scientist in my list
+
+---
 <!-- _class: highlight invert-->
-# Superpowers Acquired:
+![bg right:46%](./img/SuperSquirrel.gif)
+# Superpowers acquired:
 
 - *Everything is cached*
   and *(re)computed incrementally*
 - Dependencies are *captured automatically*
 - So we *invalidate just what's produced externally!*
+- It's a *transparent abstraction* that doesn't change functions' signatures, code, and even their behavior stays mostly the same<sup>*</sup>
 
-![bg right:48%](./img/SuperSquirrel.gif)
-
----
-<!-- _class: highlight -->
-![bg](./img/InvisibleEverything.jpg)
-
-We achieved this by **decoration** &ndash;
-The original functions weren't changed! 
-
-<footer style="width: 100%; text-align: center;">
-  <div style="font-size: 48px; color: #fff">
-    A transparent <strike>furniture</strike> abstraction!*
-    <div style="font-size: 24px; color: #fff">
-      (*) Except <tt>Computed.Invalidate</tt> &ndash; nothing is prefect :(
-    </div>
-  </div>
-</footer>
+<footer>(*) Except different timings & tiny periods of inconsistency.</footer>
 
 ---
 <!-- _class: highlight invert -->
@@ -396,14 +387,6 @@ All modern .NET apps rely on Dependency Injection.
 Making DI container to provide a proxy implementing such decorators is a 🍰
 
 So it can be <span style="opacity: 0.05">absolutely transparent!</span>
-
----
-![bg right:50%](./img/Stitch1.gif)
-# ⚒️ Incrementally-Build-Everything Decorator
-
-"So, tell me, my little one-eyed one, on what poor, pitiful, defenseless planet has my monstrosity been unleashed?"
-
-&ndash; [Dr. Jumba Jookiba](https://disney.fandom.com/wiki/Jumba_Jookiba), #1 scientist in my list
 
 ---
 <!-- _class: highlight invert -->
@@ -643,13 +626,6 @@ See it on BlazorREPL: https://blazorrepl.com/repl/wluHuIOv061KS9Vt31
 ![bg height:90%](./diagrams/trinity/2.dio.svg)
 
 ---
-<div class="col2">
-<img src="./img/FP3.jpg">
-<div class="break">
-<img src="./img/FP2.jpg">
-</div>
-
----
 <!-- _class: invert-->
 ![w:300px](./img/Substance.jpg)
 ![bg fit](./img/FP4-En.jpg)
@@ -740,15 +716,28 @@ interface IComputed<T> {
 ![bg height:90%](./diagrams/consistency-state/instances.dio.svg)
 
 ---
-![bg fit](./img/Samples-TodoApp.gif)
+# TodoApp: `ITodoService` API
 
-<footer style="position: absolute">
-  <h2 style="
-    position: relative; left: -1em; top: 1.2em;
-    background: #9F0; color: #000; padding: 3pt;">
-    &nbsp;TodoApp, v1: SimpleTodoService running on the client&nbsp;
-  </h2>
-</footer>
+**Note:** `CancellationToken` argument is removed here & further to keep things simple.
+
+```cs
+public interface ITodoService
+{
+    // Commands
+    [CommandHandler]
+    Task<Todo> AddOrUpdate(AddOrUpdateTodoCommand command);
+    [CommandHandler]
+    Task Remove(RemoveTodoCommand command);
+
+    // Queries
+    [ComputeMethod]
+    Task<Todo?> TryGet(Session session, string id);
+    [ComputeMethod]
+    Task<Todo[]> List(Session session, PageRef<string> pageRef);
+    [ComputeMethod]
+    Task<TodoSummary> GetSummary(Session session);
+}
+```
 
 ---
 # TodoApp: API models / DTOs
@@ -776,34 +765,16 @@ public record RemoveTodoCommand(Session Session, string Id) : ISessionCommand<Un
     public RemoveTodoCommand() : this(Session.Null, "") { }
 }
 ```
----
-# TodoApp: `ITodoService` API
-
-**Note:** `CancellationToken` argument is removed here to keep things simple.
-
-```cs
-public interface ITodoService
-{
-    // Commands
-    [CommandHandler]
-    Task<Todo> AddOrUpdate(AddOrUpdateTodoCommand command);
-    [CommandHandler]
-    Task Remove(RemoveTodoCommand command);
-
-    // Queries
-    [ComputeMethod]
-    Task<Todo?> TryGet(Session session, string id);
-    [ComputeMethod]
-    Task<Todo[]> List(Session session, PageRef<string> pageRef);
-    [ComputeMethod]
-    Task<TodoSummary> GetSummary(Session session);
-}
-```
----
-![bg height:90%](./diagrams/todo-app/1.dio.svg)
 
 ---
-# SimpleTodoService: query method examples
+<div class="col2">
+<img src="./img/FP3.jpg">
+<div class="break">
+<img src="./img/FP2.jpg">
+</div>
+
+---
+# SimpleTodoService: query methods
 
 ```cs
 public class SimpleTodoService : ITodoService
@@ -832,7 +803,7 @@ public class SimpleTodoService : ITodoService
 ```
 
 ---
-# SimpleTodoService: command handler example
+# SimpleTodoService: command handler
 
 ```cs
 [CommandHandler]
@@ -866,6 +837,45 @@ fusion.AddComputeService<ITodoService, SimpleTodoService>();
 // ...
 var serviceProvider = services.BuildServiceProvider()
 ```
+
+---
+![bg fit](./img/Samples-TodoApp.gif)
+
+<footer style="position: absolute">
+  <h2 style="
+    position: relative; left: -1em; top: 1.2em;
+    background: #9F0; color: #000; padding: 3pt;">
+    &nbsp;TodoApp, v1: SimpleTodoService running on the client&nbsp;
+  </h2>
+</footer>
+
+---
+# TodoSummaryBadge.razor
+
+Auto-updating "done / total". That's all the code displaying it!
+
+```cs
+@inherits ComputedStateComponent<TodoSummary>
+@inject ITodoService Todos
+@inject Session Session
+
+@{
+    var summary = State.ValueOrDefault ?? new();
+}
+
+@if (summary != null) {
+    <Badge Color="Color.Success"><b>@summary.DoneCount</b> done</Badge>
+    <Badge Color="Color.Primary"><b>@summary.Count</b> total</Badge>
+}
+
+@code {
+    protected override Task<TodoSummary> ComputeState()
+        => Todos.GetSummary(Session);
+}
+```
+
+---
+![bg height:90%](./diagrams/todo-app/1.dio.svg)
 
 ---
 # TodoPage.razor (p. 1)
@@ -974,31 +984,6 @@ public async Task<TResult> Call<TResult>(ICommand<TResult> command)
 ```
 
 ---
-# TodoSummaryBadge.razor
-
-Auto-updating "done / total". That's all the code displaying it!
-
-```cs
-@inherits ComputedStateComponent<TodoSummary>
-@inject ITodoService Todos
-@inject Session Session
-
-@{
-    var summary = State.ValueOrDefault ?? new();
-}
-
-@if (summary != null) {
-    <Badge Color="Color.Success"><b>@summary.DoneCount</b> done</Badge>
-    <Badge Color="Color.Primary"><b>@summary.Count</b> total</Badge>
-}
-
-@code {
-    protected override Task<TodoSummary> ComputeState()
-        => Todos.GetSummary(Session);
-}
-```
-
----
 # MomentsAgoBadge.razor
 
 Another auto-updating component.
@@ -1038,18 +1023,76 @@ public interface IFusionTime
 ```
 
 ---
-![bg fit](./img/Samples-TodoApp.gif)
-
-<footer style="position: absolute">
-  <h2 style="
-    position: relative; left: -1em; top: 1.2em;
-    background: #9F0; color: #000; padding: 3pt;">
-    &nbsp;TodoApp, v2: TodoService + IKeyValueStore running on the client&nbsp;
-  </h2>
-</footer>
+![bg width:90%](./diagrams/todo-app/2.dio.svg)
 
 ---
-![bg width:90%](./diagrams/todo-app/2.dio.svg)
+<!-- _class: -->
+![bg right:33% width:100%](./img/Infinity1.gif)
+# Can we use one Compute Service in another Compute Service?
+
+Imagine `ITodoService` uses Fusion-backed `IKeyValueStore` instead of `ImmutableList`.
+
+Pros:
+- **No need to invalidate anything!**
+
+Cons:
+- **None.**
+
+---
+<!-- _class: -->
+![bg right:40%](./img/Avengers.jpg)
+# Built-in Compute Services:
+
+- `IFusionTime`
+- `IKeyValueStore` 
+  - `DbKeyValueStore` (EF-backed)
+  - `InMemoryKeyValueStore`
+- `ISandboxedKeyValueStore`
+- `IAuthService` (EF-backed, in-memory)
+
+---
+# IKeyValueStore
+
+```cs
+public interface IKeyValueStore
+{
+    [CommandHandler] Task Set(SetCommand command);
+    [CommandHandler] Task SetMany(SetManyCommand command);
+    [CommandHandler] Task Remove(RemoveCommand command);
+    [CommandHandler] Task RemoveMany(RemoveManyCommand command);
+
+    [ComputeMethod] Task<string?> TryGet(string key);
+    [ComputeMethod] Task<int> Count(string prefix);
+    [ComputeMethod] Task<string[]> ListKeySuffixes(
+        string prefix,
+        PageRef<string> pageRef,
+        SortDirection sortDirection = SortDirection.Ascending);
+}
+```
+
+---
+# ISandboxedKeyValueStore
+
+Same as `IKeyValueStore`, just requiring `Session` everywhere to
+constraint keys to ~ "user folder".
+
+```cs
+public interface ISandboxedKeyValueStore
+{
+    [CommandHandler] Task Set(SandboxedSetCommand command);
+    [CommandHandler] Task SetMany(SandboxedSetManyCommand command);
+    [CommandHandler] Task Remove(SandboxedRemoveCommand command);
+    [CommandHandler] Task RemoveMany(SandboxedRemoveManyCommand command);
+
+    [ComputeMethod] Task<string?> TryGet(Session session, string key);
+    [ComputeMethod] Task<int> Count(Session session, string prefix);
+    [ComputeMethod] Task<string[]> ListKeySuffixes(
+        Session session,
+        string prefix,
+        PageRef<string> pageRef,
+        SortDirection sortDirection = SortDirection.Ascending);
+}
+```
 
 ---
 # TodoService: command handler method
@@ -1099,45 +1142,15 @@ public virtual async Task<TodoSummary> GetSummary(Session session)
 ```
 
 ---
-# ISandboxedKeyValueStore
+![bg fit](./img/Samples-TodoApp.gif)
 
-```cs
-public interface ISandboxedKeyValueStore
-{
-    [CommandHandler] Task Set(SandboxedSetCommand command);
-    [CommandHandler] Task SetMany(SandboxedSetManyCommand command);
-    [CommandHandler] Task Remove(SandboxedRemoveCommand command);
-    [CommandHandler] Task RemoveMany(SandboxedRemoveManyCommand command);
-
-    [ComputeMethod] Task<string?> TryGet(Session session, string key);
-    [ComputeMethod] Task<int> Count(Session session, string prefix);
-    [ComputeMethod] Task<string[]> ListKeySuffixes(
-        Session session,
-        string prefix,
-        PageRef<string> pageRef,
-        SortDirection sortDirection = SortDirection.Ascending);
-}
-```
-
----
-# IKeyValueStore
-
-```cs
-public interface IKeyValueStore
-{
-    [CommandHandler] Task Set(SetCommand command);
-    [CommandHandler] Task SetMany(SetManyCommand command);
-    [CommandHandler] Task Remove(RemoveCommand command);
-    [CommandHandler] Task RemoveMany(RemoveManyCommand command);
-
-    [ComputeMethod] Task<string?> TryGet(string key);
-    [ComputeMethod] Task<int> Count(string prefix);
-    [ComputeMethod] Task<string[]> ListKeySuffixes(
-        string prefix,
-        PageRef<string> pageRef,
-        SortDirection sortDirection = SortDirection.Ascending);
-}
-```
+<footer style="position: absolute">
+  <h2 style="
+    position: relative; left: -1em; top: 1.2em;
+    background: #9F0; color: #000; padding: 3pt;">
+    &nbsp;TodoApp, v2: TodoService + IKeyValueStore running on the client&nbsp;
+  </h2>
+</footer>
 
 ---
 ![bg height:90%](./diagrams/todo-app/3.dio.svg)
@@ -1268,17 +1281,6 @@ fusionClient.AddReplicaService<ITodoService, ITodoClient>();
 ```
 
 ---
-![bg fit](./img/Samples-TodoApp.gif)
-
-<footer style="position: absolute">
-  <h2 style="
-    position: relative; left: -1em; top: 1.2em;
-    background: #9F0; color: #000; padding: 3pt;">
-    &nbsp;TodoApp, v3: Client-side replica service + server-side TodoService&nbsp;
-  </h2>
-</footer>
-
----
 ![bg width:90%](./diagrams/todo-app/4.dio.svg)
 
 ---
@@ -1294,18 +1296,18 @@ fusionClient.AddReplicaService<ITodoService, ITodoClient>();
 ![bg width:90%](./diagrams/todo-app/8.dio.svg)
 
 ---
-![bg width:90%](./diagrams/todo-app/9.dio.svg)
-
----
 ![bg fit](./img/Samples-TodoApp.gif)
 
 <footer style="position: absolute">
   <h2 style="
     position: relative; left: -1em; top: 1.2em;
     background: #9F0; color: #000; padding: 3pt;">
-    &nbsp;TodoApp, v4: Client-side TodoService + server-side SandboxedKeyValueStore&nbsp;
+    &nbsp;TodoApp, v3: Server-side `TodoService`&nbsp;
   </h2>
 </footer>
+
+---
+![bg width:90%](./diagrams/todo-app/9.dio.svg)
 
 ---
 ![bg height:90%](./diagrams/use-cases/distributed.dio.svg)
@@ -1320,41 +1322,9 @@ fusionClient.AddReplicaService<ITodoService, ITodoClient>();
   <h2 style="
     position: relative; left: -1em; top: 1.2em;
     background: #9F0; color: #000; padding: 3pt;">
-    &nbsp;TodoApp, v5: Multi-host&nbsp;
+    &nbsp;TodoApp, v4: Multiple hosts + console client&nbsp;
   </h2>
 </footer>
-
----
-# HelloCart: [Any]CartService.GetTotal
-
-```cs
-public virtual async Task<decimal> GetTotal(string id)
-{
-    var cart = await TryGet(id);
-    if (cart == null)
-        return 0;
-    var total = 0M;
-    foreach (var (productId, quantity) in cart.Items) {
-        var product = await _products.TryGet(productId);
-        total += (product?.Price ?? 0M) * quantity;
-    }
-    return total;
-}
-```
-
----
-# HelloCart: DbProductService.TryGet (query)
-
-```cs
-public virtual async Task<Product?> TryGet(string id)
-{
-    await using var dbContext = CreateDbContext();
-    var dbProduct = await dbContext.Products.FindAsync((object) id);
-    if (dbProduct == null)
-        return null;
-    return new Product() { Id = dbProduct.Id, Price = dbProduct.Price };
-}
-```
 
 ---
 # HelloCart: DbProductService.Edit (command)
@@ -1382,6 +1352,20 @@ public virtual async Task Edit(EditCommand<Product> command)
             dbContext.Add(new DbProduct { Id = productId, Price = product.Price });
     }
     await dbContext.SaveChangesAsync();
+}
+```
+
+---
+# HelloCart: DbProductService.TryGet (query)
+
+```cs
+public virtual async Task<Product?> TryGet(string id)
+{
+    await using var dbContext = CreateDbContext();
+    var dbProduct = await dbContext.Products.FindAsync((object) id);
+    if (dbProduct == null)
+        return null;
+    return new Product() { Id = dbProduct.Id, Price = dbProduct.Price };
 }
 ```
 
@@ -1626,13 +1610,6 @@ Things you don't need with Fusion:
 ✉ Server-side push notifications
 
 ---
-![bg opacity:0.7](./img/CrazyGuy.jpg)
-
-<p style="text-align: right">
-<img src="./diagrams/keywords.dio.svg" style="width: 80%"/>
-</p>
-
----
 <!-- _class: invert highlight -->
 ![bg opacity:0.7](./img/BilboOneRing.jpg)
 
@@ -1640,21 +1617,32 @@ Things you don't need with Fusion:
 > *― Albert Szent-Gyorgyi*
 
 ---
+![bg opacity:0.7](./img/CrazyGuy.jpg)
+
+<p style="text-align: right">
+<img src="./diagrams/keywords-final.dio.svg" style="width: 80%"/>
+</p>
+
+---
 <!-- _class: invert highlight -->
-![bg blur:5px opacity:0.25](./img/Gollum.jpg)
+![bg blur:3px opacity:0.25](./img/Gollum.jpg)
 # The price you pay for Fusion
 
-- **Money:** thanks to [ServiceTitan](servicetitan.com), Fusion is free (MIT license)
-- **CPU:** free your CPUs! The torture of making them to run recurring computations again and again must be stopped!
-- **RAM:** is where the cost is really paid. Besides that, [remember about GC pauses](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part08.md#large-working-sets-and-gc-pauses) and other downsides of local caching. But the upside is so bright + Fusion actually supports external caching via ["swapping" feature](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part05.md#caching-options).
-- **Learning curve:** relatively shallow in the beginning, but getting steeper once you start to dig deeper &ndash; like TPL with its `ExecutionContext`, `ValueTask<T>`, etc.
-- **Other risks:** first lines of Fusion code were written ~ 1 year ago. What "other risks" are you talking about?
+**Money:** thanks to [ServiceTitan](servicetitan.com), Fusion is free (MIT license)
+
+**CPU:** free your CPUs! The torture of making them to run recurring computations again and again must be stopped!
+
+**RAM** is where the price is really paid. So keep this under control, [remember about GC pauses](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part08.md#large-working-sets-and-gc-pauses) and check out how Fusion [scales horizontally](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part10.md) + supports external caching via ["swapping"](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part05.md#caching-options) feature.
+
+**Learning curve:** relatively shallow in the beginning, but getting steeper once you start to dig deeper. ~ Like for TPL with its `ExecutionContext`, `ValueTask<T>`, etc.
+
+**Other risks:** you may really love it.
 
 ---
 ![bg brightness:0.5](./img/StitchAndOthers.jpg)
-## But...
+## &nbsp;
 
-If you need a real-time UI or a robust caching, Fusion is probably the lesser of many evils you'll have to deal with otherwise. *
+If you need a real-time UI or a robust caching, Fusion is probably the lesser of many evils you'll have to fight otherwise.<sup>*</sup>
 </br>
 </br>
 
