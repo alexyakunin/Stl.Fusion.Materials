@@ -371,7 +371,7 @@ void Update(Product product)
   and *(re)computed incrementally*
 - Dependencies are *captured automatically*
 - So we *invalidate just what's produced externally!*
-- It's a *transparent abstraction* that doesn't change functions' signatures, code, and even their behavior stays mostly the same<sup>*</sup>
+- It's a *transparent abstraction* that doesn't change functions' signatures, code, and even their output!<sup>*</sup>
 
 <footer>(*) Except different timings & tiny periods of inconsistency.</footer>
 
@@ -402,7 +402,7 @@ Not quite:
 > Boring technical problems!
 > &ndash; Elon Musk*
 
-Let me show 50+ more slides first!
+Let me show 100+ more slides first!
 
 <footer>(*) Pretty sure he said this at least once
 
