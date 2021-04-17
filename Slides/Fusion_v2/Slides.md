@@ -1503,7 +1503,11 @@ Fusion's Replica Client:
 
 ---
 <!-- _class: video -->
-<iframe src="https://www.youtube.com/embed/yNRPiM0hWgI?start=269" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe src="https://www.youtube.com/embed/fg9-2JSBkWk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+---
+<!-- _class: video -->
+<iframe src="https://www.youtube.com/embed/8uthWu0pGiM?start=110" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ---
 <!-- _class: center invert -->
