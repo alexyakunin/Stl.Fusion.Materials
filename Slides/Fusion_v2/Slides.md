@@ -185,15 +185,6 @@ decimal GetCartTotal(string cartId)
    **And the Client-Side Cache too!**
 
 ---
-<!-- _class: highlight invert -->
-![bg right](./img/ShockedDog.jpg)
-# To Cache
-
-means to store and reuse the results of computations executed in past.
-
-**Do we always cache everything?**
-
----
 <!-- _class: highlight center -->
 ![bg width:90%](./diagrams/caching-decorator/1.dio.svg)
 <header>
@@ -318,18 +309,21 @@ public static Disposable Computed.Invalidate()
 ## Plan 🦄: Example
 
 ```cs
-// IProductService code
-void Update(Product product) 
-{
-  var oldProduct = ProductStore.Fetch(product.Id);
-  ProductStore.Update(product);
+public class ProductService {
+  Product Get(string productId) => ProductStore.Fetch(product.Id);
+  Product GetFeatured() => ProductStore.List(p => p.IsFeatured);
 
-  // Invalidation logic
-  using (Computed.Invalidate()) {
-    Get(product.Id);
-    Count();
-    if (oldProduct.IsFeatured || product.IsFeatured)
-      GetFeatured();
+  void Update(Product product) 
+  {
+    var oldProduct = ProductStore.Fetch(product.Id);
+    ProductStore.Update(product);
+
+    // Invalidation logic
+    using (Computed.Invalidate()) {
+      Get(product.Id);
+      if (oldProduct.IsFeatured || product.IsFeatured)
+        GetFeatured();
+    }
   }
 }
 ```
@@ -390,7 +384,7 @@ So it can be <span style="opacity: 0.05">absolutely transparent!</span>
 
 ---
 <!-- _class: highlight invert -->
-![bg left:50%](./img/MuskWeed.jpg)
+![bg right:49%](./img/Unlearn.jpg)
 # Can I use it now?
 
 Not quite:
@@ -650,11 +644,6 @@ See it on BlazorREPL: https://blazorrepl.com/repl/wluHuIOv061KS9Vt31
 <!-- _class: center -->
 ![bg](./img/Samples-Blazor.gif)
 
-<div style="font-size: 100px; color: #eee; text-shadow: 2px 2px #000;">
-  <a href="http://fusion-samples.servicetitan.com/" 
-     style="color: #eee">DEMO</a>
-</div>
-
 <footer style="text-align: left">
   <span style="background: #9F0; color: #000; padding: 3pt;">
   Live samples:&nbsp;</br>
@@ -772,13 +761,6 @@ public record RemoveTodoCommand(Session Session, string Id) : ISessionCommand<Un
     public RemoveTodoCommand() : this(Session.Null, "") { }
 }
 ```
-
----
-<div class="col2">
-<img src="./img/FP3.jpg">
-<div class="break">
-<img src="./img/FP2.jpg">
-</div>
 
 ---
 # SimpleTodoService: query methods
@@ -1033,14 +1015,11 @@ public interface IFusionTime
 ```
 
 ---
-![bg width:90%](./diagrams/todo-app/2.dio.svg)
-
----
 <!-- _class: -->
 ![bg right:40% width:100%](./img/Infinity1.gif)
 # Can one Fusion service call another Fusion service?
 
-IT MUST, NOT CAN! 
+MUST, NOT CAN! 
 Pros: **No need to invalidate anything!**
 Cons: **None.**
 
@@ -1099,6 +1078,10 @@ public interface ISandboxedKeyValueStore
         SortDirection sortDirection = SortDirection.Ascending);
 }
 ```
+
+---
+![bg width:90%](./diagrams/todo-app/2.dio.svg)
+
 
 ---
 # TodoService: command handler method
@@ -1320,9 +1303,6 @@ fusionClient.AddReplicaService<ITodoService, ITodoClient>();
 
   </h2>
 </footer>
-
----
-![bg width:90%](./diagrams/todo-app/9.dio.svg)
 
 ---
 ![bg height:90%](./diagrams/use-cases/distributed.dio.svg)
