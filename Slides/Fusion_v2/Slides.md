@@ -321,8 +321,8 @@ public static Disposable Computed.Invalidate()
 // IProductService code
 void Update(Product product) 
 {
-  var oldProduct = ProductRepo.Get(product);
-  ProductRepo.Update(product);
+  var oldProduct = ProductStore.Fetch(product.Id);
+  ProductStore.Update(product);
 
   // Invalidation logic
   using (Computed.Invalidate()) {
@@ -1627,11 +1627,17 @@ Forget about:
 ![bg left:50% width:100%](./img/WASM-And-Server.jpg)
 # Fusion and Blazor
 
-👰 WASM
-💃 Server
-👯 Fusion
+Blazor WASM 👰 or Blazor Server 💃?
 
-Debugging 👰 is 😭, so get 👯!
+👰 provides the best experience
+but drags 2MB+ 🧳 everywhere...
+and you need a 🦸 to debug 👰
+
+💃 rules on low-end 📱,
+easy to debug, but provides inferior
+experience otherwise.
+
+👯 Fusion to the rescue!
 
 ---
 <!-- _class: invert highlight -->
