@@ -790,7 +790,7 @@ public class SimpleTodoService : ITodoService
 
     [ComputeMethod]
     public virtual async Task<Todo?> TryGet(Session session, string id)
-        =>_store.SingleOrDefault(i => i.Id == id);
+        => _store.SingleOrDefault(i => i.Id == id);
 
     [ComputeMethod]
     public virtual async Task<TodoSummary> GetSummary(Session session)
@@ -862,7 +862,7 @@ var serviceProvider = services.BuildServiceProvider()
 ---
 # TodoSummaryBadge.razor
 
-Auto-updating "done / total". That's all the code displaying it!
+Auto-updating "done / total". There is no other code related to this!
 
 ```cs
 @inherits ComputedStateComponent<TodoSummary>
@@ -1037,16 +1037,12 @@ public interface IFusionTime
 
 ---
 <!-- _class: -->
-![bg right:33% width:100%](./img/Infinity1.gif)
-# Can we use one Compute Service in another Compute Service?
+![bg right:40% width:100%](./img/Infinity1.gif)
+# Can one Fusion service call another Fusion service?
 
-Imagine `ITodoService` uses Fusion-backed `IKeyValueStore` instead of `ImmutableList`.
-
-Pros:
-- **No need to invalidate anything!**
-
-Cons:
-- **None.**
+IT MUST, NOT CAN! 
+Pros: **No need to invalidate anything!**
+Cons: **None.**
 
 ---
 <!-- _class: -->
@@ -1635,7 +1631,7 @@ Forget about:
 💃 Server
 👯 Fusion
 
-🔧👰 = ⏳, so get 👯!
+Debugging 👰 is 💩, so get 👯!
 
 ---
 <!-- _class: invert highlight -->
