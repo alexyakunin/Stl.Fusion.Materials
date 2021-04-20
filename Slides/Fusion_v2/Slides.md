@@ -850,7 +850,7 @@ var serviceProvider = services.BuildServiceProvider()
   <source src="./img/TodoApp-SimpleTodoService.webm" type="video/webm" />
 </video>
 
-<footer style="position: absolute">
+<footer style="position: absolute; z-index: 1000">
   <h2 style="
     position: relative; left: -1em; top: 1.2em;
     background: #9F0; color: #000; padding: 3pt;">
@@ -1156,7 +1156,7 @@ public virtual async Task<TodoSummary> GetSummary(Session session)
   <source src="./img/TodoApp-ClientTodoService.webm" type="video/webm" />
 </video>
 
-<footer style="position: absolute">
+<footer style="position: absolute; z-index: 1000">
   <h2 style="
     position: relative; left: -1em; top: 1.2em;
     background: #9F0; color: #000; padding: 3pt;">
@@ -1313,7 +1313,7 @@ fusionClient.AddReplicaService<ITodoService, ITodoClient>();
   <source src="./img/TodoApp-ServerTodoService.webm" type="video/webm" />
 </video>
 
-<footer style="position: absolute">
+<footer style="position: absolute; z-index: 1000">
   <h2 style="
     position: relative; left: -1em; top: 1.2em;
     background: #9F0; color: #000; padding: 3pt;">
@@ -1339,7 +1339,7 @@ fusionClient.AddReplicaService<ITodoService, ITodoClient>();
   <source src="./img/TodoApp-Multihost.webm" type="video/webm" />
 </video>
 
-<footer style="position: absolute">
+<footer style="position: absolute; z-index: 1000">
   <h2 style="
     position: relative; left: -1em; top: 1.2em;
     background: #9F0; color: #000; padding: 3pt;">
