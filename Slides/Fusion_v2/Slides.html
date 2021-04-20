@@ -213,8 +213,8 @@
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-comment">// IProductService code</span>
 <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Update</span>(<span class="hljs-params">Product product</span>)</span> 
 {
-  <span class="hljs-keyword">var</span> oldProduct = ProductRepo.Get(product);
-  ProductRepo.Update(product);
+  <span class="hljs-keyword">var</span> oldProduct = ProductStore.Fetch(product.Id);
+  ProductStore.Update(product);
 
   <span class="hljs-comment">// Invalidation logic</span>
   <span class="hljs-keyword">using</span> (Computed.Invalidate()) {
