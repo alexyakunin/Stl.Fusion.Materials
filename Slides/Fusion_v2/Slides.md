@@ -1626,6 +1626,17 @@ Forget about:
 ✉ Server-side push notifications
 
 ---
+<!-- _class: highlight -->
+![bg left:60% width:100%](./img/BlazorVsFusionBlazor.jpg)
+# Fusion and Blazor
+
+👰 WASM
+💃 Server
+👯 Fusion
+
+👰🔧 = 🤬, so get 👯!
+
+---
 <!-- _class: invert highlight -->
 ![bg opacity:0.7](./img/BilboOneRing.jpg)
 
