@@ -1631,7 +1631,7 @@ Forget about:
 💃 Server
 👯 Fusion
 
-Debugging 👰 is 💩, so get 👯!
+Debugging 👰 is 😭, so get 👯!
 
 ---
 <!-- _class: invert highlight -->
