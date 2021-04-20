@@ -458,6 +458,10 @@ Which one you should marry?
 ![bg height:90%](./diagrams/consistency/2.dio.svg)
 
 ---
+<!-- _class:  -->
+![bg height:90%](./diagrams/consistency/3.dio.svg)
+
+---
 <!-- _class: center invert -->
 ![bg right:35%](./img/HaveASeat.jpg)
 ## How this is relevant to real-time, again?
@@ -842,13 +846,16 @@ var serviceProvider = services.BuildServiceProvider()
 ```
 
 ---
-![bg fit](./img/Samples-TodoApp.gif)
+<video muted class="bg" onclick="this.paused ? this.play() : this.pause(); this.blur()" onpause="">
+  <source src="./img/TodoApp-SimpleTodoService.webm" type="video/webm" />
+</video>
 
 <footer style="position: absolute">
   <h2 style="
     position: relative; left: -1em; top: 1.2em;
     background: #9F0; color: #000; padding: 3pt;">
-    &nbsp;TodoApp, v1: SimpleTodoService running on the client&nbsp;
+    <span style="background: #000; color: #9F0;">&nbsp;Click to play/pause&nbsp;</span>
+    TodoApp, v1: SimpleTodoService running on the client&nbsp;
   </h2>
 </footer>
 
@@ -1145,13 +1152,16 @@ public virtual async Task<TodoSummary> GetSummary(Session session)
 ```
 
 ---
-![bg fit](./img/Samples-TodoApp.gif)
+<video muted class="bg" onclick="this.paused ? this.play() : this.pause(); this.blur()" onpause="">
+  <source src="./img/TodoApp-ClientTodoService.webm" type="video/webm" />
+</video>
 
 <footer style="position: absolute">
   <h2 style="
     position: relative; left: -1em; top: 1.2em;
     background: #9F0; color: #000; padding: 3pt;">
-    &nbsp;TodoApp, v2: TodoService + IKeyValueStore running on the client&nbsp;
+    <span style="background: #000; color: #9F0;">&nbsp;Click to play/pause&nbsp;</span>
+    TodoApp, v2: TodoService + IKeyValueStore running on the client&nbsp;
   </h2>
 </footer>
 
@@ -1299,13 +1309,19 @@ fusionClient.AddReplicaService<ITodoService, ITodoClient>();
 ![bg width:90%](./diagrams/todo-app/8.dio.svg)
 
 ---
-![bg fit](./img/Samples-TodoApp.gif)
+<video muted class="bg" onclick="this.paused ? this.play() : this.pause(); this.blur()" onpause="">
+  <source src="./img/TodoApp-ServerTodoService.webm" type="video/webm" />
+</video>
 
 <footer style="position: absolute">
   <h2 style="
     position: relative; left: -1em; top: 1.2em;
     background: #9F0; color: #000; padding: 3pt;">
-    &nbsp;TodoApp, v3: Server-side `TodoService`&nbsp;
+    <span style="background: #000; color: #9F0;">&nbsp;Click to play/pause&nbsp;</span>
+    TodoApp, v3: Server-side TodoService, Blazor Server + WASM, debugging,  console client&nbsp;
+  </h2>
+</footer>
+
   </h2>
 </footer>
 
@@ -1319,13 +1335,16 @@ fusionClient.AddReplicaService<ITodoService, ITodoClient>();
 ![bg height:90%](./diagrams/use-cases/multi-host.dio.svg)
 
 ---
-![bg fit](./img/Samples-TodoApp.gif)
+<video muted class="bg" onclick="this.paused ? this.play() : this.pause(); this.blur()" onpause="">
+  <source src="./img/TodoApp-Multihost.webm" type="video/webm" />
+</video>
 
 <footer style="position: absolute">
   <h2 style="
     position: relative; left: -1em; top: 1.2em;
     background: #9F0; color: #000; padding: 3pt;">
-    &nbsp;TodoApp, v4: Multiple hosts + console client&nbsp;
+    <span style="background: #000; color: #9F0;">&nbsp;Click to play/pause&nbsp;</span>
+    TodoApp, v4: Multiple hosts&nbsp;
   </h2>
 </footer>
 
@@ -1550,18 +1569,11 @@ Server:
 
 ---
 <!-- _class: highlight -->
-![bg right:50% width:120%](./img/SoChatty.jpg)
-## Fusion vs .NET Remoting
+![bg left:66% height:100%](./img/ShortTermMemory.jpg)
+## Fusion vs gRPC
 
-.NET Remoting was:
-🤬 Chatty
-🔓 Insecure
-👽 Custom protocol
-
-And Fusion:
-🤖 Kills chattiness 
-🔒 Is secure
-👩 Relies on HTTP / REST + JSON
+... but Dory is 
+DAMN FAST!
 
 ---
 <!-- _class: highlight -->
@@ -1600,18 +1612,17 @@ And Fusion:
 
 ---
 <!-- _class: -->
-![bg right:40% height:66%](./img/IDareYou-Flux.jpg)
+![bg right:40% width:110%](./img/IDareYou-Flux.jpg)
 # Fusion vs Flux, Redux, MVC, MobX, ...
 
-💍 One ring to rule them all - clients, servers, UI
-🚀 Real-time & caching everywhere!
-👌 Everything is eventually consistent
+🚀 Real-time & caching everywhere
+👌 Guaranteed eventual consistency
 💃 CQRS, multi-host mode, bells, whistles.
 
-Things you don't need with Fusion:
+Forget about:
 👾 Reducers, stores
 🤬 Observable models. Of observable models. 
-&nbsp;&nbsp;&nbsp;&nbsp; Full of other observable models.
+&nbsp;&nbsp;&nbsp;&nbsp; Of other observable models.
 ✉ Server-side push notifications
 
 ---
@@ -1622,10 +1633,10 @@ Things you don't need with Fusion:
 > *― Albert Szent-Gyorgyi*
 
 ---
-![bg opacity:0.7](./img/CrazyGuy.jpg)
+![bg opacity:0.7](./img/OneRing2.jpg)
 
-<p style="text-align: right">
-<img src="./diagrams/keywords-final.dio.svg" style="width: 80%"/>
+<p style="text-align: center">
+<img src="./diagrams/keywords-final.dio.svg" style="width: 95%"/>
 </p>
 
 ---
