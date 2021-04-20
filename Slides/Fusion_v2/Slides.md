@@ -1627,14 +1627,15 @@ Forget about:
 
 ---
 <!-- _class: highlight -->
-![bg left:60% width:100%](./img/BlazorVsFusionBlazor.jpg)
+![bg left:50% width:100%](./img/WASM-Or-Server.jpg)
+![bg left:50% width:100%](./img/WASM-And-Server.jpg)
 # Fusion and Blazor
 
 👰 WASM
 💃 Server
 👯 Fusion
 
-👰🔧 = 🤬, so get 👯!
+🔧👰 = ⏳, so get 👯!
 
 ---
 <!-- _class: invert highlight -->
