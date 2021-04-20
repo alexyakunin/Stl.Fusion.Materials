@@ -569,7 +569,7 @@ Coincidentally, <a href="https://twitter.com/StevenSanderson">Mr. Sanderson</a> 
 
     [<span class="hljs-meta">ComputeMethod</span>]
     <span class="hljs-keyword">public</span> <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">async</span> Task&lt;Todo?&gt; TryGet(Session session, <span class="hljs-built_in">string</span> id)
-        =&gt;_store.SingleOrDefault(i =&gt; i.Id == id);
+        =&gt; _store.SingleOrDefault(i =&gt; i.Id == id);
 
     [<span class="hljs-meta">ComputeMethod</span>]
     <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">async</span> Task&lt;TodoSummary&gt; <span class="hljs-title">GetSummary</span>(<span class="hljs-params">Session session</span>)</span>
@@ -635,7 +635,7 @@ fusion.AddComputeService&lt;ITodoService, SimpleTodoService&gt;();
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="77" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h1>TodoSummaryBadge.razor</h1>
-<p>Auto-updating &quot;done / total&quot;. That's all the code displaying it!</p>
+<p>Auto-updating &quot;done / total&quot;. There is no other code related to this!</p>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap>@inherits ComputedStateComponent&lt;TodoSummary&gt;
 @inject ITodoService Todos
 @inject Session Session
@@ -787,17 +787,11 @@ and exposes an error (if any) via its property rather than throwing it.</p>
 </span></span></foreignObject></svg></code></pre>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./diagrams/todo-app/2.dio.svg&quot;);background-size:90% auto;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="85" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;" data-marpit-advanced-background="content"></section>
-</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-theme="default" style="--theme:default;--marpit-advanced-background-split:33%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="right"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/Infinity1.gif&quot;);background-size:100% auto;"></figure></div></section></foreignObject><foreignObject width="67%" height="720"><section id="86" data-theme="default" style="--theme:default;--marpit-advanced-background-split:33%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="right">
-<h1>Can we use one Compute Service in another Compute Service?</h1>
-<p>Imagine <code>ITodoService</code> uses Fusion-backed <code>IKeyValueStore</code> instead of <code>ImmutableList</code>.</p>
-<p>Pros:</p>
-<ul>
-<li><strong>No need to invalidate anything!</strong></li>
-</ul>
-<p>Cons:</p>
-<ul>
-<li><strong>None.</strong></li>
-</ul>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="invert" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-theme="default" style="--theme:default;--marpit-advanced-background-split:40%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="right"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/Infinity1.gif&quot;);background-size:100% auto;"></figure></div></section></foreignObject><foreignObject width="60%" height="720"><section id="86" data-theme="default" style="--theme:default;--marpit-advanced-background-split:40%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="right">
+<h1>Can one Fusion service call another Fusion service?</h1>
+<p>IT MUST, NOT CAN!<br />
+Pros: <strong>No need to invalidate anything!</strong><br />
+Cons: <strong>None.</strong></p>
 </section>
 </foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-theme="default" style="--theme:default;--marpit-advanced-background-split:40%;" data-marpit-advanced-background="background" data-marpit-advanced-background-split="right"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/Avengers.jpg&quot;);"></figure></div></section></foreignObject><foreignObject width="60%" height="720"><section id="87" data-theme="default" style="--theme:default;--marpit-advanced-background-split:40%;" data-marpit-advanced-background="content" data-marpit-advanced-background-split="right">
 <h1>Built-in Compute Services:</h1>
@@ -1291,7 +1285,7 @@ DAMN FAST!</p>
 <p><img class="emoji" draggable="false" alt="👰" src="https://twemoji.maxcdn.com/2/svg/1f470.svg" data-marp-twemoji=""/> WASM<br />
 <img class="emoji" draggable="false" alt="💃" src="https://twemoji.maxcdn.com/2/svg/1f483.svg" data-marp-twemoji=""/> Server<br />
 <img class="emoji" draggable="false" alt="👯" src="https://twemoji.maxcdn.com/2/svg/1f46f.svg" data-marp-twemoji=""/> Fusion</p>
-<p><img class="emoji" draggable="false" alt="🔧" src="https://twemoji.maxcdn.com/2/svg/1f527.svg" data-marp-twemoji=""/><img class="emoji" draggable="false" alt="👰" src="https://twemoji.maxcdn.com/2/svg/1f470.svg" data-marp-twemoji=""/> = <img class="emoji" draggable="false" alt="⏳" src="https://twemoji.maxcdn.com/2/svg/23f3.svg" data-marp-twemoji=""/>, so get <img class="emoji" draggable="false" alt="👯" src="https://twemoji.maxcdn.com/2/svg/1f46f.svg" data-marp-twemoji=""/>!</p>
+<p>Debugging <img class="emoji" draggable="false" alt="👰" src="https://twemoji.maxcdn.com/2/svg/1f470.svg" data-marp-twemoji=""/> is <img class="emoji" draggable="false" alt="💩" src="https://twemoji.maxcdn.com/2/svg/1f4a9.svg" data-marp-twemoji=""/>, so get <img class="emoji" draggable="false" alt="👯" src="https://twemoji.maxcdn.com/2/svg/1f46f.svg" data-marp-twemoji=""/>!</p>
 </section>
 </foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section class="highlight" style="" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-class="invert highlight" data-theme="default" class="invert highlight" style="--class:invert highlight;--theme:default;" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./img/BilboOneRing.jpg&quot;);filter:opacity(0.7);"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="135" data-class="invert highlight" data-theme="default" class="invert highlight" style="--class:invert highlight;--theme:default;" data-marpit-advanced-background="content">
 <blockquote>
