@@ -54,7 +54,7 @@ div.col2 .break {
 ![bg left:60%](./img/Racoon.gif)
 A junior developer
 coding real-time UI
-1 day after this talk
+1 day after this talk.
 
 ---
 <!-- _class: highlight center invert -->
@@ -124,7 +124,7 @@ We'll hit every possible threshold:
 ![bg right:43%](./img/GrumpyCat.jpg)
 
 ---
-# No! Let's write a function!
+# Not yet! Let's draw a call graph for this function:
 
 ```cs
 decimal GetCartTotal(string cartId) 
@@ -181,18 +181,18 @@ decimal GetCartTotal(string cartId)
 <!-- _class: highlight center -->
 ![bg width:90%](./diagrams/caching-decorator/1.dio.svg)
 <header>
-<h1>Caching as a Higher Order Function</h1>
+<h1>Add caching behavior using a Higher Order Function</h1>
 </header>
 
 ---
 <!-- _class: highlight center -->
 ![bg height:90%](./diagrams/caching-decorator/2.dio.svg)
 <header>
-<h1>Caching as a Higher Order Function</h1>
+<h1>Add caching behavior using a Higher Order Function</h1>
 </header>
 
 ---
-# Caching as a Higher Order Function
+# Add caching behavior using a Higher Order Function
 
 ```cs
 Func<TIn, TOut> ToCaching<TIn, TOut>(Func<TIn, TOut> fn)
@@ -215,7 +215,7 @@ var cartTotal = cachingGetCartTotal.Invoke("cart1");
 
 ---
 ![bg right:38%](./img/ValentinesDay.jpg)
-# A Tiny Problem
+# A tiny issue
 
 To make it work, <tt>fn</tt> must be a **pure function**.
 
@@ -259,7 +259,7 @@ Func<TIn, TOut> ToAwesome<TIn, TOut>(Func<TIn, TOut> fn)
 ```
 
 ---
-# Dependency Capture
+# Dependency capture
 
 ```cs
 public TOut Use()
@@ -275,7 +275,7 @@ public TOut Use()
 ```
 
 ---
-## Invalidation = Marking `Computed` as Inconsistent / Dirty
+## Invalidation
 
 ```cs
 public void Invalidate() 
@@ -511,7 +511,8 @@ Coincidentally, <a href="https://twitter.com/StevenSanderson">Mr. Sanderson</a> 
   **.NET 6, don't disappoint us! 
   10🧵 x 20x AOT ≃ 200x🚀**
 - Even a small project downloads 2…4 MB of .NET .dlls (gzipped!) - and that's after linking with tree shaking.
-  **Cmon, it's 21 century &ndash; size doesn't matter! At least online, right?**
+  **Cmon, it's 21 century &ndash; size doesn't matter. 
+  At least online.**
 
 ---
 ## React Component - UI markup example
@@ -587,16 +588,6 @@ See it on BlazorREPL: https://blazorrepl.com/repl/wluHuIOv061KS9Vt31
 
 ---
 <!-- _class: highlight center -->
-![bg width:90%](./img/JsHolyTrinity.jpg)
-
-<footer>One more argument to use Blazor, btw.</footer>
-
----
-<!-- _class: highlight center -->
-![bg height:90%](./diagrams/trinity/1.dio.svg)
-
----
-<!-- _class: highlight center -->
 ![bg opacity:0.2](./img/BlazorAndReact.jpg)
 <div style="text-align: center">
 <h2 style="margin: 0px">
@@ -607,10 +598,6 @@ See it on BlazorREPL: https://blazorrepl.com/repl/wluHuIOv061KS9Vt31
   (actually, any UI control tree) after any component's render() that</br>
   actually just defines the new desirable UI state.
 </div>
-
----
-<!-- _class: highlight center -->
-![bg height:90%](./diagrams/trinity/2.dio.svg)
 
 ---
 <!-- _class: invert-->
@@ -677,9 +664,9 @@ Func<TIn, TOut> ToAwesome<TIn, TOut>(Func<TIn, TOut> fn)
 
 ---
 ![bg fit right:30%](./diagrams/consistency-state/transitions.dio.svg)
-# Fusion's `IComputed<T>`:
+# Fusion's `IComputed<T>`
 
-A bit simplified version of actual `IComputed<T>`:
+A bit simplified version:
 
 ```cs
 interface IComputed<T> {
@@ -766,17 +753,10 @@ public class SimpleTodoService : ITodoService
     [ComputeMethod]
     public virtual async Task<TodoSummary> GetSummary(Session session)
     {
-        await PseudoGetAllItems(session);
         var count = _store.Count();
         var doneCount = _store.Count(i => i.IsDone);
         return new TodoSummary(count, doneCount);
     }
-
-    // Pseudo queries
-
-    [ComputeMethod]
-    protected virtual Task<Unit> PseudoGetAllItems(Session session)
-        => TaskEx.UnitTask;
 }
 ```
 
@@ -790,14 +770,16 @@ public virtual async Task<Todo> AddOrUpdate(AddOrUpdateTodoCommand command)
     // I'll explain further why this line is needed
     if (Computed.IsInvalidating()) return null!;
 
+    // Apply changes
     var (session, todo) = command;
     if (string.IsNullOrEmpty(todo.Id))
         todo = todo with { Id = Ulid.NewUlid().ToString() };
     _store = _store.RemoveAll(i => i.Id == todo.Id).Add(todo);
 
+    // Invalidate what's impacted
     using var _ = Computed.Invalidate();
     TryGet(session, todo.Id).Ignore();
-    PseudoGetAllItems(session).Ignore();
+    GetSummary(session).Ignore();
     return todo;
 }
 ```
@@ -976,7 +958,8 @@ Another auto-updating component.
 @State.Value
 
 @code {
-    [Parameter] public DateTime Value { get; set; }
+    [Parameter] 
+    public DateTime Value { get; set; }
 
     protected override Task<string> ComputeState()
         => _fusionTime.GetMomentsAgo(Value) ;
@@ -1012,14 +995,14 @@ Cons: **None.**
 ---
 <!-- _class: -->
 ![bg right:40%](./img/Avengers.jpg)
-# Built-in Compute Services:
+# Built-in Fusion Services:
 
 - `IFusionTime`
 - `IKeyValueStore` 
   - `DbKeyValueStore` (EF-backed)
   - `InMemoryKeyValueStore`
 - `ISandboxedKeyValueStore`
-- `IAuthService` (EF-backed, in-memory)
+- `IAuthService` and `IServerSideAuthService` (EF-backed, in-memory)
 
 ---
 # IKeyValueStore
@@ -1078,6 +1061,7 @@ public class TodoService : ITodoService
     private readonly ISandboxedKeyValueStore _store;
     private readonly IAuthService _authService;
 
+    [CommandHandler]
     public virtual async Task Remove(RemoveTodoCommand command)
     {
         if (Computed.IsInvalidating()) return;
@@ -1105,6 +1089,7 @@ public class TodoService : ITodoService
 # TodoService: query method
 
 ```cs
+[ComputeMethod]
 public virtual async Task<TodoSummary> GetSummary(Session session)
 {
     var user = await _authService.GetUser(session);
@@ -1304,6 +1289,7 @@ fusionClient.AddReplicaService<ITodoService, ITodoClient>();
 # HelloCart: DbProductService.Edit (command)
 
 ```cs
+[CommandHandler]
 public virtual async Task Edit(EditCommand<Product> command)
 {
     var (productId, product) = command;
@@ -1333,6 +1319,7 @@ public virtual async Task Edit(EditCommand<Product> command)
 # HelloCart: DbProductService.TryGet (query)
 
 ```cs
+[ComputeMethod]
 public virtual async Task<Product?> TryGet(string id)
 {
     await using var dbContext = CreateDbContext();
@@ -1471,10 +1458,6 @@ Fusion's Replica Client:
 <footer style="text-align: left">
   <a style="background: #9F0; color: #000; padding: 10pt;" href="https://www.youtube.com/watch?v=05pzUXujMJU&t=186s">Click here to see this video on YouTube</a>
 </footer>
-
----
-<!-- _class: video -->
-<iframe src="https://www.youtube.com/embed/fg9-2JSBkWk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ---
 <!-- _class: video -->
@@ -1673,12 +1656,13 @@ On a serious note: [Real-Time is #1 Feature Your Next Web App Needs](https://ale
 <!-- _class: center invert-->
 ![bg](./img/FusionBg.jpg)
 
-<br><br><br><br>
-<h2 style="font-size: 60pt">Thank you!</h1>
+<br><br><br>
+<h2 style="font-size: 60pt; margin: 0px; padding: 0px;">Thank you!</h1>
 
 <footer style="width: 95%; text-align: right; font-size: 20pt; color: white">
 Alex Yakunin</br>
 The creator of Fusion, <a href="https://www.servicetitan.com/">ServiceTitan, Inc.</a> CTO</br>
 <a href="https://github.com/servicetitan/Stl.Fusion">https://github.com/servicetitan/Stl.Fusion</a></br>
+<a href="https://discord.gg/EKEwv6d">https://discord.gg/EKEwv6d</a></br>
 P.S. We need your stars and forks! <img src="https://img.shields.io/github/stars/servicetitan/Stl.Fusion?style=social" style="height: 1.1em; vertical-align: middle"/> <img src="https://img.shields.io/github/forks/servicetitan/Stl.Fusion?style=social" style="height: 1.1em; vertical-align: middle"/></br>
 </footer>
