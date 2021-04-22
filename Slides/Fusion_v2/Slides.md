@@ -52,12 +52,9 @@ div.col2 .break {
 
 ---
 ![bg left:60%](./img/Racoon.gif)
-## Is real-time UI </br>really hard to code</br> or do I suck?
-
----
-<!-- _class: invert center -->
-![bg](./img/TwitterMinusOneLike.jpg)
-### </br>Twitter can do it,</br>so you can do it too!
+A junior developer
+coding real-time UI
+1 day after this talk
 
 ---
 <!-- _class: highlight center invert -->
@@ -89,7 +86,6 @@ div.col2 .break {
 ![bg right:40%](./img/Let-me-explain.jpg)
 
 # How the hell this is relevant to real-time?
-Kids, look what happens when you code 24/7!
 
 ---
 # Imagine your app is a composition of functions...
@@ -133,18 +129,15 @@ We'll hit every possible threshold:
 ```cs
 decimal GetCartTotal(string cartId) 
 {
-  var cartTotal = 0M;
-  var cart = Carts.Get(string userId); // Carts is ICartService
-  var specialOffers = SpecialOffers.GetActive(); // etc.
-  foreach (var item in cart.Items) {
-    var product = Products.Get(item.ProductId);
-    var productPrice = Prices.Get(item.ProductId);
-    cartTotal += item.Quantity * productPrice;
-    cartTotal -= specialOffers
-      .Select(offer => offer.GetDiscount(product, price, item.Quantity))
-      .Max();
-  }
-  return cartTotal;
+    var cartTotal = 0M;
+    var cart = Carts.Get(string userId); // Carts is ICartService
+    var specialOffers = SpecialOffers.GetActive(); // etc.
+    foreach (var item in cart.Items) {
+        cartTotal += item.Price * item.Quantity;
+        cartTotal -= specialOffers.Max(
+            o => o.GetDiscount(item.Product.Id, item.Price, item.Quantity))
+    }
+    return cartTotal;
 }
 ```
 <footer>
@@ -372,20 +365,16 @@ public class ProductService {
 ---
 <!-- _class: highlight invert -->
 ![bg left:50%](./img/YouDontNeedIt.jpg)
-# Do we really need delegates to decorate them?
+# Do we really need delegates?
 
-We don't. 
+We don't. Making DI container to provide a proxy implementing such decorators is a 🍰
 
-All modern .NET apps rely on Dependency Injection.
-
-Making DI container to provide a proxy implementing such decorators is a 🍰
-
-So it can be <span style="opacity: 0.05">absolutely transparent!</span>
+So it can be <span style="opacity: 0.20">absolutely transparent!</span>
 
 ---
 <!-- _class: highlight invert -->
 ![bg right:49%](./img/Unlearn.jpg)
-# Can I use it now?
+# Can I use this now?
 
 Not quite:
 - No async/await, thread-safety
@@ -987,13 +976,10 @@ Another auto-updating component.
 @State.Value
 
 @code {
-    [Parameter] public DateTime? Value { get; set; }
-    [Parameter] public string None { get; set; } = "n/a";
+    [Parameter] public DateTime Value { get; set; }
 
     protected override Task<string> ComputeState()
-        => Value.HasValue 
-            ? _fusionTime.GetMomentsAgo(Value.Value) 
-            : Task.FromResult(None);
+        => _fusionTime.GetMomentsAgo(Value) ;
 }
 ```
 
@@ -1181,16 +1167,6 @@ Do the same, but deliver the invalidation event via RPC!
 ![bg right:40% width:90%](./img/SpecialSkills.jpg)
 # Fusion Web API call
 <img src="./diagrams/replica-service/fusion1.dio.svg" style="width: 100%"/>
-
----
-<!-- _class: highlight invert-->
-![bg brightness:0.2](./img/Yoda1.jpg)
-# A new Incremental Builder build you must!
-
-1. Recompute everything → saturate CPU
-   **May the Cache be with you!**
-2. Chatty client-server RPC → saturate NIC
-   **And the Client-Side Cache too!**
 
 ---
 <!-- _class: highlight -->
@@ -1392,7 +1368,7 @@ public virtual async Task<ComposedValue> GetComposedValue(Session session, strin
 ```
 
 ---
-# Fusion's caching performance
+# Caching performance
 
 Most important part of the [performance test](https://github.com/servicetitan/Stl.Fusion/blob/master/tests/Stl.Fusion.Tests/PerformanceTest.cs):
 ```cs
@@ -1620,13 +1596,6 @@ experience otherwise.
 👯 Fusion to the rescue!
 
 ---
-<!-- _class: invert highlight -->
-![bg opacity:0.7](./img/BilboOneRing.jpg)
-
-> <span style="color: white">Discovery consists of looking at the same thing as everyone else and thinking something different.</span>
-> *― Albert Szent-Gyorgyi*
-
----
 ![bg opacity:0.7](./img/OneRing2.jpg)
 
 <p style="text-align: center">
@@ -1635,18 +1604,25 @@ experience otherwise.
 
 ---
 <!-- _class: invert highlight -->
+![bg opacity:0.7](./img/BilboOneRing.jpg)
+
+> <span style="color: white">Discovery consists of looking at the same thing as everyone else and thinking something different.</span>
+> *― Albert Szent-Gyorgyi*
+
+---
+<!-- _class: invert highlight -->
 ![bg blur:3px opacity:0.25](./img/Gollum.jpg)
 # The price you pay for Fusion
 
-**Money:** thanks to [ServiceTitan](servicetitan.com), Fusion is free (MIT license)
+**Money:** thanks to [ServiceTitan](servicetitan.com), Fusion is free and open-source (MIT license)
 
 **CPU:** free your CPUs! The torture of making them to run recurring computations again and again must be stopped!
 
-**RAM** is where the price is really paid. So keep this under control, [remember about GC pauses](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part08.md#large-working-sets-and-gc-pauses) and check out how Fusion [scales horizontally](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part10.md) + supports external caching via ["swapping"](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part05.md#caching-options) feature.
+**RAM** is where the price is really paid. So keep this under control, [remember about GC pauses](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part08.md#large-working-sets-and-gc-pauses). Check out how Fusion [scales horizontally](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part10.md) and allows you to ["swap"](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part05.md#caching-options) the data in RAM to external caches.
 
 **Learning curve:** relatively shallow in the beginning, but getting steeper once you start to dig deeper. ~ Like for TPL with its `ExecutionContext`, `ValueTask<T>`, etc.
 
-**Other risks:** you may really love it.
+**Other risks:** "We wants it, we needs it. Must have the precious!"
 
 ---
 ![bg brightness:0.5](./img/StitchAndOthers.jpg)
