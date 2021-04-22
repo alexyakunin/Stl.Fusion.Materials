@@ -262,7 +262,7 @@ Func<TIn, TOut> ToAwesome<TIn, TOut>(Func<TIn, TOut> fn)
 # Dependency Capture
 
 ```cs
-static TOut Use()
+public TOut Use()
 {
   if (Computed.IsInvalidating) { // Will explain this later
     Invalidate(); 
