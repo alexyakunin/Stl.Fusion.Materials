@@ -302,7 +302,8 @@ public static Disposable Computed.Invalidate()
 ## Plan 🦄: Example
 
 ```cs
-public class ProductService {
+public class ProductService 
+{
   Product Get(string productId) => ProductStore.Fetch(product.Id);
   Product GetFeatured() => ProductStore.List(p => p.IsFeatured);
 
@@ -1452,6 +1453,7 @@ Fusion's Replica Client:
 ![bg](./img/CaptainMarvel.jpg)
 <h2 style="background: #000; width:320px;">How 10x speed boost looks like?</h2>
 
+
 ---
 <!-- _class: center invert-->
 ![bg](./img/BrieLarsonBeatSaber.gif)
@@ -1461,7 +1463,7 @@ Fusion's Replica Client:
 
 ---
 <!-- _class: video -->
-<iframe src="https://www.youtube.com/embed/8uthWu0pGiM?start=110" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe src="https://www.youtube.com/embed/znanYPThmXI?start=32" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ---
 <!-- _class: center invert -->
