@@ -1235,6 +1235,26 @@ fusionClient.AddReplicaService<ITodoService, ITodoClient>();
 ```
 
 ---
+<!-- _class: highlight -->
+![bg width:100%](./img/Fusion-WebApi-Swagger.gif)
+
+<div style="text-align: right">
+  <span style="background: #000; color: white; padding: 10px">
+    &nbsp;Got <b>Fusion</b>?&nbsp;</br>
+    &nbsp;Get <b>API-first design</b> as a bonus!&nbsp;</br>
+  </span>
+</div>
+
+<footer style="position: absolute; z-index: 1000">
+  <h2 style="
+    position: relative; left: -1em; top: 1.2em;
+    background: #9F0; color: #000; padding: 3pt;">
+    &nbsp;<a style="color: #000" href="https://fusion-samples.servicetitan.com/swagger/index.html">https://fusion-samples.servicetitan.com/swagger/index.html</a>&nbsp;</br>
+    &nbsp;<a style="color: #000" href="https://boardgames.alexyakunin.com/swagger/index.html">https://boardgames.alexyakunin.com/swagger/index.html</a>&nbsp;
+  </h2>
+</footer>
+
+---
 ![bg width:90%](./diagrams/todo-app/4.dio.svg)
 
 ---
@@ -1260,9 +1280,6 @@ fusionClient.AddReplicaService<ITodoService, ITodoClient>();
     background: #9F0; color: #000; padding: 3pt;">
     <span style="background: #000; color: #9F0;">&nbsp;Click to play/pause&nbsp;</span>
     TodoApp, v3: Server-side TodoService, Blazor Server + WASM, debugging,  console client&nbsp;
-  </h2>
-</footer>
-
   </h2>
 </footer>
 
@@ -1478,31 +1495,30 @@ to be broken.
 ![bg left:45%](./img/FlyingCat.jpg)
 # Fusion vs Redis, memcached, ...
 
-⌚ Almost always consistent
-🚀 Local = 1000 times faster
-❌ No serialization/deserialization
-📌 Ref. copy vs deep copy on use
+💯 Almost always consistent
+🚀 Local = 1000x faster:
+&nbsp;&nbsp;&nbsp;&nbsp; ❌ No network calls
+&nbsp;&nbsp;&nbsp;&nbsp; ❌ No serialization/deserialization
+&nbsp;&nbsp;&nbsp;&nbsp; 📌 Ref. copy vs deep copy on use
 🧱 Incrementally-Build-Everything™
-🙀 Supports swapping to ext. caches!
+🙀 Supports "swapping" to ext. caches.
 
 ---
 <!-- _class: highlight -->
 ![bg right:43%](./img/LazyCat.jpg)
 # Fusion vs SignalR
 
-🦌 All SignalR events = 🦄 "X is invalidated".
-</br>
+<span style="opacity: 0.25">📪 Automatic & transparent pub/sub</span>
+🦄 "X is invalidated" vs all 🦌 SignalR events
+💯 Guaranteed eventual consistency
 
-Client / UI:
-❌ No 📪/unsub. UI models to groups/topics
-❌ No update-on-event logic
-⌛ Custom update delays (scalability)
-👍 Guaranteed eventual consistency!
-</br>
-
-Server:
-❌ No events, groups/topics
-💋 (# of invalidation points) ≪ (# of events)
+And:
+&nbsp;λ&nbsp; **Substance (build) vs form (update)**
+&nbsp;&nbsp;&nbsp;&nbsp; (think React vs jQuery)
+🤖 Web **API-first design**
+🐳 **Sub-1ms responses, CQRS,** multi-host,
+&nbsp;&nbsp;&nbsp;&nbsp; custom update delays → **high-load ready**
+🧬 **Single abstraction** on the client, server, ...
 
 ---
 <!-- _class: highlight -->
@@ -1549,11 +1565,13 @@ DAMN FAST!
 
 ---
 <!-- _class: -->
-![bg right:40% width:110%](./img/IDareYou-Flux.jpg)
+![bg right:38% width:110%](./img/IDareYou-Flux.jpg)
 # Fusion vs Flux, Redux, MVC, MobX, ...
 
-🚀 Real-time & caching everywhere
-👌 Guaranteed eventual consistency
+🚀 Real-time & sub-1ms responses
+0️⃣-coupled UI components & 👙-frontends
+🧬 Single abstraction everywhere
+💯 Guaranteed eventual consistency
 💃 CQRS, multi-host mode, bells, whistles.
 
 Forget about:
