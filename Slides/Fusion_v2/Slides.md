@@ -50,11 +50,22 @@ div.col2 .break {
 <img src="./diagrams/keywords.dio.svg" style="width: 80%"/>
 </p>
 
+<footer style="position: absolute; z-index: 1000">
+  <h2 style="
+    position: relative; left: -1em; top: 1.2em;
+    background: #9F0; color: #000; padding: 3pt;">
+    <span style="background: #000; color: #9F0;">&nbsp;Video of this talk:&nbsp;</span>
+    <a style="color: #000" href="https://www.youtube.com/watch?v=HRknXVXla9s">https://www.youtube.com/watch?v=HRknXVXla9s</a>
+    (open its description to see chapters)&nbsp;
+  </h2>
+</footer>
+
+
 ---
 ![bg left:60%](./img/Racoon.gif)
 A junior developer
 coding real-time UI
-1 day after this talk.
+next day after this talk
 
 ---
 <!-- _class: highlight center invert -->
