@@ -519,7 +519,8 @@ At least online.</strong></li>
 <h1>TodoApp: API models / DTOs</h1>
 <pre><code class="language-cs"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">record</span> <span class="hljs-title">Todo</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> Id, <span class="hljs-built_in">string</span> Title, <span class="hljs-built_in">bool</span> IsDone = <span class="hljs-literal">false</span></span>)</span>
 {
-    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Todo</span>(<span class="hljs-params"></span>) : <span class="hljs-title">this</span>(<span class="hljs-params"><span class="hljs-string">&quot;&quot;</span>, <span class="hljs-string">&quot;&quot;</span></span>)</span> { }
+    <span class="hljs-comment">// Default .ctor() is needed for JSON deserialization</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Todo</span>(<span class="hljs-params"></span>) : <span class="hljs-title">this</span>(<span class="hljs-params"><span class="hljs-string">&quot;&quot;</span>, <span class="hljs-string">&quot;&quot;</span></span>)</span> { } 
 }
 
 <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">record</span> <span class="hljs-title">TodoSummary</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> Count, <span class="hljs-built_in">int</span> DoneCount</span>)</span>
@@ -917,21 +918,14 @@ constraint keys to ~ &quot;user folder&quot;.</p>
 <span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">TodoController</span> : <span class="hljs-title">ControllerBase</span>, <span class="hljs-title">ITodoService</span>
 {
     <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> ITodoService _todos;
-    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> ISessionResolver _sessionResolver;
     
     [<span class="hljs-meta">HttpPost</span>]
     <span class="hljs-function"><span class="hljs-keyword">public</span> Task&lt;Todo&gt; <span class="hljs-title">AddOrUpdate</span>(<span class="hljs-params">[FromBody] AddOrUpdateTodoCommand command</span>)</span>
-    {
-        command.UseDefaultSession(_sessionResolver);
-        <span class="hljs-keyword">return</span> _todos.AddOrUpdate(command);
-    }
+        =&gt; _todos.AddOrUpdate(command);
 
     [<span class="hljs-meta">HttpGet, Publish</span>]
-    <span class="hljs-keyword">public</span> Task&lt;Todo?&gt; TryGet(Session? session, <span class="hljs-built_in">string</span> id)
-    {
-        session ??= _sessionResolver.Session;
-        <span class="hljs-keyword">return</span> _todos.TryGet(session, id);
-    }
+    <span class="hljs-keyword">public</span> Task&lt;Todo?&gt; TryGet(Session session, <span class="hljs-built_in">string</span> id)
+        =&gt; _todos.TryGet(session, id);
 
     <span class="hljs-comment">// ...</span>
 }
@@ -1194,9 +1188,9 @@ to be broken.
 <h1>Fusion vs Redis, memcached, ...</h1>
 <p><img class="emoji" draggable="false" alt="💯" src="https://twemoji.maxcdn.com/2/svg/1f4af.svg" data-marp-twemoji=""/> Almost always consistent<br />
 <img class="emoji" draggable="false" alt="🚀" src="https://twemoji.maxcdn.com/2/svg/1f680.svg" data-marp-twemoji=""/> Local = 1000x faster:<br />
-     <img class="emoji" draggable="false" alt="❌" src="https://twemoji.maxcdn.com/2/svg/274c.svg" data-marp-twemoji=""/> No network calls<br />
-     <img class="emoji" draggable="false" alt="❌" src="https://twemoji.maxcdn.com/2/svg/274c.svg" data-marp-twemoji=""/> No serialization/deserialization<br />
-     <img class="emoji" draggable="false" alt="📌" src="https://twemoji.maxcdn.com/2/svg/1f4cc.svg" data-marp-twemoji=""/> Ref. copy vs deep copy on use<br />
+     <img class="emoji" draggable="false" alt="❌" src="https://twemoji.maxcdn.com/2/svg/274c.svg" data-marp-twemoji=""/><img class="emoji" draggable="false" alt="🚝" src="https://twemoji.maxcdn.com/2/svg/1f69d.svg" data-marp-twemoji=""/> No network calls<br />
+     <img class="emoji" draggable="false" alt="❌" src="https://twemoji.maxcdn.com/2/svg/274c.svg" data-marp-twemoji=""/><img class="emoji" draggable="false" alt="💾" src="https://twemoji.maxcdn.com/2/svg/1f4be.svg" data-marp-twemoji=""/> No serialization/deserialization<br />
+     <img class="emoji" draggable="false" alt="❌" src="https://twemoji.maxcdn.com/2/svg/274c.svg" data-marp-twemoji=""/><img class="emoji" draggable="false" alt="👪" src="https://twemoji.maxcdn.com/2/svg/1f46a.svg" data-marp-twemoji=""/> Reuse vs deep copy on use<br />
 <img class="emoji" draggable="false" alt="🧱" src="https://twemoji.maxcdn.com/2/svg/1f9f1.svg" data-marp-twemoji=""/> Incrementally-Build-Everything™<br />
 <img class="emoji" draggable="false" alt="🙀" src="https://twemoji.maxcdn.com/2/svg/1f640.svg" data-marp-twemoji=""/> Supports &quot;swapping&quot; to ext. caches.</p>
 </section>

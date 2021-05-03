@@ -718,7 +718,8 @@ public interface ITodoService
 ```cs
 public record Todo(string Id, string Title, bool IsDone = false)
 {
-    public Todo() : this("", "") { }
+    // Default .ctor() is needed for JSON deserialization
+    public Todo() : this("", "") { } 
 }
 
 public record TodoSummary(int Count, int DoneCount)
@@ -1168,21 +1169,14 @@ Do the same, but deliver the invalidation event via RPC!
 public class TodoController : ControllerBase, ITodoService
 {
     private readonly ITodoService _todos;
-    private readonly ISessionResolver _sessionResolver;
     
     [HttpPost]
     public Task<Todo> AddOrUpdate([FromBody] AddOrUpdateTodoCommand command)
-    {
-        command.UseDefaultSession(_sessionResolver);
-        return _todos.AddOrUpdate(command);
-    }
+        => _todos.AddOrUpdate(command);
 
     [HttpGet, Publish]
-    public Task<Todo?> TryGet(Session? session, string id)
-    {
-        session ??= _sessionResolver.Session;
-        return _todos.TryGet(session, id);
-    }
+    public Task<Todo?> TryGet(Session session, string id)
+        => _todos.TryGet(session, id);
 
     // ...
 }
@@ -1497,9 +1491,9 @@ to be broken.
 
 💯 Almost always consistent
 🚀 Local = 1000x faster:
-&nbsp;&nbsp;&nbsp;&nbsp; ❌ No network calls
-&nbsp;&nbsp;&nbsp;&nbsp; ❌ No serialization/deserialization
-&nbsp;&nbsp;&nbsp;&nbsp; 📌 Ref. copy vs deep copy on use
+&nbsp;&nbsp;&nbsp;&nbsp; ❌🚝 No network calls
+&nbsp;&nbsp;&nbsp;&nbsp; ❌💾 No serialization/deserialization
+&nbsp;&nbsp;&nbsp;&nbsp; ❌👪 Reuse vs deep copy on use
 🧱 Incrementally-Build-Everything™
 🙀 Supports "swapping" to ext. caches.
 
