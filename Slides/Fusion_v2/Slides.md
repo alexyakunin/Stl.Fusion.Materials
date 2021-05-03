@@ -1528,6 +1528,14 @@ And:
 ... but Dory is 
 DAMN FAST!
 
+<footer style="padding-right: 30px;">
+  <b>On a serious note:</b> 
+  <a href="https://github.com/neuecc/MessagePack-CSharp">MessagePack</a>-based
+  protocol is one of planned improvements.<br/>
+  No plans to support GRPC in the observable future 
+  due to lack of support for generic type serialization there.
+</footer>
+
 ---
 <!-- _class: highlight -->
 # Flux
