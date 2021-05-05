@@ -1406,7 +1406,7 @@ async Task<long> Reader(string name, int iterationCount)
 ```
 
 ---
-# Fusion's caching performance
+# Caching performance
 <!-- _class: highlight invert -->
 
 Sqlite EF provider: **16,070x**
@@ -1453,9 +1453,9 @@ And that's just *plain caching*, i.e. no benefits from "incrementally-build-ever
 # Caching Sample & more data points on caching
 <!-- _class: highlight invert -->
 
-A very similar code, but exposing the service via Web API. The results: 
+The same service converted to Replica Service:
 - 20,000 → 130,000 RPS = **6.5x throughput**
-  With server-side changes only, i.e. the same client.
+  With server-side changes only, i.e. regular Web API client.
 - 20,000 → 20,000,000 RPS = **1000x throughput!**  
   If you switch to Fusion client (so-called ["Replica Service"](https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part04.md))
 

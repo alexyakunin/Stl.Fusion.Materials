@@ -1120,7 +1120,7 @@ Source code: <a href="https://github.com/servicetitan/Stl.Fusion.Samples/blob/ma
 </span></span></foreignObject></svg></code></pre>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="109" data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;">
-<h1>Fusion's caching performance</h1>
+<h1>Caching performance</h1>
 
 <p>Sqlite EF provider: <strong>16,070x</strong></p>
 <div class="col2" style="margin-top: 0px;">
@@ -1163,10 +1163,10 @@ Without Stl.Fusion:
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="110" data-class="highlight invert" data-theme="default" class="highlight invert" style="--class:highlight invert;--theme:default;">
 <h1>Caching Sample &amp; more data points on caching</h1>
 
-<p>A very similar code, but exposing the service via Web API. The results:</p>
+<p>The same service converted to Replica Service:</p>
 <ul>
 <li>20,000 → 130,000 RPS = <strong>6.5x throughput</strong><br />
-With server-side changes only, i.e. the same client.</li>
+With server-side changes only, i.e. regular Web API client.</li>
 <li>20,000 → 20,000,000 RPS = <strong>1000x throughput!</strong><br />
 If you switch to Fusion client (so-called <a href="https://github.com/servicetitan/Stl.Fusion.Samples/blob/master/docs/tutorial/Part04.md">&quot;Replica Service&quot;</a>)</li>
 </ul>
